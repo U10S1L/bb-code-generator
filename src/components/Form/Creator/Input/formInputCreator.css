@@ -1,0 +1,45 @@
+.input-selector-container {
+    background-color: lightgray;
+}
+.input-selector {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-types {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+.input-types .btn-col {
+    flex: 1;
+    margin: 3rem 0;
+}
+.input-types .btn-col .btn-primary.btn {
+    width: 100%;
+    height: 100%;
+}
+
+.selected-input-component {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.selected-input-component .footer,
+.selected-input-component .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.selected-input-component .title-text {
+    font-size: 1.25rem;
+    resize: none;
+    line-height: inherit;
+}
+
+.selected-input-component .type-text {
+    font-size: 0.9rem;
+}
