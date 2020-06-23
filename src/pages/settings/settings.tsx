@@ -1,8 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { AppContext, UserType } from "../../context";
 import { Types } from "../../reducers";
-import { Row, Col, Form, Button } from "react-bootstrap";
+import { Form, Row, Col, Button } from "react-bootstrap";
 import { SuccessToast } from "../../components/Toast/toast";
+import Dropzone from "react-dropzone";
+const writeJsonFile = require("write-json-file");
+// const loadJsonFile = require("load-json-file");
+
 const Settings = () => {
     const [user, setUser] = useState<UserType>({
         firstName: "",
@@ -24,6 +28,18 @@ const Settings = () => {
             payload: user
         });
         SuccessToast("Saved User");
+    };
+
+    const downloadObjectAsJson = (exportObj, exportName) => {
+        var dataStr =
+            "data:text/json;charset=utf-8," +
+            encodeURIComponent(JSON.stringify(exportObj));
+        var downloadAnchorNode = document.createElement("a");
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", exportName + ".json");
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     };
 
     useEffect(() => {
@@ -88,7 +104,39 @@ const Settings = () => {
                     <h4>Forms</h4>
                     <Row>
                         <Col xs={4}>
-                            <Button>Download Forms</Button>
+                            <Button
+                                onClick={() =>
+                                    downloadObjectAsJson(state, "state")
+                                }>
+                                Download
+                            </Button>
+                        </Col>
+                        <Col xs={4}>
+                            <Dropzone
+                                multiple={false}
+                                onDrop={(acceptedFiles) => {
+                                    acceptedFiles.forEach((file) => {
+                                        const reader = new FileReader();
+                                        reader.onload = () => {
+                                            const binaryStr = reader.result;
+                                            console.log(
+                                                JSON.parse(binaryStr.toString())
+                                            );
+                                        };
+                                        reader.readAsText(file);
+
+                                        // Handle the state dispatch to override the existing state. And session storage and shit. (Maybe only need to do the session storage ?)
+                                    });
+                                }}>
+                                {({ getRootProps, getInputProps }) => (
+                                    <section>
+                                        <div {...getRootProps()}>
+                                            <input {...getInputProps()} />
+                                            <p>Drop JSON Config File Here</p>
+                                        </div>
+                                    </section>
+                                )}
+                            </Dropzone>
                         </Col>
                         <Col xs={4}>
                             <Button variant="danger">Clear All Data</Button>

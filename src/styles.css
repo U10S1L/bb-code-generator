@@ -1,87 +1,85 @@
 .App {
-    font-family: sans-serif;
-    text-align: center;
+  font-family: sans-serif;
+  text-align: center;
 }
 body {
-    background-color: #f5f7fa;
+  background-color: #f5f7fa;
 
-    font-family: "Roboto Mono", Helvetica, Arial, Sans-serif;
+  font-family: "Roboto Mono", Helvetica, Arial, Sans-serif;
 }
 .app-container {
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .container-fluid {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Page Layout */
 .component-wrapper {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 .header {
-    display: flex;
-    align-items: center;
-    margin-top: 1rem;
-    font-weight: bold;
-    border-bottom: 1px solid lightgray;
-    padding-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+  font-weight: bold;
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 1rem;
 }
 /* Theme Colors */
 .bg-primary {
-    background-color: #1c2a3d;
+  background-color: #1c2a3d;
 }
 /* Buttons */
 .btn.btn-default {
-    background-color: #1c2a3d;
-    color: #eeeeee;
-    font-weight: bold;
-    text-shadow: none;
-    background-image: none;
-    border-radius: 0;
-    float: none;
+  background-color: #1c2a3d;
+  color: #eeeeee;
+  font-weight: bold;
+  text-shadow: none;
+  background-image: none;
+  float: none;
 }
 .btn.btn-primary {
-    background-color: #033389;
-    color: #eeeeee;
-    font-weight: bold;
-    text-shadow: none;
-    background-image: none;
-    border: 0;
-    border-radius: 0;
-    float: none;
+  background-color: #033389;
+  color: #eeeeee;
+  font-weight: bold;
+  text-shadow: none;
+  background-image: none;
+  border: 0;
+  float: none;
 }
 
 .btn.btn-primary:hover {
-    background-color: #002567;
+  background-color: #002567;
 }
 
 .btn.btn-info {
-    background-color: #0ead8e;
-    font-weight: bold;
-    text-shadow: none;
-    background-image: none;
-    border-radius: 0;
-    border: 0;
-    float: none;
+  background-color: #0ead8e;
+  font-weight: bold;
+  text-shadow: none;
+  background-image: none;
+  border-radius: 0;
+  border: 0;
+  float: none;
 }
 .btn.btn-info:hover {
-    background-color: #0c9076;
+  background-color: #0c9076;
 }
 
 .btn.btn-danger {
-    background-color: #a90000;
+  background-color: #a90000;
 }
 
 .drag-handle {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* Lists */
 ul {
-    padding: 0;
+  padding: 0;
 }
