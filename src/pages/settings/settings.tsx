@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { AppContext, UserType } from "../../context";
 import { Types } from "../../reducers";
 import { Row, Col, Form, Button } from "react-bootstrap";
-import { successToast } from "../../components/Toast/toast";
+import { SuccessToast } from "../../components/Toast/toast";
 const Settings = () => {
     const [user, setUser] = useState<UserType>({
         firstName: "",
@@ -23,7 +23,7 @@ const Settings = () => {
             type: Types.UpdateUser,
             payload: user
         });
-        successToast("Saved User");
+        SuccessToast("Saved User");
     };
 
     useEffect(() => {

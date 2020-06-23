@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext} from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { AppContext } from "../../context";
@@ -11,7 +11,7 @@ type NavigationBarProps = {
 const NavigationBar = ({ links }: NavigationBarProps) => {
     const { state } = useContext(AppContext);
 
-    return (
+    return(
         <Navbar variant="dark" bg="dark" expand="sm" id="navbar">
             <LinkContainer to={"/"}>
                 <Navbar.Brand>

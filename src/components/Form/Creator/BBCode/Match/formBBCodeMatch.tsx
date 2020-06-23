@@ -15,7 +15,6 @@ const FormBBCodeMatch = ({ selectedInputComponents, matchedBBCode, setMatchedBBC
     const matchedBBCodeRef = useRef<HTMLTextAreaElement>(null!);
     const inputComponentIsMatched = (uniqueId: string) => {
         return matchedBBCode.includes(uniqueId);
-        // $("#bbCodeInput").setSelectionRange(50, 55)
     };
 
     const goToUniqueIDInMatchedBBCode = (uniqueId: string) => {

@@ -14,10 +14,10 @@ import { Types } from "../../../reducers";
 var slugify = require("slugify");
 
 export enum FormCreationStep {
-    FORM_SETUP = 0,
-    INPUT_CREATION = 20,
-    BBCODE_UPLOAD = 40,
-    BBCODE_MATCH = 80
+    FORM_SETUP,
+    INPUT_CREATION,
+    BBCODE_UPLOAD,
+    BBCODE_MATCH
 }
 
 const FormCreator = () => {
