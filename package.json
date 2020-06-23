@@ -25,7 +25,6 @@
         "array-move": "2.2.2",
         "bootstrap": "4.5.0",
         "jquery": "3.5.1",
-        "load-json-file": "^6.2.0",
         "npm-check": "^5.9.2",
         "react": "16.13.1",
         "react-bootstrap": "1.0.1",
@@ -39,8 +38,7 @@
         "react-toastify": "6.0.5",
         "slugify": "1.4.0",
         "tslint-plugin-prettier": "^2.3.0",
-        "typescript": "3.9.5",
-        "write-json-file": "^4.3.0"
+        "typescript": "3.9.5"
     },
     "devDependencies": {
         "eslint-config-prettier": "^6.11.0",

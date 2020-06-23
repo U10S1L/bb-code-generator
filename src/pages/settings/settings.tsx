@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
-import { AppContext, UserType } from "../../context";
+import React, { useState, useEffect, useContext } from "react";
+import { AppContext, UserType, SiteTheme } from "../../context";
 import { Types } from "../../reducers";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { SuccessToast } from "../../components/Toast/toast";
+import { InitialStateType } from "../../context";
 import Dropzone from "react-dropzone";
-const writeJsonFile = require("write-json-file");
-// const loadJsonFile = require("load-json-file");
 
 const Settings = () => {
     const [user, setUser] = useState<UserType>({
         firstName: "",
         lastName: "",
-        badgeNumber: ""
+        badgeNumber: "",
+        theme: SiteTheme.LIGHT
     });
     const { state, dispatch } = useContext(AppContext);
 
@@ -30,16 +30,24 @@ const Settings = () => {
         SuccessToast("Saved User");
     };
 
-    const downloadObjectAsJson = (exportObj, exportName) => {
+    const exportState = () => {
         var dataStr =
             "data:text/json;charset=utf-8," +
-            encodeURIComponent(JSON.stringify(exportObj));
+            encodeURIComponent(JSON.stringify(state));
         var downloadAnchorNode = document.createElement("a");
         downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", exportName + ".json");
+        downloadAnchorNode.setAttribute(
+            "download",
+            "bbCodeGeneratorExport.json"
+        );
         document.body.appendChild(downloadAnchorNode); // required for firefox
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
+    };
+
+    const uploadState = (newState: InitialStateType) => {
+        dispatch({ type: Types.UpdateUser, payload: newState.user });
+        dispatch({ type: Types.UpdateForms, payload: newState.forms });
     };
 
     useEffect(() => {
@@ -104,10 +112,7 @@ const Settings = () => {
                     <h4>Forms</h4>
                     <Row>
                         <Col xs={4}>
-                            <Button
-                                onClick={() =>
-                                    downloadObjectAsJson(state, "state")
-                                }>
+                            <Button onClick={() => exportState()}>
                                 Download
                             </Button>
                         </Col>
@@ -119,9 +124,12 @@ const Settings = () => {
                                         const reader = new FileReader();
                                         reader.onload = () => {
                                             const binaryStr = reader.result;
-                                            console.log(
-                                                JSON.parse(binaryStr.toString())
-                                            );
+                                            if (binaryStr != null) {
+                                                const stateJson = JSON.parse(
+                                                    binaryStr.toString()
+                                                );
+                                                uploadState(stateJson);
+                                            }
                                         };
                                         reader.readAsText(file);
 
