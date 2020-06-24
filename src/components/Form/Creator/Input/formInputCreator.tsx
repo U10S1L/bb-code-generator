@@ -2,8 +2,20 @@ import "./formInputCreator.css";
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputComponentProps } from "../../../../types/form";
-import { Container, Row, Col, Form, Card, InputGroup, Button } from "react-bootstrap";
-import { SortableContainer, SortableElement, SortableHandle } from "react-sortable-hoc";
+import {
+    Container,
+    Row,
+    Col,
+    Form,
+    Card,
+    InputGroup,
+    Button
+} from "react-bootstrap";
+import {
+    SortableContainer,
+    SortableElement,
+    SortableHandle
+} from "react-sortable-hoc";
 import FormPreviewer from "../../Previewer/formPreviewer";
 import { BBCodeFormType } from "../../../../context";
 
@@ -20,7 +32,11 @@ type SelectedInputComponentProps = {
 };
 
 const SelectedInputComponent = SortableElement(
-    ({ inputComponent, deleteSelf, updateSelf }: SelectedInputComponentProps) => {
+    ({
+        inputComponent,
+        deleteSelf,
+        updateSelf
+    }: SelectedInputComponentProps) => {
         const [inEditMode, setInEditMode] = useState(false);
         const [label, setLabel] = useState(inputComponent.label);
 
@@ -54,7 +70,9 @@ const SelectedInputComponent = SortableElement(
                             <Button
                                 variant={!inEditMode ? "secondary" : "success"}
                                 onClick={() => handleToggleEditMode()}>
-                                <FontAwesomeIcon icon={!inEditMode ? "edit" : "check"} />
+                                <FontAwesomeIcon
+                                    icon={!inEditMode ? "edit" : "check"}
+                                />
                             </Button>
                             {inEditMode && (
                                 <Button
@@ -88,7 +106,11 @@ type SortableSelectedInputComponentsProps = {
 };
 
 const SortableSelectedInputComponents = SortableContainer(
-    ({ inputComponents, removeInput, updateInput }: SortableSelectedInputComponentsProps) => {
+    ({
+        inputComponents,
+        removeInput,
+        updateInput
+    }: SortableSelectedInputComponentsProps) => {
         return (
             <ul>
                 {inputComponents &&
@@ -97,8 +119,12 @@ const SortableSelectedInputComponents = SortableContainer(
                             index={index}
                             key={index}
                             inputComponent={inputComponent}
-                            deleteSelf={() => removeInput(inputComponent.uniqueId)}
-                            updateSelf={(inputComponent) => updateInput(inputComponent)}
+                            deleteSelf={() =>
+                                removeInput(inputComponent.uniqueId)
+                            }
+                            updateSelf={(inputComponent) =>
+                                updateInput(inputComponent)
+                            }
                         />
                     ))}
             </ul>
@@ -129,7 +155,10 @@ type FormInputCreatorProps = {
     addInput: (inputType: InputComponentProps) => void;
     updateInput: (inputComponent: InputComponentProps) => void;
     removeInput: (i: string) => void;
-    reorderSelectedInputComponents: (sortObject: { oldIndex: number; newIndex: number }) => void;
+    reorderSelectedInputComponents: (sortObject: {
+        oldIndex: number;
+        newIndex: number;
+    }) => void;
 };
 
 const FormInputCreator = (props: FormInputCreatorProps) => {
@@ -142,14 +171,18 @@ const FormInputCreator = (props: FormInputCreatorProps) => {
         if (isValidInputName(inputName)) {
             let newInputComponent: InputComponentProps = {
                 ...inputComponent,
-                uniqueId: `{<${inputName}>_${Math.floor(Math.random() * (9999 - 0)) + 0}}`,
+                uniqueId: `{<${inputName}>_${
+                    Math.floor(Math.random() * (9999 - 0)) + 0
+                }}`,
                 multi: isMulti,
                 label: inputName
             };
 
             newInputComponent.inputs = inputComponent.inputs.map((input) => ({
                 ...input,
-                uniqueId: `{<${input.type}>_${Math.floor(Math.random() * (9999 - 0)) + 0}}`
+                uniqueId: `{<${input.type}>_${
+                    Math.floor(Math.random() * (9999 - 0)) + 0
+                }}`
             }));
 
             props.addInput(newInputComponent);
@@ -189,7 +222,9 @@ const FormInputCreator = (props: FormInputCreatorProps) => {
                             value={inputName}
                             onChange={(e) => setInputName(e.target.value)}
                             type="text"
-                            className={`form-control ${!inputNameValid && "is-invalid"}`}
+                            className={`form-control ${
+                                !inputNameValid && "is-invalid"
+                            }`}
                             ref={inputNameRef}
                             placeholder="Label"
                         />
@@ -201,18 +236,24 @@ const FormInputCreator = (props: FormInputCreatorProps) => {
                             onChange={() => setIsMulti(!isMulti)}
                         />
                         <div className="input-types">
-                            {inputComponentChoiceList.map((inputComponent, i) => {
-                                return (
-                                    <div key={i} className="btn-col">
-                                        <button
-                                            onClick={() => onClickInputComponent(inputComponent)}
-                                            type="button"
-                                            className="btn btn-primary">
-                                            {inputComponent.typeName}
-                                        </button>
-                                    </div>
-                                );
-                            })}
+                            {inputComponentChoiceList.map(
+                                (inputComponent, i) => {
+                                    return (
+                                        <div key={i} className="btn-col">
+                                            <button
+                                                onClick={() =>
+                                                    onClickInputComponent(
+                                                        inputComponent
+                                                    )
+                                                }
+                                                type="button"
+                                                className="btn btn-primary">
+                                                {inputComponent.typeName}
+                                            </button>
+                                        </div>
+                                    );
+                                }
+                            )}
                         </div>
                     </div>
                 </Col>
@@ -222,16 +263,22 @@ const FormInputCreator = (props: FormInputCreatorProps) => {
                             <Col xs={12} md={4}>
                                 <h4 className="header">Selected Inputs</h4>
                                 <SortableSelectedInputComponents
-                                    inputComponents={props.newBBCodeForm.inputComponents}
+                                    inputComponents={
+                                        props.newBBCodeForm.inputComponents
+                                    }
                                     removeInput={props.removeInput}
                                     updateInput={props.updateInput}
-                                    onSortEnd={props.reorderSelectedInputComponents}
+                                    onSortEnd={
+                                        props.reorderSelectedInputComponents
+                                    }
                                     useDragHandle
                                 />
                             </Col>
                             <Col xs={12} md={8}>
                                 <h4 className="header">Preview</h4>
-                                <FormPreviewer bbCodeForm={props.newBBCodeForm} />
+                                <FormPreviewer
+                                    bbCodeForm={props.newBBCodeForm}
+                                />
                             </Col>
                         </Row>
                     </Container>

@@ -1,11 +1,13 @@
 import "./styles.css";
+
+// import "./bootstrap-flatly.css";
 import React, { useState, useLayoutEffect, useContext, useEffect } from "react";
 import Form from "./pages/form/form";
 import { Switch, Route } from "react-router-dom";
 import NavigationBar from "./components/Navbar/navbar";
 import { ToastContainer, Slide } from "react-toastify";
 import { Container } from "react-bootstrap";
-import { AppProvider, AppContext } from "./context";
+import { AppProvider, AppContext, SiteTheme } from "./context";
 // Site Pages
 import pages from "./constants/pages";
 // FontAwesome
@@ -55,21 +57,44 @@ const App = () => {
         setForms(state.forms);
     }, [state.forms, forms]);
 
+    // Themeing
+    console.log(state.user.theme);
     return (
         <AppProvider>
-            <div className="app-container">
-                <ToastContainer hideProgressBar={true} autoClose={2500} transition={Slide} />
-                <NavigationBar links={pages} />
+            <div
+                className="app-container"
+                style={{ backgroundColor: "#2C3E50" }}>
+                <Container style={{ backgroundColor: "white" }} fluid>
+                    <NavigationBar
+                        links={pages}
+                        style={{ margin: "0 -15px" }}
+                    />
 
-                <Container style={{ minHeight: mainMinHeight }} fluid>
-                    <Switch>
-                        {state.forms.map((bbCodeForm, i) => (
-                            <Route key={i} path="/form/:slug" component={Form} exact />
-                        ))}
-                        {pages.map((page, i) => (
-                            <Route key={i} path={page.path} render={() => <page.component />} exact />
-                        ))}
-                    </Switch>
+                    <ToastContainer
+                        hideProgressBar={true}
+                        autoClose={2500}
+                        transition={Slide}
+                    />
+                    <Container style={{ minHeight: mainMinHeight }} fluid>
+                        <Switch>
+                            {state.forms.map((bbCodeForm, i) => (
+                                <Route
+                                    key={i}
+                                    path="/form/:slug"
+                                    component={Form}
+                                    exact
+                                />
+                            ))}
+                            {pages.map((page, i) => (
+                                <Route
+                                    key={i}
+                                    path={page.path}
+                                    render={() => <page.component />}
+                                    exact
+                                />
+                            ))}
+                        </Switch>
+                    </Container>
                 </Container>
             </div>
         </AppProvider>

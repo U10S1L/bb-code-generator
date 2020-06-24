@@ -1,19 +1,15 @@
+import "./settings.css";
 import React, { useState, useEffect, useContext } from "react";
 import { AppContext, UserType, SiteTheme } from "../../context";
 import { Types } from "../../reducers";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { SuccessToast } from "../../components/Toast/toast";
-import { InitialStateType } from "../../context";
-import Dropzone from "react-dropzone";
+import { DropEvent, FileRejection } from "react-dropzone";
+import Uploader from "../../components/Uploader/uploader";
 
 const Settings = () => {
-    const [user, setUser] = useState<UserType>({
-        firstName: "",
-        lastName: "",
-        badgeNumber: "",
-        theme: SiteTheme.LIGHT
-    });
     const { state, dispatch } = useContext(AppContext);
+    const [user, setUser] = useState<UserType>(state.user);
 
     const handleChange = (e: any) => {
         setUser({
@@ -45,14 +41,35 @@ const Settings = () => {
         downloadAnchorNode.remove();
     };
 
-    const uploadState = (newState: InitialStateType) => {
-        dispatch({ type: Types.UpdateUser, payload: newState.user });
-        dispatch({ type: Types.UpdateForms, payload: newState.forms });
+    const onDrop = <T extends File>(
+        acceptedFiles: T[],
+        fileRejections: FileRejection[],
+        event: DropEvent
+    ): void => {
+        acceptedFiles.forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const binaryStr = reader.result;
+                if (binaryStr != null) {
+                    const stateJson = JSON.parse(binaryStr.toString());
+                    dispatch({
+                        type: Types.UpdateUser,
+                        payload: stateJson.user
+                    });
+                    dispatch({
+                        type: Types.UpdateForms,
+                        payload: stateJson.forms
+                    });
+                }
+            };
+            reader.readAsText(file);
+        });
     };
-
     useEffect(() => {
+        console.log(state.user);
         setUser(state.user);
     }, [state]);
+
     return (
         <div className="component-wrapper flex-grow-1">
             <Row>
@@ -117,34 +134,7 @@ const Settings = () => {
                             </Button>
                         </Col>
                         <Col xs={4}>
-                            <Dropzone
-                                multiple={false}
-                                onDrop={(acceptedFiles) => {
-                                    acceptedFiles.forEach((file) => {
-                                        const reader = new FileReader();
-                                        reader.onload = () => {
-                                            const binaryStr = reader.result;
-                                            if (binaryStr != null) {
-                                                const stateJson = JSON.parse(
-                                                    binaryStr.toString()
-                                                );
-                                                uploadState(stateJson);
-                                            }
-                                        };
-                                        reader.readAsText(file);
-
-                                        // Handle the state dispatch to override the existing state. And session storage and shit. (Maybe only need to do the session storage ?)
-                                    });
-                                }}>
-                                {({ getRootProps, getInputProps }) => (
-                                    <section>
-                                        <div {...getRootProps()}>
-                                            <input {...getInputProps()} />
-                                            <p>Drop JSON Config File Here</p>
-                                        </div>
-                                    </section>
-                                )}
-                            </Dropzone>
+                            <Uploader onDrop={onDrop} />
                         </Col>
                         <Col xs={4}>
                             <Button variant="danger">Clear All Data</Button>

@@ -6,7 +6,10 @@ type FormBBCodeUploadProps = {
     setRawBBCode: (bbCode: string) => void;
 };
 
-const FormBBCodeUpload = ({ rawBBCode, setRawBBCode }: FormBBCodeUploadProps) => {
+const FormBBCodeUpload = ({
+    rawBBCode,
+    setRawBBCode
+}: FormBBCodeUploadProps) => {
     const rawBBCodeRef = useRef<HTMLTextAreaElement>(null!);
 
     useEffect(() => {
@@ -23,7 +26,7 @@ const FormBBCodeUpload = ({ rawBBCode, setRawBBCode }: FormBBCodeUploadProps) =>
             </Row>
             <Row className="flex-grow-1">
                 <Col xs={12}>
-                    <Container fluid className="h-100">
+                    <Container className="h-100" fluid>
                         <Row className="h-100">
                             <Form.Control
                                 as="textarea"

@@ -1,4 +1,4 @@
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { AppContext } from "../../context";
@@ -7,15 +7,20 @@ import { Page } from "../../constants/pages";
 
 type NavigationBarProps = {
     links: Page[];
+    style: React.CSSProperties;
 };
-const NavigationBar = ({ links }: NavigationBarProps) => {
+const NavigationBar = ({ links, style }: NavigationBarProps) => {
     const { state } = useContext(AppContext);
 
-    return(
-        <Navbar variant="dark" bg="dark" expand="sm" id="navbar">
+    return (
+        <Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
             <LinkContainer to={"/"}>
                 <Navbar.Brand>
-                    <img className="lspd-logo img-fluid" src="https://i.imgur.com/w6Kdktt.png" alt="LSPD Logo" />
+                    <img
+                        className="lspd-logo img-fluid"
+                        src="https://i.imgur.com/w6Kdktt.png"
+                        alt="LSPD Logo"
+                    />
                 </Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -24,8 +29,13 @@ const NavigationBar = ({ links }: NavigationBarProps) => {
                     <NavDropdown title="Forms" id="basic-nav-dropdown">
                         {state.forms.map((bbCodeForm, i) => {
                             return (
-                                <LinkContainer to={`/form/${bbCodeForm.slug}`} key={i} exact>
-                                    <NavDropdown.Item>{bbCodeForm.name}</NavDropdown.Item>
+                                <LinkContainer
+                                    to={`/form/${bbCodeForm.slug}`}
+                                    key={i}
+                                    exact>
+                                    <NavDropdown.Item>
+                                        {bbCodeForm.name}
+                                    </NavDropdown.Item>
                                 </LinkContainer>
                             );
                         })}

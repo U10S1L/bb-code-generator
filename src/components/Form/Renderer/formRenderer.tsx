@@ -9,14 +9,16 @@ type FormRendererProps = {
 
 const FormRenderer = ({ bbCodeForm }: FormRendererProps) => {
     return (
-        <Form>
-            <h4>{bbCodeForm.name}</h4>
-            {bbCodeForm.inputComponents != null &&
-                bbCodeForm.inputComponents.map((inputComponent, i) => {
-                    return <InputComponent {...inputComponent} key={i} />;
-                })}
-            <Button block>Generate BBCode</Button>
-        </Form>
+        <div className="container">
+            <Form>
+                <h4>{bbCodeForm.name}</h4>
+                {bbCodeForm.inputComponents != null &&
+                    bbCodeForm.inputComponents.map((inputComponent, i) => {
+                        return <InputComponent {...inputComponent} key={i} />;
+                    })}
+                <Button block>Generate BBCode</Button>
+            </Form>
+        </div>
     );
 };
 

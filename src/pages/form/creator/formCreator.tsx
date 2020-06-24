@@ -22,7 +22,9 @@ export enum FormCreationStep {
 
 const FormCreator = () => {
     const { dispatch } = useContext(AppContext);
-    const [formCreationStep, setFormCreationStep] = useState(FormCreationStep.FORM_SETUP);
+    const [formCreationStep, setFormCreationStep] = useState(
+        FormCreationStep.FORM_SETUP
+    );
     const [newBBCodeForm, setNewBBCodeForm] = useState<BBCodeFormType>({
         uniqueId: "",
         slug: "",
@@ -50,7 +52,9 @@ const FormCreator = () => {
                     type: Types.AddForm,
                     payload: {
                         ...newBBCodeForm,
-                        uniqueId: `{<${newBBCodeForm.name}>_${Math.floor(Math.random() * (9999 - 0)) + 0}}`,
+                        uniqueId: `{<${newBBCodeForm.name}>_${
+                            Math.floor(Math.random() * (9999 - 0)) + 0
+                        }}`,
                         slug: slugify(newBBCodeForm.name)
                     }
                 });
@@ -82,42 +86,68 @@ const FormCreator = () => {
     };
 
     // Form Input Components
-    const addSelectedInputComponent = (inputComponent: InputComponentProps): void => {
+    const addSelectedInputComponent = (
+        inputComponent: InputComponentProps
+    ): void => {
         if (newBBCodeForm.inputComponents == null) {
-            setNewBBCodeForm({ ...newBBCodeForm, inputComponents: [inputComponent] });
+            setNewBBCodeForm({
+                ...newBBCodeForm,
+                inputComponents: [inputComponent]
+            });
         } else {
             setNewBBCodeForm({
                 ...newBBCodeForm,
-                inputComponents: newBBCodeForm.inputComponents.concat(inputComponent)
+                inputComponents: newBBCodeForm.inputComponents.concat(
+                    inputComponent
+                )
             });
         }
     };
-    const updateSelectedInputComponent = (newInputComponent: InputComponentProps): void => {
+    const updateSelectedInputComponent = (
+        newInputComponent: InputComponentProps
+    ): void => {
         setNewBBCodeForm({
             ...newBBCodeForm,
-            inputComponents: newBBCodeForm.inputComponents.map((currInputComponent) =>
-                currInputComponent.uniqueId === newInputComponent.uniqueId ? newInputComponent : currInputComponent
+            inputComponents: newBBCodeForm.inputComponents.map(
+                (currInputComponent) =>
+                    currInputComponent.uniqueId === newInputComponent.uniqueId
+                        ? newInputComponent
+                        : currInputComponent
             )
         });
     };
-    const removeSelectedInputComponent = (selectedInputComponentUniqueId: string) => {
+    const removeSelectedInputComponent = (
+        selectedInputComponentUniqueId: string
+    ) => {
         setNewBBCodeForm({
             ...newBBCodeForm,
             inputComponents: newBBCodeForm.inputComponents.filter(
-                (selectedInput) => selectedInput.uniqueId !== selectedInputComponentUniqueId
+                (selectedInput) =>
+                    selectedInput.uniqueId !== selectedInputComponentUniqueId
             )
         });
     };
-    const reorderSelectedInputComponents = (sortObject: { oldIndex: number; newIndex: number }) => {
+    const reorderSelectedInputComponents = (sortObject: {
+        oldIndex: number;
+        newIndex: number;
+    }) => {
         setNewBBCodeForm({
             ...newBBCodeForm,
-            inputComponents: arrayMove(newBBCodeForm.inputComponents, sortObject.oldIndex, sortObject.newIndex)
+            inputComponents: arrayMove(
+                newBBCodeForm.inputComponents,
+                sortObject.oldIndex,
+                sortObject.newIndex
+            )
         });
     };
 
     // Form BB Code
     const updateRawBBCode = (rawBBCode: string) => {
-        setNewBBCodeForm({ ...newBBCodeForm, rawBBCode, matchedBBCode: rawBBCode });
+        setNewBBCodeForm({
+            ...newBBCodeForm,
+            rawBBCode,
+            matchedBBCode: rawBBCode
+        });
     };
 
     const updateMatchedBBCode = (matchedBBCode: string) => {
@@ -126,9 +156,14 @@ const FormCreator = () => {
 
     useEffect(() => {
         if (newBBCodeForm.name !== "") {
-            localStorage.setItem("newBBCodeForm", JSON.stringify(newBBCodeForm));
+            localStorage.setItem(
+                "newBBCodeForm",
+                JSON.stringify(newBBCodeForm)
+            );
         } else {
-            const newBBCodeFormStorageString = localStorage.getItem("newBBCodeForm");
+            const newBBCodeFormStorageString = localStorage.getItem(
+                "newBBCodeForm"
+            );
             if (newBBCodeFormStorageString != null) {
                 setNewBBCodeForm(JSON.parse(newBBCodeFormStorageString));
             }
@@ -138,7 +173,10 @@ const FormCreator = () => {
     return (
         <Fragment>
             {formCreationStep === FormCreationStep.FORM_SETUP && (
-                <FormSetupCreator val={newBBCodeForm.name} setVal={updateFormName} />
+                <FormSetupCreator
+                    val={newBBCodeForm.name}
+                    setVal={updateFormName}
+                />
             )}
 
             {formCreationStep === FormCreationStep.INPUT_CREATION && (
@@ -147,11 +185,16 @@ const FormCreator = () => {
                     addInput={addSelectedInputComponent}
                     updateInput={updateSelectedInputComponent}
                     removeInput={removeSelectedInputComponent}
-                    reorderSelectedInputComponents={reorderSelectedInputComponents}
+                    reorderSelectedInputComponents={
+                        reorderSelectedInputComponents
+                    }
                 />
             )}
             {formCreationStep === FormCreationStep.BBCODE_UPLOAD && (
-                <FormBBCodeUpload rawBBCode={newBBCodeForm.rawBBCode} setRawBBCode={updateRawBBCode} />
+                <FormBBCodeUpload
+                    rawBBCode={newBBCodeForm.rawBBCode}
+                    setRawBBCode={updateRawBBCode}
+                />
             )}
             {formCreationStep === FormCreationStep.BBCODE_MATCH && (
                 <FormBBCodeMatch
@@ -162,7 +205,10 @@ const FormCreator = () => {
             )}
             <div className="row mt-auto">
                 {formCreationStep !== FormCreationStep.FORM_SETUP && (
-                    <Button className="btn btn-default col" variant="dark" onClick={() => decrementFormCreationStep()}>
+                    <Button
+                        className="btn btn-default col"
+                        variant="dark"
+                        onClick={() => decrementFormCreationStep()}>
                         Back
                     </Button>
                 )}
@@ -171,16 +217,21 @@ const FormCreator = () => {
                     variant="dark"
                     onClick={() => incrementFormCreationStep()}
                     disabled={
-                        (formCreationStep === FormCreationStep.FORM_SETUP && newBBCodeForm.name === "") ||
+                        (formCreationStep === FormCreationStep.FORM_SETUP &&
+                            newBBCodeForm.name === "") ||
                         (formCreationStep === FormCreationStep.INPUT_CREATION &&
-                            (newBBCodeForm.inputComponents == null || newBBCodeForm.inputComponents.length === 0)) ||
-                        (formCreationStep === FormCreationStep.BBCODE_UPLOAD && newBBCodeForm.rawBBCode === "")
+                            (newBBCodeForm.inputComponents == null ||
+                                newBBCodeForm.inputComponents.length === 0)) ||
+                        (formCreationStep === FormCreationStep.BBCODE_UPLOAD &&
+                            newBBCodeForm.rawBBCode === "")
                     }>
-                    {formCreationStep === FormCreationStep.FORM_SETUP && "Start"}
+                    {formCreationStep === FormCreationStep.FORM_SETUP &&
+                        "Start"}
                     {(formCreationStep === FormCreationStep.INPUT_CREATION ||
                         formCreationStep === FormCreationStep.BBCODE_UPLOAD) &&
                         "Next"}
-                    {formCreationStep === FormCreationStep.BBCODE_MATCH && "Save"}
+                    {formCreationStep === FormCreationStep.BBCODE_MATCH &&
+                        "Save"}
                 </Button>
             </div>
         </Fragment>
