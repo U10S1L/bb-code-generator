@@ -34,7 +34,9 @@ const FormCreator = () => {
         matchedBBCode: ""
     });
     let history = useHistory();
-
+    function sleep(time: number) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
     // Form Creation Step
     const incrementFormCreationStep = (): void => {
         switch (formCreationStep) {
@@ -58,9 +60,10 @@ const FormCreator = () => {
                         slug: slugify(newBBCodeForm.name)
                     }
                 });
-                localStorage.setItem("newBBCodeForm", JSON.stringify({}));
-                history.push(`/form/${slugify(newBBCodeForm.name)}`);
-                break;
+                sleep(2000).then(() => {
+                    history.push(`/form/${slugify(newBBCodeForm.name)}`);
+                    localStorage.removeItem("newBBCodeForm");
+                });
         }
     };
     const decrementFormCreationStep = (): void => {
@@ -155,19 +158,17 @@ const FormCreator = () => {
     };
 
     useEffect(() => {
-        if (newBBCodeForm.name !== "") {
-            localStorage.setItem(
-                "newBBCodeForm",
-                JSON.stringify(newBBCodeForm)
-            );
-        } else {
-            const newBBCodeFormStorageString = localStorage.getItem(
-                "newBBCodeForm"
-            );
-            if (newBBCodeFormStorageString != null) {
-                setNewBBCodeForm(JSON.parse(newBBCodeFormStorageString));
-            }
+        // Initial load, get form from storage
+        const newBBCodeFormStorageString = localStorage.getItem(
+            "newBBCodeForm"
+        );
+        if (newBBCodeFormStorageString != null) {
+            setNewBBCodeForm(JSON.parse(newBBCodeFormStorageString));
         }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem("newBBCodeForm", JSON.stringify(newBBCodeForm));
     }, [newBBCodeForm]);
 
     return (

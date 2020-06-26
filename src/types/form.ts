@@ -4,6 +4,7 @@ export type InputComponentProps = {
     label?: string; // User-created
     multi?: boolean;
     inputs: InputTypeProps[];
+    onChangeInputs?: (inputs: InputTypeProps[]) => void;
 };
 
 export type InputTypeProps = {

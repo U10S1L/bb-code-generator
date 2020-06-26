@@ -136,17 +136,20 @@ const inputComponentChoiceList: InputComponentProps[] = [
     {
         uniqueId: "",
         typeName: "Short Text",
-        inputs: [{ type: "shortText", val: "" }]
+        inputs: [{ type: "shortText", val: "" }],
+        onChangeInputs: undefined
     },
     {
         uniqueId: "",
         typeName: "Long Text",
-        inputs: [{ type: "longText", val: "" }]
+        inputs: [{ type: "longText", val: "" }],
+        onChangeInputs: undefined
     },
     {
         uniqueId: "",
         typeName: "Number",
-        inputs: [{ type: "number", val: "" }]
+        inputs: [{ type: "number", val: "" }],
+        onChangeInputs: undefined
     }
 ];
 

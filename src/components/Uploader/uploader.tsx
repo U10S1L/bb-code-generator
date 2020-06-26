@@ -64,11 +64,11 @@ const Uploader = ({ onDrop }: UploaderProps) => {
     return (
         <div {...getRootProps({ style: dropzoneStyle })}>
             <input {...getInputProps()} />
-            {isDragActive ? (
-                <p>Drop the Config File Here</p>
-            ) : (
-                <p>Drag and Drop the Config File Here</p>
+            {!isDragActive && !isDragAccept && !isDragReject && (
+                <p>Drag the Config File Here</p>
             )}
+            {isDragAccept && <p>Drop the Config File Here</p>}
+            {isDragReject && <p>Invalid File Type</p>}
         </div>
     );
 };

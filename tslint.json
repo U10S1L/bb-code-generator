@@ -25,7 +25,7 @@
         "noEmit": true
     },
     "include": ["src"],
-     "extends": ["tslint-plugin-prettier", "tslint-config-prettier"],,
+    "extends": ["tslint-plugin-prettier", "tslint-config-prettier"],
     "rules": {
         "prettier": true
     }

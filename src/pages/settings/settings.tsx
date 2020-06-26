@@ -1,6 +1,6 @@
 import "./settings.css";
 import React, { useState, useEffect, useContext } from "react";
-import { AppContext, UserType, SiteTheme } from "../../context";
+import { AppContext, UserType } from "../../context";
 import { Types } from "../../reducers";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { SuccessToast } from "../../components/Toast/toast";

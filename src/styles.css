@@ -33,6 +33,14 @@ body {
     border-bottom: 1px solid lightgray;
     padding-bottom: 1rem;
 }
+
+/* Spinner */
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
 /* Theme Colors */
 .bg-primary {
     background-color: #1c2a3d;
