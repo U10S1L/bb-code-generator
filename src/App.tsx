@@ -1,11 +1,11 @@
 import "./styles.css";
 
 // import "./bootstrap-flatly.css";
-import React, { useState, useContext, useEffect } from "react";
+import React from "react";
 import NavigationBar from "./components/Navbar/navbar";
 import { ToastContainer, Slide } from "react-toastify";
 import { Container } from "react-bootstrap";
-import { AppProvider, AppContext } from "./context";
+import { AppProvider } from "./context";
 // Site Pages
 import pages from "./constants/pages";
 // FontAwesome
@@ -41,13 +41,6 @@ library.add(
 );
 
 const App = () => {
-	const { state } = useContext(AppContext);
-	const [forms, setForms] = useState(state.forms);
-
-	useEffect(() => {
-		setForms(state.forms);
-	}, [state]);
-
 	return (
 		<AppProvider>
 			<Container style={{ backgroundColor: "white", minHeight: "100vh" }}>
