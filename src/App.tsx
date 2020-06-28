@@ -42,7 +42,7 @@ library.add(
 
 const App = () => {
 	const { state } = useContext(AppContext);
-	const [setForms] = useState(state.forms);
+	const [forms, setForms] = useState(state.forms);
 
 	useEffect(() => {
 		setForms(state.forms);
