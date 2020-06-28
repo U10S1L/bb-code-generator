@@ -211,7 +211,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	};
 
 	useEffect(() => {
-		// Initial load, get form from storage
+		// Initial load, get form from local storage
 		const bbCodeFormString = localStorage.getItem(
 			editMode ? "editBBCodeForm" : "newBBCodeForm"
 		);
@@ -219,14 +219,15 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 			setBBCodeForm(JSON.parse(bbCodeFormString));
 			setOriginalBBCodeForm(JSON.parse(bbCodeFormString));
 		}
-	}, []);
+	}, [editMode]);
 
 	useEffect(() => {
+		// Save form in local storage on every edit
 		localStorage.setItem(
 			editMode ? "editBBCodeForm" : "newBBCodeForm",
 			JSON.stringify(bbCodeForm)
 		);
-	}, [bbCodeForm]);
+	}, [bbCodeForm, editMode]);
 
 	return (
 		<Fragment>

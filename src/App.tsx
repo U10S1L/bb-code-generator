@@ -23,7 +23,6 @@ import {
 	faMinus,
 	faSearch
 } from "@fortawesome/free-solid-svg-icons";
-import $ from "jquery";
 import SwitchRoutes from "./SwitchRoutes";
 
 // FontAwesome Library Setup
@@ -43,7 +42,7 @@ library.add(
 
 const App = () => {
 	const { state } = useContext(AppContext);
-	const [forms, setForms] = useState(state.forms);
+	const [setForms] = useState(state.forms);
 
 	useEffect(() => {
 		setForms(state.forms);

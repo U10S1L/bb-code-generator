@@ -36,9 +36,7 @@ type SelectedInputComponentProps = {
 
 const SelectedInputComponent = SortableElement(
 	({ inputComponent, deleteSelf, updateSelf }: SelectedInputComponentProps) => {
-		const [originalInputComponent, setOriginalInputComponent] = useState(
-			inputComponent
-		);
+		const [originalInputComponent] = useState(inputComponent);
 		const [inEditMode, setInEditMode] = useState(false);
 		const [label, setLabel] = useState(inputComponent.label);
 
