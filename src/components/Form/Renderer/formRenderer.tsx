@@ -1,66 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BBCodeFormType } from "../../../context";
 import InputComponent from "../../InputComponents/inputComponent";
 import { Form } from "react-bootstrap";
-import { InputTypeProps, InputComponentProps } from "../../../types/form";
+import { InputTypeProps } from "../../../types/form";
 
 type FormRendererProps = {
-    bbCodeForm: BBCodeFormType;
-    onUpdateRenderedBBCodeForm: (bbCodeForm: BBCodeFormType) => void;
+	bbCodeForm: BBCodeFormType;
+	onUpdateBBCodeForm: (bbCodeForm: BBCodeFormType) => void;
 };
 
 const FormRenderer = ({
-    bbCodeForm,
-    onUpdateRenderedBBCodeForm
+	bbCodeForm,
+	onUpdateBBCodeForm
 }: FormRendererProps) => {
-    const [renderedBBCodeForm, setRenderedBBCodeForm] = useState(bbCodeForm);
+	const onUpdateInputComponentInputs = (
+		inputComponentIndex: number,
+		inputComponentInputs: InputTypeProps[]
+	) => {
+		var newInputComponents = bbCodeForm.inputComponents.concat();
+		newInputComponents[inputComponentIndex].inputs = inputComponentInputs;
+		const updatedBBCodeForm = {
+			...bbCodeForm,
+			inputComponents: newInputComponents
+		};
+		onUpdateBBCodeForm(updatedBBCodeForm);
+	};
 
-    const onUpdateInputComponentInputs = (
-        inputComponentIndex: number,
-        inputComponentInputs: InputTypeProps[]
-    ) => {
-        // Make a copy of the current Rendered BB Code Form
-        var newInputComponents = renderedBBCodeForm.inputComponents.concat();
-        newInputComponents[inputComponentIndex].inputs = inputComponentInputs;
-
-        setRenderedBBCodeForm({
-            ...renderedBBCodeForm,
-            inputComponents: newInputComponents
-        });
-    };
-
-    useEffect(() => {
-        onUpdateRenderedBBCodeForm(renderedBBCodeForm);
-    }, [renderedBBCodeForm]);
-
-    useEffect(() => {
-        setRenderedBBCodeForm(bbCodeForm);
-    }, [bbCodeForm]);
-
-    return (
-        <div className="container">
-            <Form>
-                <h4>{renderedBBCodeForm.name}</h4>
-                {renderedBBCodeForm.inputComponents != null &&
-                    renderedBBCodeForm.inputComponents.map(
-                        (inputComponent, i) => {
-                            return (
-                                <InputComponent
-                                    {...inputComponent}
-                                    key={i}
-                                    onChangeInputs={(updatedInputs) =>
-                                        onUpdateInputComponentInputs(
-                                            i,
-                                            updatedInputs
-                                        )
-                                    }
-                                />
-                            );
-                        }
-                    )}
-            </Form>
-        </div>
-    );
+	return (
+		<Form>
+			{bbCodeForm.inputComponents != null &&
+				bbCodeForm.inputComponents.map((inputComponent, i) => {
+					return (
+						<InputComponent
+							{...inputComponent}
+							onUpdateInputs={(updatedInputs) =>
+								onUpdateInputComponentInputs(i, updatedInputs)
+							}
+							key={i}
+						/>
+					);
+				})}
+		</Form>
+	);
 };
 
 export default FormRenderer;

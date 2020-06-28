@@ -6,53 +6,42 @@ import "./navbar.css";
 import { Page } from "../../constants/pages";
 
 type NavigationBarProps = {
-    links: Page[];
-    style: React.CSSProperties;
+	links: Page[];
+	style: React.CSSProperties;
 };
 const NavigationBar = ({ links, style }: NavigationBarProps) => {
-    const { state } = useContext(AppContext);
+	const { state } = useContext(AppContext);
 
-    return (
-        <Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
-            <LinkContainer to={"/"}>
-                <Navbar.Brand>
-                    <img
-                        className="lspd-logo img-fluid"
-                        src="https://i.imgur.com/w6Kdktt.png"
-                        alt="LSPD Logo"
-                    />
-                </Navbar.Brand>
-            </LinkContainer>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
-                    <NavDropdown title="Forms" id="basic-nav-dropdown">
-                        {state.forms.map((bbCodeForm, i) => {
-                            return (
-                                <LinkContainer
-                                    to={`/form/${bbCodeForm.slug}`}
-                                    key={i}
-                                    exact>
-                                    <NavDropdown.Item>
-                                        {bbCodeForm.name}
-                                    </NavDropdown.Item>
-                                </LinkContainer>
-                            );
-                        })}
-                    </NavDropdown>
-                    {links.map((link, i) => {
-                        return (
-                            link.id !== "home" && (
-                                <LinkContainer to={link.path} key={i} exact>
-                                    <Nav.Link>{link.name}</Nav.Link>
-                                </LinkContainer>
-                            )
-                        );
-                    })}
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
-    );
+	return (
+		<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
+			<LinkContainer to={"/"} exact>
+				<Navbar.Brand>Fuck BBCode</Navbar.Brand>
+			</LinkContainer>
+			<Navbar.Toggle aria-controls="basic-navbar-nav" />
+			<Navbar.Collapse id="basic-navbar-nav">
+				<Nav className="mr-auto">
+					<NavDropdown title="Forms" id="basic-nav-dropdown">
+						{state.forms.map((bbCodeForm, i) => {
+							return (
+								<LinkContainer to={`/form/${bbCodeForm.slug}`} key={i} exact>
+									<NavDropdown.Item>{bbCodeForm.name}</NavDropdown.Item>
+								</LinkContainer>
+							);
+						})}
+					</NavDropdown>
+					{links.map((link, i) => {
+						return (
+							link.id !== "home" && (
+								<LinkContainer to={link.path} key={i} exact>
+									<Nav.Link>{link.name}</Nav.Link>
+								</LinkContainer>
+							)
+						);
+					})}
+				</Nav>
+			</Navbar.Collapse>
+		</Navbar>
+	);
 };
 
 export default NavigationBar;
