@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Image } from "react-bootstrap";
 import { AppContext } from "../../context";
 import "./navbar.css";
 import { Page } from "../../constants/pages";
@@ -15,7 +15,11 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 	return (
 		<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
 			<LinkContainer to={"/"} exact>
-				<Navbar.Brand>Fuck BBCode</Navbar.Brand>
+				<Navbar.Brand>
+					<Image
+						style={{ width: "10rem" }}
+						src="https://media.discordapp.net/attachments/726623599200305192/726843029620785172/Untitled.png?width=717&height=152"></Image>
+				</Navbar.Brand>
 			</LinkContainer>
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />
 			<Navbar.Collapse id="basic-navbar-nav">

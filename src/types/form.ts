@@ -1,6 +1,6 @@
 export type InputComponentProps = {
 	uniqueId: string;
-	typeName: "Short Text" | "Long Text" | "Number";
+	typeName: "Short Text" | "Long Text" | "Number" | "Date Time";
 	label?: string; // User-created
 	multi?: boolean;
 	inputs: InputTypeProps[];
@@ -8,7 +8,7 @@ export type InputComponentProps = {
 };
 
 export type InputTypeProps = {
-	type: "shortText" | "longText" | "number";
+	type: "shortText" | "longText" | "number" | "dateTime";
 	uniqueId?: string;
 	placeholder?: string;
 	readOnly?: boolean;

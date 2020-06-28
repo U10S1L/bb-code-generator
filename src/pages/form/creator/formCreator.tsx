@@ -86,6 +86,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				});
 				history.push(`/form/${slugify(bbCodeForm.name)}`);
 				localStorage.removeItem("newBBCodeForm");
+				break;
 		}
 	};
 	const decrementFormCreationStep = (): void => {
@@ -143,9 +144,6 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		oldInputComponent: InputComponentProps,
 		newInputComponent: InputComponentProps
 	): void => {
-		console.log(oldInputComponent);
-		console.log(newInputComponent);
-
 		setBBCodeForm({
 			...bbCodeForm,
 			inputComponents: bbCodeForm.inputComponents.map((currInputComponent) =>
@@ -246,7 +244,13 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				</Col>
 			</Row>
 			{formCreationStep === FormCreationStep.FORM_SETUP && (
-				<FormSetupCreator val={bbCodeForm.name} setVal={updateFormName} />
+				<FormSetupCreator
+					val={bbCodeForm.name}
+					setVal={updateFormName}
+					loadBBCodeForm={(bbCodeForm: BBCodeFormType) =>
+						setBBCodeForm(bbCodeForm)
+					}
+				/>
 			)}
 
 			{formCreationStep === FormCreationStep.INPUT_CREATION && (

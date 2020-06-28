@@ -147,6 +147,12 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		typeName: "Number",
 		inputs: [{ type: "number", val: "" }],
 		onUpdateInputs: undefined
+	},
+	{
+		uniqueId: "",
+		typeName: "Date Time",
+		inputs: [{ type: "dateTime", val: "" }],
+		onUpdateInputs: undefined
 	}
 ];
 
