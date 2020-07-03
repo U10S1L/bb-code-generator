@@ -1,23 +1,7 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import {
-	userReducer,
-	formsReducer,
-	UserActions,
-	FormsActions
-} from "./reducers";
+import { formsReducer, FormsActions } from "./reducers";
 import { InputComponentProps } from "./types/form";
 
-// Types
-export enum SiteTheme {
-	LIGHT,
-	DARK
-}
-export type UserType = {
-	firstName: string;
-	lastName: string;
-	badgeNumber: string;
-	theme: SiteTheme;
-};
 export type BBCodeFormType = {
 	uniqueId: string;
 	slug: string;
@@ -28,17 +12,10 @@ export type BBCodeFormType = {
 };
 
 // Defaults
-const user = {
-	firstName: "",
-	lastName: "",
-	badgeNumber: "",
-	theme: SiteTheme.LIGHT
-};
 const forms: BBCodeFormType[] = [];
 
 // Initial State
 export type InitialStateType = {
-	user: UserType;
 	forms: BBCodeFormType[];
 };
 const initialState = (): InitialStateType => {
@@ -47,7 +24,6 @@ const initialState = (): InitialStateType => {
 		return JSON.parse(stateString);
 	} else {
 		return {
-			user,
 			forms
 		};
 	}
@@ -55,14 +31,10 @@ const initialState = (): InitialStateType => {
 
 const AppContext = createContext<{
 	state: InitialStateType;
-	dispatch: React.Dispatch<UserActions | FormsActions>;
+	dispatch: React.Dispatch<FormsActions>;
 }>({ state: initialState(), dispatch: () => null });
 
-const mainReducer = (
-	{ user, forms }: InitialStateType,
-	action: UserActions | FormsActions
-) => ({
-	user: userReducer(user, action as UserActions),
+const mainReducer = ({ forms }: InitialStateType, action: FormsActions) => ({
 	forms: formsReducer(forms, action as FormsActions)
 });
 

@@ -20,73 +20,7 @@ import {
 } from "react-sortable-hoc";
 import FormPreviewer from "../../Previewer/formPreviewer";
 import { BBCodeFormType } from "../../../../context";
-
-const DragHandle = SortableHandle(() => (
-	<div className="drag-handle">
-		<FontAwesomeIcon icon="bars" />
-	</div>
-));
-
-type SelectedInputComponentProps = {
-	inputComponent: InputComponentProps;
-	editInputComponent: (inputComponent: InputComponentProps) => void;
-};
-
-const SelectedInputComponent = SortableElement(
-	({ inputComponent, editInputComponent }: SelectedInputComponentProps) => {
-		return (
-			<Card className="selected-input-component">
-				<Card.Body>
-					<Card.Title className="title">
-						<InputGroup>
-							<div style={{ overflowWrap: "anywhere" }}>
-								{inputComponent.label}
-							</div>
-						</InputGroup>
-					</Card.Title>
-					<Card.Subtitle className="type-text text-muted">
-						{inputComponent.typeName}
-						{inputComponent.multi ? " (Multi)" : null}
-					</Card.Subtitle>
-				</Card.Body>
-				<Card.Footer className="footer">
-					<DragHandle />
-					<Button onClick={() => editInputComponent(inputComponent)}>
-						<FontAwesomeIcon icon={"edit"} />
-					</Button>
-				</Card.Footer>
-			</Card>
-		);
-	}
-);
-
-type SortableSelectedInputComponentsProps = {
-	inputComponents: InputComponentProps[];
-	editInputComponent: (inputComponent: InputComponentProps) => void;
-};
-
-const SortableSelectedInputComponents = SortableContainer(
-	({
-		inputComponents,
-		editInputComponent
-	}: SortableSelectedInputComponentsProps) => {
-		return (
-			<ul>
-				{inputComponents &&
-					inputComponents.map((inputComponent, index) => (
-						<SelectedInputComponent
-							index={index}
-							key={index}
-							inputComponent={inputComponent}
-							editInputComponent={(inputComponent) =>
-								editInputComponent(inputComponent)
-							}
-						/>
-					))}
-			</ul>
-		);
-	}
-);
+import InputType from "../../../InputComponents/inputType";
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
@@ -94,6 +28,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		label: "",
 		description: "",
 		multi: false,
+		defaultVal: "",
 		type: "shortText",
 		typeName: "Short Text",
 		inputs: [{ type: "shortText", val: "" }],
@@ -128,7 +63,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		multi: false,
 		defaultVal: "",
 		type: "dateTime",
-		typeName: "Date Time",
+		typeName: "Date & Time",
 		inputs: [{ type: "dateTime", val: "" }],
 		onUpdateInputs: undefined
 	},
@@ -137,14 +72,124 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		label: "",
 		description: "",
 		multi: false,
-		defaultVal: "",
+		type: "date",
+		typeName: "Date",
+		inputs: [{ type: "date", val: "" }],
+		onUpdateInputs: undefined,
+		selectOptions: [""]
+	},
+	{
+		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
+		type: "time",
+		typeName: "Time",
+		inputs: [{ type: "time", val: "" }],
+		onUpdateInputs: undefined,
+		selectOptions: [""]
+	},
+	{
+		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
 		type: "dropdown",
 		typeName: "Dropdown",
 		inputs: [{ type: "dropdown", val: "" }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]
+	},
+	{
+		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
+		defaultVal: "",
+		type: "checkbox",
+		typeName: "Checkbox",
+		inputs: [{ type: "checkbox", val: false }],
+		onUpdateInputs: undefined,
+		selectOptions: [""]
+	},
+	{
+		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
+		defaultVal: "",
+		type: "url",
+		typeName: "Url",
+		inputs: [{ type: "url", val: { text: "", link: "" } }],
+		onUpdateInputs: undefined,
+		selectOptions: [""]
 	}
 ];
+
+const DragHandle = SortableHandle(() => (
+	<div className="drag-handle">
+		<FontAwesomeIcon icon="bars" />
+	</div>
+));
+
+type SelectedInputComponentProps = {
+	inputComponent: InputComponentProps;
+	editInputComponent: (inputComponent: InputComponentProps) => void;
+};
+const SelectedInputComponent = SortableElement(
+	({ inputComponent, editInputComponent }: SelectedInputComponentProps) => {
+		return (
+			<Card className="selected-input-component">
+				<Card.Body>
+					<Card.Title className="title">
+						<InputGroup>
+							<div style={{ overflowWrap: "anywhere" }}>
+								{inputComponent.label}
+							</div>
+						</InputGroup>
+					</Card.Title>
+					<Card.Subtitle className="type-text text-muted">
+						{inputComponent.typeName}
+						{inputComponent.multi ? " (Multi)" : null}
+					</Card.Subtitle>
+				</Card.Body>
+				<Card.Footer className="footer">
+					<DragHandle />
+					<Button onClick={() => editInputComponent(inputComponent)}>
+						<FontAwesomeIcon icon={"edit"} />
+					</Button>
+				</Card.Footer>
+			</Card>
+		);
+	}
+);
+
+type SortableSelectedInputComponentsProps = {
+	inputComponents: InputComponentProps[];
+	editInputComponent: (inputComponent: InputComponentProps) => void;
+};
+const SortableSelectedInputComponents = SortableContainer(
+	({
+		inputComponents,
+		editInputComponent
+	}: SortableSelectedInputComponentsProps) => {
+		return (
+			<ul>
+				{inputComponents &&
+					inputComponents.map((inputComponent, index) => (
+						<SelectedInputComponent
+							index={index}
+							key={index}
+							inputComponent={inputComponent}
+							editInputComponent={(inputComponent) =>
+								editInputComponent(inputComponent)
+							}
+						/>
+					))}
+			</ul>
+		);
+	}
+);
 
 type FormInputCreatorProps = {
 	newBBCodeForm: BBCodeFormType;
@@ -156,7 +201,6 @@ type FormInputCreatorProps = {
 		newIndex: number;
 	}) => void;
 };
-
 const FormInputCreator = ({
 	newBBCodeForm,
 	addInput,
@@ -402,14 +446,16 @@ const InputComponentModal = ({
 							onChange={(e) => setDescription(e.target.value)}
 						/>
 					</Form.Group>
-					<Form.Group>
-						<Form.Label>Default Value</Form.Label>
-						<Form.Control
-							value={defaultVal}
-							type="text"
-							onChange={(e) => setDefaultVal(e.target.value)}
-						/>
-					</Form.Group>
+					{inputComponent !== undefined && inputComponent?.type !== "dropdown" && (
+						<Form.Group>
+							<Form.Label>Default Value</Form.Label>
+							<InputType
+								type={inputComponent.type}
+								val={defaultVal}
+								setVal={(val) => setDefaultVal(val)}
+							/>
+						</Form.Group>
+					)}
 					{inputComponent?.type === "dropdown" && (
 						<Form.Group>
 							<Form.Label>Options</Form.Label>

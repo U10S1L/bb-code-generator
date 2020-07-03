@@ -5,10 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputType from "../InputComponents/inputType";
 
 const InputComponent: React.FC<InputComponentProps> = ({
-	uniqueId,
-	typeName,
 	label,
 	description,
+	type,
 	defaultVal,
 	multi,
 	inputs,
@@ -64,6 +63,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 								{...inputType}
 								setVal={(val: any) => updateInput(i, val)}
 								selectOptions={selectOptions}
+								type={type}
 							/>
 							<InputGroup.Append hidden={!multi}>
 								<Button

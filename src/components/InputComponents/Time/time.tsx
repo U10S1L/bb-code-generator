@@ -2,25 +2,21 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import { InputTypeProps } from "../../../types/form";
 
-export const Dropdown = ({
+export const Time = ({
 	placeholder,
 	readOnly,
 	val,
-	setVal,
-	selectOptions
+	setVal
 }: InputTypeProps) => {
 	return (
 		<Form.Control
-			as="select"
+			type="time"
 			value={val}
 			onChange={(e) => {
 				setVal && setVal(e.target.value);
 			}}
 			placeholder={placeholder}
-			readOnly={readOnly}>
-			{selectOptions?.map((selectOption, i) => {
-				return <option key={i}>{selectOption}</option>;
-			})}
-		</Form.Control>
+			readOnly={readOnly}
+		/>
 	);
 };

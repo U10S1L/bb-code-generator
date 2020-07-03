@@ -1,5 +1,4 @@
-import React, { useMemo, useState } from "react";
-import { Modal } from "react-bootstrap";
+import React, { useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import { DropEvent, FileRejection } from "react-dropzone";
 
@@ -71,22 +70,6 @@ const Uploader = ({ onDrop }: UploaderProps) => {
 			{isDragAccept && <span>Drop file here</span>}
 			{isDragReject && <span>Invalid File Type</span>}
 		</div>
-	);
-};
-
-type UploaderModalProps = {} & UploaderProps;
-export const UploaderModal = ({ onDrop }: UploaderModalProps) => {
-	const [show, setShow] = useState(false);
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
-
-	return (
-		<Modal show={show} onHide={handleClose}>
-			<Modal.Header closeButton>
-				<Modal.Title>Modal Title</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>Modal Body</Modal.Body>
-		</Modal>
 	);
 };
 

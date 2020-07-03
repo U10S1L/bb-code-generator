@@ -1,6 +1,6 @@
 import "./formList.css";
 import React, { useContext, useState } from "react";
-import { Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Row, Col, Card, Button } from "react-bootstrap";
 import {
 	SortableContainer,
 	SortableElement,
@@ -11,8 +11,6 @@ import { AppContext, BBCodeFormType } from "../../../context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Types } from "../../../reducers";
 import { LinkContainer } from "react-router-bootstrap";
-import { UploaderModal } from "../../../components/Uploader/uploader";
-import { FileRejection, DropEvent } from "react-dropzone";
 
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
@@ -63,7 +61,6 @@ const SortableFormContainer = SortableContainer(
 
 const FormList = () => {
 	const { state, dispatch } = useContext(AppContext);
-	const [searchTerm, setSearchTerm] = useState("");
 
 	const reorderForms = (sortObject: { oldIndex: number; newIndex: number }) => {
 		dispatch({

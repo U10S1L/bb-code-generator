@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Navbar, Nav, NavDropdown, Image } from "react-bootstrap";
+import { Navbar, Nav, Image } from "react-bootstrap";
 import { AppContext } from "../../context";
 import "./navbar.css";
 import { Page } from "../../constants/pages";
@@ -10,8 +10,6 @@ type NavigationBarProps = {
 	style: React.CSSProperties;
 };
 const NavigationBar = ({ links, style }: NavigationBarProps) => {
-	const { state } = useContext(AppContext);
-
 	return (
 		<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
 			<LinkContainer to={"/"} exact>
