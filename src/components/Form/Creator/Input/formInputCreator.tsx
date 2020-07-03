@@ -117,7 +117,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		label: "",
 		description: "",
 		multi: false,
-		defaultVal: "",
+		defaultVal: { text: "", link: "" },
 		type: "url",
 		typeName: "Url",
 		inputs: [{ type: "url", val: { text: "", link: "" } }],

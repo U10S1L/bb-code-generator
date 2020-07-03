@@ -9,7 +9,7 @@ export const Url = ({ placeholder, readOnly, val, setVal }: InputTypeProps) => {
 				<Form.Label>Link</Form.Label>
 				<Form.Control
 					type="text"
-					value={val.link}
+					value={val.link !== undefined ? val.link : ""}
 					onChange={(e) => {
 						setVal && setVal({ ...val, link: e.target.value });
 					}}
@@ -21,7 +21,7 @@ export const Url = ({ placeholder, readOnly, val, setVal }: InputTypeProps) => {
 				<Form.Label>Text</Form.Label>
 				<Form.Control
 					type="text"
-					value={val.text}
+					value={val.text && val.text}
 					onChange={(e) => {
 						setVal && setVal({ ...val, text: e.target.value });
 					}}

@@ -19,7 +19,11 @@ export const Dropdown = ({
 			placeholder={placeholder}
 			readOnly={readOnly}>
 			{selectOptions?.map((selectOption, i) => {
-				return <option key={i}>{selectOption}</option>;
+				return (
+					<option value={selectOption} key={i}>
+						{selectOption}
+					</option>
+				);
 			})}
 		</Form.Control>
 	);
