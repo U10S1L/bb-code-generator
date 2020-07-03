@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Image } from "react-bootstrap";
-import { AppContext } from "../../context";
 import "./navbar.css";
 import { Page } from "../../constants/pages";
 

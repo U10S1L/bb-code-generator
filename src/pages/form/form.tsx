@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import FormRenderer from "../../components/Form/Renderer/formRenderer";
 import { AppContext, BBCodeFormType } from "../../context";
@@ -32,7 +32,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
 	const [editMode, setEditMode] = useState(false);
 
-	const getOriginalBBCodeForm = () => {
+	const getOriginalBBCodeForm = useCallback(() => {
 		let originalBBCodeForm = state.forms.find(
 			(form) => form.uniqueId === bbCodeForm.uniqueId
 		);
@@ -63,7 +63,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 			rawBBCode: "",
 			matchedBBCode: ""
 		};
-	};
+	}, [bbCodeForm.uniqueId, state.forms]);
 
 	const generateBBCode = (): string => {
 		var inputComponents: InputComponentProps[] = JSON.parse(
@@ -74,8 +74,8 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 		var generatedBBCode: string = matchedBBCode;
 
 		// Format Vals if Necessary
-		inputComponents.map((inputComponent) => {
-			inputComponent.inputs.map((input) => {
+		inputComponents.forEach((inputComponent) => {
+			inputComponent.inputs.forEach((input) => {
 				if (inputComponent.type === "dateTime") {
 					input.val = formatDateTime(new Date(input.val));
 				} else if (inputComponent.type === "checkbox") {
@@ -173,12 +173,17 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 		} else {
 			setBBCodeForm(getOriginalBBCodeForm());
 		}
-	}, [match.params.slug, state.forms]);
+	}, [
+		match.params.slug,
+		state.forms,
+		formProgressString,
+		getOriginalBBCodeForm
+	]);
 
 	useEffect(() => {
 		// Saving current form progress in local storage
 		localStorage.setItem(formProgressString, JSON.stringify(bbCodeForm));
-	}, [bbCodeForm]);
+	}, [bbCodeForm, formProgressString]);
 
 	return !editMode ? (
 		<div>

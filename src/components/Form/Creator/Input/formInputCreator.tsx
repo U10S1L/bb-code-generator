@@ -1,5 +1,5 @@
 import "./formInputCreator.css";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputComponentProps } from "../../../../types/form";
 import {
@@ -354,9 +354,9 @@ const InputComponentModal = ({
 	const [labelValid, setLabelValid] = useState(true);
 
 	// Form Validation
-	const isValidLabel = () => {
+	const isValidLabel = useCallback(() => {
 		return label && label !== "";
-	};
+	}, [label]);
 
 	const submitForm = () => {
 		if (inputComponent === undefined) {
