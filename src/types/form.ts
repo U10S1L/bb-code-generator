@@ -25,7 +25,7 @@ export type InputComponentProps = {
 	label?: string; // User-created
 	description?: string;
 	multi?: boolean;
-	defaultVal?: any;
+	defaultVal: string;
 	inputs: InputTypeProps[];
 	onUpdateInputs?: (inputs: InputTypeProps[]) => void;
 	selectOptions?: string[];
@@ -33,7 +33,7 @@ export type InputComponentProps = {
 
 export type InputTypeProps = {
 	type: inputTypes;
-	val: any;
+	val: string;
 	setVal?: (val: any) => void;
 	uniqueId?: string;
 	placeholder?: string;

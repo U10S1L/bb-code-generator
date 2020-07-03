@@ -72,6 +72,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		label: "",
 		description: "",
 		multi: false,
+		defaultVal: "",
 		type: "date",
 		typeName: "Date",
 		inputs: [{ type: "date", val: "" }],
@@ -83,6 +84,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		label: "",
 		description: "",
 		multi: false,
+		defaultVal: "",
 		type: "time",
 		typeName: "Time",
 		inputs: [{ type: "time", val: "" }],
@@ -94,6 +96,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		label: "",
 		description: "",
 		multi: false,
+		defaultVal: "",
 		type: "dropdown",
 		typeName: "Dropdown",
 		inputs: [{ type: "dropdown", val: "" }],
@@ -108,7 +111,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "checkbox",
 		typeName: "Checkbox",
-		inputs: [{ type: "checkbox", val: false }],
+		inputs: [{ type: "checkbox", val: "false" }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]
 	},
@@ -117,10 +120,10 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		label: "",
 		description: "",
 		multi: false,
-		defaultVal: { text: "", link: "" },
+		defaultVal: JSON.stringify({ text: "", link: "" }),
 		type: "url",
 		typeName: "Url",
-		inputs: [{ type: "url", val: { text: "", link: "" } }],
+		inputs: [{ type: "url", val: JSON.stringify({ text: "", link: "" }) }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]
 	}
@@ -446,16 +449,17 @@ const InputComponentModal = ({
 							onChange={(e) => setDescription(e.target.value)}
 						/>
 					</Form.Group>
-					{inputComponent !== undefined && inputComponent?.type !== "dropdown" && (
-						<Form.Group>
-							<Form.Label>Default Value</Form.Label>
-							<InputType
-								type={inputComponent.type}
-								val={defaultVal}
-								setVal={(val) => setDefaultVal(val)}
-							/>
-						</Form.Group>
-					)}
+					{inputComponent?.type !== undefined &&
+						inputComponent?.type !== "dropdown" && (
+							<Form.Group>
+								<Form.Label>Default Value</Form.Label>
+								<InputType
+									type={inputComponent?.type}
+									val={defaultVal}
+									setVal={(val) => setDefaultVal(val)}
+								/>
+							</Form.Group>
+						)}
 					{inputComponent?.type === "dropdown" && (
 						<Form.Group>
 							<Form.Label>Options</Form.Label>

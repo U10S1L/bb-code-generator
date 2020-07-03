@@ -43,11 +43,11 @@ const InputComponent: React.FC<InputComponentProps> = ({
 
 	return (
 		<Form.Group as={Row}>
-			<Form.Label column xs={4}>
+			<Form.Label column xs={3}>
 				{label}
 				<div className="small text-muted">{description}</div>
 			</Form.Label>
-			<Col xs={8}>
+			<Col xs={9}>
 				{inputs.map((inputType, i) => {
 					const canAddInput = multi;
 					const canRemoveInput = multi && inputs.length !== 1;

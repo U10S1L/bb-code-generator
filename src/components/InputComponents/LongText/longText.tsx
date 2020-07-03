@@ -1,17 +1,17 @@
 import React from "react";
-import { Form } from "react-bootstrap";
 import { InputTypeProps } from "../../../types/form";
+import TextAreaAutosize from "react-textarea-autosize";
 
 const LongText = ({ placeholder, readOnly, val, setVal }: InputTypeProps) => {
-    return (
-        <Form.Control
-            as="textarea"
-            readOnly={readOnly}
-            value={val}
-            onChange={(e) => setVal && setVal(e.target.value)}
-            placeholder={placeholder}
-        />
-    );
+	return (
+		<TextAreaAutosize
+			readOnly={readOnly}
+			value={val}
+			onChange={(e) => setVal && setVal(e.target.value)}
+			placeholder={placeholder}
+			className="form-control"
+		/>
+	);
 };
 
 export default LongText;

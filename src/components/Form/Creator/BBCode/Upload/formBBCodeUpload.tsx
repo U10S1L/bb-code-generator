@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
+import TextAreaAutosize from "react-textarea-autosize";
 
 type FormBBCodeUploadProps = {
 	rawBBCode: string;
@@ -23,8 +24,7 @@ const FormBBCodeUpload = ({
 				<Col xs={12}>
 					<Container className="h-100">
 						<Row className="h-100">
-							<Form.Control
-								as="textarea"
+							<TextAreaAutosize
 								className="form-control"
 								value={rawBBCode}
 								onChange={(e) => setRawBBCode(e.target.value)}

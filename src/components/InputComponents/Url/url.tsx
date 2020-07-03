@@ -2,33 +2,28 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import { InputTypeProps } from "../../../types/form";
 
-export const Url = ({ placeholder, readOnly, val, setVal }: InputTypeProps) => {
+export const Url = ({ readOnly, val, setVal }: InputTypeProps) => {
+	const valObj = JSON.parse(val);
 	return (
-		<>
-			<Form.Group>
-				<Form.Label>Link</Form.Label>
-				<Form.Control
-					type="text"
-					value={val.link !== undefined ? val.link : ""}
-					onChange={(e) => {
-						setVal && setVal({ ...val, link: e.target.value });
-					}}
-					placeholder={placeholder}
-					readOnly={readOnly}
-				/>
-			</Form.Group>
-			<Form.Group>
-				<Form.Label>Text</Form.Label>
-				<Form.Control
-					type="text"
-					value={val.text && val.text}
-					onChange={(e) => {
-						setVal && setVal({ ...val, text: e.target.value });
-					}}
-					placeholder={placeholder}
-					readOnly={readOnly}
-				/>
-			</Form.Group>
-		</>
+		<div style={{ display: "flex", flex: 1 }}>
+			<Form.Control
+				type="text"
+				value={valObj && valObj.link !== undefined ? valObj.link : ""}
+				onChange={(e) => {
+					setVal && setVal(JSON.stringify({ ...valObj, link: e.target.value }));
+				}}
+				placeholder={"Text"}
+				readOnly={readOnly}
+			/>
+			<Form.Control
+				type="text"
+				value={valObj && valObj.text !== undefined ? valObj.text : ""}
+				onChange={(e) => {
+					setVal && setVal(JSON.stringify({ ...valObj, text: e.target.value }));
+				}}
+				placeholder={"Link"}
+				readOnly={readOnly}
+			/>
+		</div>
 	);
 };

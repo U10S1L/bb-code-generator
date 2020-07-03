@@ -8,11 +8,12 @@ export const Checkbox = ({
 	val,
 	setVal
 }: InputTypeProps) => {
+	const boolValue = val === "true" ? true : false;
 	return (
 		<Form.Check
-			checked={val}
+			checked={val == "true"}
 			onChange={() => {
-				setVal && setVal(!val);
+				setVal && setVal(boolValue == true ? "false" : "true");
 			}}
 			placeholder={placeholder}
 			readOnly={readOnly}></Form.Check>

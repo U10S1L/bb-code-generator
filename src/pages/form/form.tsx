@@ -79,11 +79,11 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 				if (inputComponent.type === "dateTime") {
 					input.val = formatDateTime(new Date(input.val));
 				} else if (inputComponent.type === "checkbox") {
-					input.val = input.val === true ? "[cbc]" : "[cb]";
+					input.val = input.val === "true" ? "[cbc]" : "[cb]";
 				} else if (inputComponent.type === "date") {
 					input.val = formatDate(new Date(input.val));
 				} else if (inputComponent.type === "url") {
-					input.val = formatUrl(input.val);
+					input.val = formatUrl(JSON.parse(input.val));
 				}
 			});
 		});

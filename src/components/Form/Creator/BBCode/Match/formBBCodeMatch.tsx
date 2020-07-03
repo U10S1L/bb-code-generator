@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
-import { Container, Form, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputComponentProps } from "../../../../../types/form";
 import { SuccessToast } from "../../../../Toast/toast";
 import CopyToClipboard from "react-copy-to-clipboard";
-
+import TextAreaAutosize from "react-textarea-autosize";
 type FormBBCodeMatchProps = {
 	selectedInputComponents: InputComponentProps[];
 	matchedBBCode: string;
@@ -98,8 +98,7 @@ const FormBBCodeMatch = ({
 								})}
 							</Col>
 							<Col xs={8}>
-								<Form.Control
-									as="textarea"
+								<TextAreaAutosize
 									ref={matchedBBCodeRef}
 									className="form-control h-100"
 									value={matchedBBCode}
