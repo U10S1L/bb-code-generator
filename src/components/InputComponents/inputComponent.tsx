@@ -8,9 +8,12 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	uniqueId,
 	typeName,
 	label,
+	description,
+	defaultVal,
 	multi,
 	inputs,
-	onUpdateInputs
+	onUpdateInputs,
+	selectOptions
 }) => {
 	const addNewInput = (inputTypeItem: InputTypeProps, startIndex: number) => {
 		// Make a copy of the current inputComponentInputs
@@ -43,6 +46,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 		<Form.Group as={Row}>
 			<Form.Label column xs={4}>
 				{label}
+				<div className="small text-muted">{description}</div>
 			</Form.Label>
 			<Col xs={8}>
 				{inputs.map((inputType, i) => {
@@ -59,6 +63,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 							<InputType
 								{...inputType}
 								setVal={(val: any) => updateInput(i, val)}
+								selectOptions={selectOptions}
 							/>
 							<InputGroup.Append hidden={!multi}>
 								<Button

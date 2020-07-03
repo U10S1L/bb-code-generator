@@ -24,15 +24,6 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />
 			<Navbar.Collapse id="basic-navbar-nav">
 				<Nav className="mr-auto">
-					<NavDropdown title="Forms" id="basic-nav-dropdown">
-						{state.forms.map((bbCodeForm, i) => {
-							return (
-								<LinkContainer to={`/form/${bbCodeForm.slug}`} key={i} exact>
-									<NavDropdown.Item>{bbCodeForm.name}</NavDropdown.Item>
-								</LinkContainer>
-							);
-						})}
-					</NavDropdown>
 					{links.map((link, i) => {
 						return (
 							link.id !== "home" && (

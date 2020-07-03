@@ -9,7 +9,9 @@ import {
 	Form,
 	Card,
 	InputGroup,
-	Button
+	Button,
+	Modal,
+	FormControl
 } from "react-bootstrap";
 import {
 	SortableContainer,
@@ -27,61 +29,19 @@ const DragHandle = SortableHandle(() => (
 
 type SelectedInputComponentProps = {
 	inputComponent: InputComponentProps;
-	deleteSelf: () => void;
-	updateSelf: (
-		originalInputComponent: InputComponentProps,
-		newInputComponent: InputComponentProps
-	) => void;
+	editInputComponent: (inputComponent: InputComponentProps) => void;
 };
 
 const SelectedInputComponent = SortableElement(
-	({ inputComponent, deleteSelf, updateSelf }: SelectedInputComponentProps) => {
-		const [originalInputComponent] = useState(inputComponent);
-		const [inEditMode, setInEditMode] = useState(false);
-		const [label, setLabel] = useState(inputComponent.label);
-
-		const handleToggleEditMode = () => {
-			if (inEditMode) {
-				updateSelf(originalInputComponent, {
-					...inputComponent,
-					label
-				});
-			}
-			setInEditMode(!inEditMode);
-		};
-
-		useEffect(() => {
-			setLabel(inputComponent.label);
-		}, [inputComponent]);
+	({ inputComponent, editInputComponent }: SelectedInputComponentProps) => {
 		return (
 			<Card className="selected-input-component">
 				<Card.Body>
 					<Card.Title className="title">
 						<InputGroup>
-							<Form.Control
-								as="textarea"
-								className="title-text"
-								name="label"
-								disabled={!inEditMode}
-								plaintext={!inEditMode}
-								value={label}
-								onChange={(e) => setLabel(e.target.value)}
-							/>
-							<Button
-								variant={!inEditMode ? "secondary" : "success"}
-								onClick={() => handleToggleEditMode()}>
-								<FontAwesomeIcon icon={!inEditMode ? "edit" : "check"} />
-							</Button>
-							{inEditMode && (
-								<Button
-									variant="danger"
-									onClick={() => {
-										setInEditMode(false);
-										deleteSelf();
-									}}>
-									<FontAwesomeIcon icon="times" />
-								</Button>
-							)}
+							<div style={{ overflowWrap: "anywhere" }}>
+								{inputComponent.label}
+							</div>
 						</InputGroup>
 					</Card.Title>
 					<Card.Subtitle className="type-text text-muted">
@@ -91,6 +51,9 @@ const SelectedInputComponent = SortableElement(
 				</Card.Body>
 				<Card.Footer className="footer">
 					<DragHandle />
+					<Button onClick={() => editInputComponent(inputComponent)}>
+						<FontAwesomeIcon icon={"edit"} />
+					</Button>
 				</Card.Footer>
 			</Card>
 		);
@@ -99,18 +62,13 @@ const SelectedInputComponent = SortableElement(
 
 type SortableSelectedInputComponentsProps = {
 	inputComponents: InputComponentProps[];
-	removeInput: (uniqueId: string) => void;
-	updateInput: (
-		originalInputComponent: InputComponentProps,
-		newInputComponent: InputComponentProps
-	) => void;
+	editInputComponent: (inputComponent: InputComponentProps) => void;
 };
 
 const SortableSelectedInputComponents = SortableContainer(
 	({
 		inputComponents,
-		removeInput,
-		updateInput
+		editInputComponent
 	}: SortableSelectedInputComponentsProps) => {
 		return (
 			<ul>
@@ -120,8 +78,9 @@ const SortableSelectedInputComponents = SortableContainer(
 							index={index}
 							key={index}
 							inputComponent={inputComponent}
-							deleteSelf={() => removeInput(inputComponent.uniqueId)}
-							updateSelf={updateInput}
+							editInputComponent={(inputComponent) =>
+								editInputComponent(inputComponent)
+							}
 						/>
 					))}
 			</ul>
@@ -132,37 +91,65 @@ const SortableSelectedInputComponents = SortableContainer(
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
 		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
+		type: "shortText",
 		typeName: "Short Text",
 		inputs: [{ type: "shortText", val: "" }],
 		onUpdateInputs: undefined
 	},
 	{
 		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
+		defaultVal: "",
+		type: "longText",
 		typeName: "Long Text",
 		inputs: [{ type: "longText", val: "" }],
 		onUpdateInputs: undefined
 	},
 	{
 		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
+		defaultVal: "",
+		type: "number",
 		typeName: "Number",
 		inputs: [{ type: "number", val: "" }],
 		onUpdateInputs: undefined
 	},
 	{
 		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
+		defaultVal: "",
+		type: "dateTime",
 		typeName: "Date Time",
 		inputs: [{ type: "dateTime", val: "" }],
 		onUpdateInputs: undefined
+	},
+	{
+		uniqueId: "",
+		label: "",
+		description: "",
+		multi: false,
+		defaultVal: "",
+		type: "dropdown",
+		typeName: "Dropdown",
+		inputs: [{ type: "dropdown", val: "" }],
+		onUpdateInputs: undefined,
+		selectOptions: [""]
 	}
 ];
 
 type FormInputCreatorProps = {
 	newBBCodeForm: BBCodeFormType;
 	addInput: (inputType: InputComponentProps) => void;
-	updateInput: (
-		originalInputComponent: InputComponentProps,
-		newInputComponent: InputComponentProps
-	) => void;
+	updateInput: (newInputComponent: InputComponentProps) => void;
 	removeInput: (i: string) => void;
 	reorderSelectedInputComponents: (sortObject: {
 		oldIndex: number;
@@ -170,51 +157,59 @@ type FormInputCreatorProps = {
 	}) => void;
 };
 
-const FormInputCreator = (props: FormInputCreatorProps) => {
-	const [inputName, setInputName] = useState<string>("");
-	const [inputNameValid, setInputNameValid] = useState<boolean>(true);
-	const [isMulti, setIsMulti] = useState(false);
-	const inputNameRef = useRef<HTMLInputElement>(null!);
+const FormInputCreator = ({
+	newBBCodeForm,
+	addInput,
+	updateInput,
+	removeInput,
+	reorderSelectedInputComponents
+}: FormInputCreatorProps) => {
+	const [inputComponentModalProps, setInputComponentModalProps] = useState<
+		InputComponentModalProps
+	>({
+		editMode: false,
+		visible: false
+	});
 
-	const onClickInputComponent = (inputComponent: InputComponentProps) => {
-		if (isValidInputName(inputName)) {
-			let newInputComponent: InputComponentProps = {
-				...inputComponent,
-				uniqueId: `{<${inputName}>_${
-					Math.floor(Math.random() * (9999 - 0)) + 0
-				}}`,
-				multi: isMulti,
-				label: inputName
-			};
+	const addNewInputComponent = (inputComponent: InputComponentProps) => {
+		setInputComponentModalProps({
+			editMode: false,
+			inputComponent,
+			visible: true
+		});
+	};
 
-			newInputComponent.inputs = inputComponent.inputs.map((input) => ({
-				...input,
-				uniqueId: `{<${input.type}>_${
-					Math.floor(Math.random() * (9999 - 0)) + 0
-				}}`
-			}));
+	const editInputComponent = (inputComponent: InputComponentProps) => {
+		setInputComponentModalProps({
+			editMode: true,
+			inputComponent,
+			visible: true
+		});
+	};
 
-			props.addInput(newInputComponent);
-
-			// Sanitization
-			setIsMulti(false);
-			setInputName("");
+	const handleSaveInput = (inputComponent: InputComponentProps) => {
+		inputComponent.inputs.map((input) => {
+			return input.uniqueId !== null
+				? input
+				: {
+						...input,
+						uniqueId: `{<${input.type}>_${
+							Math.floor(Math.random() * (9999 - 0)) + 0
+						}}`
+				  };
+		});
+		if (!inputComponentModalProps.editMode) {
+			// Add New
+			inputComponent.uniqueId = `{<${inputComponent.label}>_${
+				Math.floor(Math.random() * (9999 - 0)) + 0
+			}}`;
+			addInput(inputComponent);
 		} else {
-			setInputNameValid(false);
+			// Update Existing
+			updateInput(inputComponent);
 		}
+		setInputComponentModalProps({ editMode: false, visible: false });
 	};
-
-	const isValidInputName = (inputName: string) => {
-		return inputName && inputName !== "";
-	};
-
-	useEffect(() => {
-		inputNameRef.current.focus();
-
-		if (!inputNameValid) {
-			setInputNameValid(isValidInputName(inputName) as boolean);
-		}
-	}, [inputName, inputNameValid]);
 
 	return (
 		<div className="component-wrapper flex-grow-1">
@@ -222,31 +217,14 @@ const FormInputCreator = (props: FormInputCreatorProps) => {
 				<Col xs={12} sm={2} className="input-selector-container">
 					<div className="input-selector">
 						<label className="mt-1" />
-						<Form.Control
-							value={inputName}
-							onChange={(e) => setInputName(e.target.value)}
-							type="text"
-							className={`form-control ${!inputNameValid && "is-invalid"}`}
-							ref={inputNameRef}
-							placeholder="Label"
-						/>
-						<Form.Check
-							type="switch"
-							id="isMulti"
-							label="Multi"
-							checked={isMulti}
-							onChange={() => setIsMulti(!isMulti)}
-						/>
 						<div className="input-types">
 							{inputComponentChoiceList.map((inputComponent, i) => {
 								return (
 									<div key={i} className="btn-col">
-										<button
-											onClick={() => onClickInputComponent(inputComponent)}
-											type="button"
-											className="btn btn-primary">
+										<Button
+											onClick={() => addNewInputComponent(inputComponent)}>
 											{inputComponent.typeName}
-										</button>
+										</Button>
 									</div>
 								);
 							})}
@@ -259,22 +237,236 @@ const FormInputCreator = (props: FormInputCreatorProps) => {
 							<Col xs={12} md={4}>
 								<h4 className="header">Selected Inputs</h4>
 								<SortableSelectedInputComponents
-									inputComponents={props.newBBCodeForm.inputComponents}
-									removeInput={props.removeInput}
-									updateInput={props.updateInput}
-									onSortEnd={props.reorderSelectedInputComponents}
+									inputComponents={newBBCodeForm.inputComponents}
+									onSortEnd={reorderSelectedInputComponents}
+									editInputComponent={(inputComponent) => {
+										editInputComponent(inputComponent);
+									}}
 									useDragHandle
 								/>
 							</Col>
 							<Col xs={12} md={8}>
 								<h4 className="header">Preview</h4>
-								<FormPreviewer bbCodeForm={props.newBBCodeForm} />
+								<FormPreviewer bbCodeForm={newBBCodeForm} />
 							</Col>
 						</Row>
 					</Container>
 				</Col>
 			</Row>
+			{inputComponentModalProps.visible && (
+				<InputComponentModal
+					inputComponent={inputComponentModalProps.inputComponent}
+					editMode={inputComponentModalProps.editMode}
+					visible={inputComponentModalProps.visible}
+					handleSubmit={handleSaveInput}
+					deleteInput={(uniqueId: string) => {
+						removeInput(uniqueId);
+						setInputComponentModalProps({ visible: false, editMode: false });
+					}}
+					handleCancel={() =>
+						setInputComponentModalProps({
+							editMode: false,
+							visible: false
+						})
+					}
+				/>
+			)}
 		</div>
+	);
+};
+
+type InputComponentModalProps = {
+	visible: boolean;
+	inputComponent?: InputComponentProps;
+	editMode?: boolean;
+	handleCancel?: () => void;
+	handleSubmit?: (inputComponent: InputComponentProps) => void;
+	deleteInput?: (uniqueId: string) => void;
+};
+
+const InputComponentModal = ({
+	inputComponent,
+	visible,
+	editMode,
+	handleCancel,
+	handleSubmit,
+	deleteInput
+}: InputComponentModalProps) => {
+	const [label, setLabel] = useState(
+		inputComponent ? inputComponent.label : ""
+	);
+	const [description, setDescription] = useState(
+		inputComponent ? inputComponent.description : ""
+	);
+	const [defaultVal, setDefaultVal] = useState(
+		inputComponent ? inputComponent.defaultVal : ""
+	);
+	const [multi, setMulti] = useState(
+		inputComponent ? inputComponent.multi : false
+	);
+
+	const labelRef = useRef<HTMLInputElement>(null!);
+
+	const [labelValid, setLabelValid] = useState(true);
+
+	// Form Validation
+	const isValidLabel = () => {
+		return label && label !== "";
+	};
+
+	const submitForm = () => {
+		if (inputComponent === undefined) {
+			return null;
+		} else if (!isValidLabel()) {
+			setLabelValid(false);
+		} else {
+			let newInputComponent: InputComponentProps = {
+				...inputComponent,
+				label,
+				description,
+				defaultVal,
+				multi,
+				selectOptions
+			};
+
+			handleSubmit && handleSubmit(newInputComponent);
+		}
+	};
+
+	// Select Options
+	const [selectOptions, setSelectOptions] = useState(
+		inputComponent ? inputComponent.selectOptions : []
+	);
+	const updateSelectOption = (selectOption: string, index: number) => {
+		var currSelectOptions = selectOptions?.concat();
+		currSelectOptions?.splice(index, 1, selectOption);
+		setSelectOptions(currSelectOptions);
+	};
+	const addSelectOption = (startIndex: number) => {
+		// Make a copy of the current inputComponentInputs
+		var currSelectOptions = selectOptions?.concat();
+		// Insert new inputTypeItem after the item whose "+" button was clicked
+		currSelectOptions?.splice(startIndex + 1, 0, "");
+		// Update the list of components
+		setSelectOptions(currSelectOptions);
+	};
+
+	const removeSelectOption = (index: number) => {
+		var currSelectOptions = selectOptions?.concat();
+		currSelectOptions?.splice(index, 1);
+		setSelectOptions(currSelectOptions?.concat());
+	};
+
+	useEffect(() => {
+		labelRef.current.focus();
+	}, []);
+
+	useEffect(() => {
+		if (!labelValid) {
+			setLabelValid(isValidLabel() as boolean);
+			labelRef.current.focus();
+		}
+	}, [label, labelValid, isValidLabel]);
+
+	return (
+		<Modal
+			show={visible}
+			onHide={handleCancel}
+			animation={false}
+			centered
+			backdrop="static"
+			keyboard={false}>
+			<Modal.Header>
+				<Modal.Title>
+					<div style={{ overflowWrap: "anywhere" }}>{label}</div>
+					<div className="small text-muted">{inputComponent?.typeName}</div>
+				</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<Form>
+					<Form.Group>
+						<Form.Label>Label</Form.Label>
+						<Form.Control
+							value={label}
+							type="text"
+							onChange={(e) => setLabel(e.target.value)}
+							className={`form-control ${!labelValid && "is-invalid"}`}
+							ref={labelRef}
+						/>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Description</Form.Label>
+						<Form.Control
+							value={description}
+							type="text"
+							onChange={(e) => setDescription(e.target.value)}
+						/>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Default Value</Form.Label>
+						<Form.Control
+							value={defaultVal}
+							type="text"
+							onChange={(e) => setDefaultVal(e.target.value)}
+						/>
+					</Form.Group>
+					{inputComponent?.type === "dropdown" && (
+						<Form.Group>
+							<Form.Label>Options</Form.Label>
+							{selectOptions?.map((selectOption, i) => {
+								return (
+									<InputGroup key={i}>
+										{
+											<InputGroup.Prepend>
+												<InputGroup.Text>{`${i + 1}`}</InputGroup.Text>
+											</InputGroup.Prepend>
+										}
+										<FormControl
+											type="text"
+											value={selectOption}
+											onChange={(e) => updateSelectOption(e.target.value, i)}
+										/>
+										<InputGroup.Append>
+											<Button
+												onClick={() => removeSelectOption(i)}
+												disabled={selectOptions?.length === 1}>
+												<FontAwesomeIcon icon="minus" />
+											</Button>
+											<Button onClick={() => addSelectOption(i)}>
+												<FontAwesomeIcon icon="plus" />
+											</Button>
+										</InputGroup.Append>
+									</InputGroup>
+								);
+							})}
+						</Form.Group>
+					)}
+					<Form.Check
+						type="switch"
+						id="isMulti"
+						label="Multi"
+						checked={multi}
+						onChange={() => setMulti(!multi)}
+					/>
+				</Form>
+			</Modal.Body>
+			<Modal.Footer>
+				<Button
+					onClick={() =>
+						inputComponent &&
+						deleteInput &&
+						deleteInput(inputComponent.uniqueId)
+					}>
+					Delete
+				</Button>
+				<Button variant="secondary" onClick={handleCancel}>
+					Cancel
+				</Button>
+				<Button variant="primary" onClick={submitForm}>
+					{editMode ? "Save" : "Add"}
+				</Button>
+			</Modal.Footer>
+		</Modal>
 	);
 };
 

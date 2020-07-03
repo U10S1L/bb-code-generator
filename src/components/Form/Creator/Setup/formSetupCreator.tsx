@@ -3,6 +3,7 @@ import { Row, Col, InputGroup, Form, FormGroup } from "react-bootstrap";
 import Uploader from "../../../Uploader/uploader";
 import { FileRejection, DropEvent } from "react-dropzone";
 import { BBCodeFormType } from "../../../../context";
+
 type FormNameCreatorProps = {
 	val: string;
 	setVal: (name: string) => void;

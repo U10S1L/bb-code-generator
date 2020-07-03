@@ -6,8 +6,8 @@ import App from "./App";
 const rootElement = document.getElementById("root");
 
 ReactDOM.render(
-    <Router>
-        <App />
-    </Router>,
-    rootElement
+	<Router>
+		<App />
+	</Router>,
+	rootElement
 );

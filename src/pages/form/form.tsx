@@ -9,6 +9,8 @@ import { SuccessToast } from "../../components/Toast/toast";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { formatDateTime } from "../../formatters";
 import { InputComponentProps } from "../../types/form";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useHistory } from "react-router-dom";
 
 type FormParams = {
 	slug: string;
@@ -18,6 +20,7 @@ type FormProps = RouteComponentProps<FormParams>;
 
 const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	const { state, dispatch } = useContext(AppContext);
+	let history = useHistory();
 
 	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType>(
 		state.forms.find((form) => form.slug === match.params.slug) || {
@@ -65,8 +68,9 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 				inputComponentVal = inputComponent.inputs[0].val;
 			}
 
+			const regexpForUniqueId = new RegExp(inputComponent.uniqueId, "g");
 			generatedBBCode = generatedBBCode.replace(
-				inputComponent.uniqueId,
+				regexpForUniqueId,
 				inputComponentVal
 			);
 		});
@@ -91,6 +95,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	const deleteBBCodeForm = () => {
 		// TODO: Some kind of warning like you can't undo this. And then navigate to home page
 		dispatch({ type: Types.DeleteForm, payload: bbCodeForm });
+		history.push("/forms/list");
 	};
 
 	const exportBBCodeForm = () => {

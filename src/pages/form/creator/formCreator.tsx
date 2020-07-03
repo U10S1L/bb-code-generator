@@ -141,7 +141,6 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		}
 	};
 	const updateSelectedInputComponent = (
-		oldInputComponent: InputComponentProps,
 		newInputComponent: InputComponentProps
 	): void => {
 		setBBCodeForm({
@@ -156,10 +155,13 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	const removeSelectedInputComponent = (
 		selectedInputComponentUniqueId: string
 	) => {
+		var regexpSelectedInputComponentUniqueId = new RegExp(
+			selectedInputComponentUniqueId,
+			"g"
+		);
 		var newMatchedBBCode = bbCodeForm.matchedBBCode
 			.slice()
-			.replace(selectedInputComponentUniqueId, "");
-		console.log(newMatchedBBCode);
+			.replace(regexpSelectedInputComponentUniqueId, "");
 
 		setBBCodeForm({
 			...bbCodeForm,

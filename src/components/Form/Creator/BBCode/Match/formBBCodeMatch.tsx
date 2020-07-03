@@ -81,6 +81,15 @@ const FormBBCodeMatch = ({
 															}>
 															<FontAwesomeIcon icon="search" />
 														</Button>
+														<CopyToClipboard
+															text={inputComponent.uniqueId}
+															onCopy={() =>
+																SuccessToast("Unique ID Copied to Clipboard")
+															}>
+															<Button variant="light">
+																<FontAwesomeIcon icon="clipboard" />
+															</Button>
+														</CopyToClipboard>
 													</Card.Text>
 												</Card.Body>
 											</Card>

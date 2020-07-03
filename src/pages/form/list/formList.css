@@ -1,0 +1,12 @@
+.form-element {
+	display: flex;
+	margin-bottom: 1rem;
+}
+
+.form-element .card {
+	width: 100%;
+}
+.form-element-go-button {
+	display: flex;
+	align-items: center;
+}

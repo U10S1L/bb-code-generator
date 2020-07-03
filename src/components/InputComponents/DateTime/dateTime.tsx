@@ -8,7 +8,6 @@ export const DateTime = ({
 	val,
 	setVal
 }: InputTypeProps) => {
-	console.log(val);
 	return (
 		<Form.Control
 			type="datetime-local"

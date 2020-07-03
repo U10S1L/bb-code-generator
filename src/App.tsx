@@ -18,10 +18,12 @@ import {
 	faCheck,
 	faEye,
 	faArrowLeft,
+	faArrowRight,
 	faBars,
 	faPlus,
 	faMinus,
-	faSearch
+	faSearch,
+	faDownload
 } from "@fortawesome/free-solid-svg-icons";
 import SwitchRoutes from "./SwitchRoutes";
 
@@ -34,10 +36,12 @@ library.add(
 	faCheck,
 	faEye,
 	faArrowLeft,
+	faArrowRight,
 	faBars,
 	faPlus,
 	faMinus,
-	faSearch
+	faSearch,
+	faDownload
 );
 
 const App = () => {

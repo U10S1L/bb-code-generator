@@ -24,6 +24,7 @@
     "@types/react-router-dom": "5.1.5",
     "array-move": "2.2.2",
     "bootstrap": "4.5.0",
+    "fuse.js": "^6.4.0",
     "jquery": "3.5.1",
     "npm-check": "^5.9.2",
     "react": "16.13.1",

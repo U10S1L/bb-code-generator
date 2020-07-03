@@ -4,6 +4,7 @@ import LongText from "./LongText/longText";
 import Number from "./Number/number";
 import { InputTypeProps } from "../../types/form";
 import { DateTime } from "./DateTime/dateTime";
+import { Dropdown } from "./Dropdown/dropdown";
 
 const InputType = (props: InputTypeProps) => {
 	switch (props.type) {
@@ -15,6 +16,8 @@ const InputType = (props: InputTypeProps) => {
 			return <Number {...props} />;
 		case "dateTime":
 			return <DateTime {...props} />;
+		case "dropdown":
+			return <Dropdown {...props} />;
 	}
 };
 export default InputType;
