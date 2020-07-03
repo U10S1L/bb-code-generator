@@ -11,9 +11,9 @@ export const Checkbox = ({
 	const boolValue = val === "true" ? true : false;
 	return (
 		<Form.Check
-			checked={val == "true"}
+			checked={val === "true"}
 			onChange={() => {
-				setVal && setVal(boolValue == true ? "false" : "true");
+				setVal && setVal(boolValue === true ? "false" : "true");
 			}}
 			placeholder={placeholder}
 			readOnly={readOnly}></Form.Check>
