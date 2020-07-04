@@ -71,7 +71,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 		);
 
 		const { matchedBBCode } = bbCodeForm;
-		var generatedBBCode: string = matchedBBCode;
+		var generatedBBCode: string = matchedBBCode.concat();
 
 		// Format Vals if Necessary
 		inputComponents.forEach((inputComponent) => {
@@ -106,7 +106,12 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 						: "";
 			}
 
-			const regexpForUniqueId = new RegExp(inputComponent.uniqueId, "g");
+			// Creates a regex pattern to find the unique Id. Takes care to escape all special regex characters
+			var regexpForUniqueId = new RegExp(
+				inputComponent.uniqueId.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"),
+				"g"
+			);
+
 			generatedBBCode = generatedBBCode.replace(
 				regexpForUniqueId,
 				inputComponentVal
