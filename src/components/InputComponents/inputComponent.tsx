@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Form, InputGroup, Button } from "react-bootstrap";
+import { Form, InputGroup, Button } from "react-bootstrap";
 import { InputComponentProps, InputTypeProps } from "../../types/form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputType from "../InputComponents/inputType";
