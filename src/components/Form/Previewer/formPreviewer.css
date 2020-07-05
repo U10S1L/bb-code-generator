@@ -1,8 +1,14 @@
-.preview-wrapper {
-    opacity: 0.45;
-    cursor: not-allowed;
+.preview-input-component {
+	display: flex;
+	align-items: flex-end;
+	margin-bottom: 1rem;
 }
 
 .form-renderer.preview * {
-    pointer-events: none;
+	pointer-events: none;
+	opacity: 0.75;
+}
+
+.form-renderer.preview .form-group {
+	margin-bottom: 0;
 }

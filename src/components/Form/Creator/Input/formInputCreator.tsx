@@ -13,11 +13,6 @@ import {
 	Modal,
 	FormControl
 } from "react-bootstrap";
-import {
-	SortableContainer,
-	SortableElement,
-	SortableHandle
-} from "react-sortable-hoc";
 import FormPreviewer from "../../Previewer/formPreviewer";
 import { BBCodeFormType } from "../../../../context";
 import InputType from "../../../InputComponents/inputType";
@@ -129,71 +124,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	}
 ];
 
-const DragHandle = SortableHandle(() => (
-	<div className="drag-handle">
-		<FontAwesomeIcon icon="bars" />
-	</div>
-));
-
-type SelectedInputComponentProps = {
-	inputComponent: InputComponentProps;
-	editInputComponent: (inputComponent: InputComponentProps) => void;
-};
-const SelectedInputComponent = SortableElement(
-	({ inputComponent, editInputComponent }: SelectedInputComponentProps) => {
-		return (
-			<Card className="selected-input-component">
-				<Card.Body>
-					<Card.Title className="title">
-						<InputGroup>
-							<div style={{ overflowWrap: "anywhere" }}>
-								{inputComponent.label}
-							</div>
-						</InputGroup>
-					</Card.Title>
-					<Card.Subtitle className="type-text text-muted">
-						{inputComponent.typeName}
-						{inputComponent.multi ? " (Multi)" : null}
-					</Card.Subtitle>
-				</Card.Body>
-				<Card.Footer className="footer">
-					<DragHandle />
-					<Button onClick={() => editInputComponent(inputComponent)}>
-						<FontAwesomeIcon icon={"edit"} />
-					</Button>
-				</Card.Footer>
-			</Card>
-		);
-	}
-);
-
-type SortableSelectedInputComponentsProps = {
-	inputComponents: InputComponentProps[];
-	editInputComponent: (inputComponent: InputComponentProps) => void;
-};
-const SortableSelectedInputComponents = SortableContainer(
-	({
-		inputComponents,
-		editInputComponent
-	}: SortableSelectedInputComponentsProps) => {
-		return (
-			<ul>
-				{inputComponents &&
-					inputComponents.map((inputComponent, index) => (
-						<SelectedInputComponent
-							index={index}
-							key={index}
-							inputComponent={inputComponent}
-							editInputComponent={(inputComponent) =>
-								editInputComponent(inputComponent)
-							}
-						/>
-					))}
-			</ul>
-		);
-	}
-);
-
 type FormInputCreatorProps = {
 	newBBCodeForm: BBCodeFormType;
 	addInput: (inputType: InputComponentProps) => void;
@@ -259,47 +189,37 @@ const FormInputCreator = ({
 	};
 
 	return (
-		<div className="component-wrapper flex-grow-1">
-			<Row className="flex-grow-1">
-				<Col xs={12} sm={2} className="input-selector-container">
-					<div className="input-selector">
-						<label className="mt-1" />
-						<div className="input-types">
-							{inputComponentChoiceList.map((inputComponent, i) => {
-								return (
-									<div key={i} className="btn-col">
-										<Button
-											onClick={() => addNewInputComponent(inputComponent)}>
-											{inputComponent.typeName}
-										</Button>
-									</div>
-								);
-							})}
-						</div>
+		<Row>
+			<Col xs={12} sm={2} className="input-selector-container">
+				<h4 className="header">Input Types</h4>
+				<div className="input-selector">
+					<label className="mt-1" />
+					<div className="input-types">
+						{inputComponentChoiceList.map((inputComponent, i) => {
+							return (
+								<div key={i} className="btn-col">
+									<Button onClick={() => addNewInputComponent(inputComponent)}>
+										{inputComponent.typeName}
+									</Button>
+								</div>
+							);
+						})}
 					</div>
-				</Col>
-				<Col xs={12} sm={10}>
-					<Container fluid>
-						<Row>
-							<Col xs={12} md={4}>
-								<h4 className="header">Selected Inputs</h4>
-								<SortableSelectedInputComponents
-									inputComponents={newBBCodeForm.inputComponents}
-									onSortEnd={reorderSelectedInputComponents}
-									editInputComponent={(inputComponent) => {
-										editInputComponent(inputComponent);
-									}}
-									useDragHandle
-								/>
-							</Col>
-							<Col xs={12} md={8}>
-								<h4 className="header">Preview</h4>
-								<FormPreviewer bbCodeForm={newBBCodeForm} />
-							</Col>
-						</Row>
-					</Container>
-				</Col>
-			</Row>
+				</div>
+			</Col>
+			<Col xs={12} sm={10}>
+				<Container fluid>
+					<h4 className="header">Form Preview</h4>
+					<FormPreviewer
+						bbCodeForm={newBBCodeForm}
+						onReorderSelectedInputComponent={reorderSelectedInputComponents}
+						onEditSelectedInputComponent={(inputComponent) =>
+							editInputComponent(inputComponent)
+						}
+					/>
+				</Container>
+			</Col>
+
 			{inputComponentModalProps.visible && (
 				<InputComponentModal
 					inputComponent={inputComponentModalProps.inputComponent}
@@ -318,7 +238,7 @@ const FormInputCreator = ({
 					}
 				/>
 			)}
-		</div>
+		</Row>
 	);
 };
 
@@ -330,7 +250,6 @@ type InputComponentModalProps = {
 	handleSubmit?: (inputComponent: InputComponentProps) => void;
 	deleteInput?: (uniqueId: string) => void;
 };
-
 const InputComponentModal = ({
 	inputComponent,
 	visible,

@@ -36,8 +36,9 @@ type UploaderProps = {
 		fileRejections: FileRejection[],
 		event: DropEvent
 	) => void;
+	styles?: React.CSSProperties;
 };
-const Uploader = ({ onDrop }: UploaderProps) => {
+const Uploader = ({ onDrop, styles }: UploaderProps) => {
 	const {
 		getRootProps,
 		getInputProps,
@@ -54,11 +55,12 @@ const Uploader = ({ onDrop }: UploaderProps) => {
 	const dropzoneStyle = useMemo(
 		() => ({
 			...baseStyle,
+			...styles,
 			...(isDragActive ? activeStyle : {}),
 			...(isDragAccept ? acceptStyle : {}),
 			...(isDragReject ? rejectStyle : {})
 		}),
-		[isDragActive, isDragReject, isDragAccept]
+		[isDragActive, isDragReject, isDragAccept, styles]
 	);
 
 	return (

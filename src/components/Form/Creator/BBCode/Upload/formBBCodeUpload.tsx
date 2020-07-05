@@ -19,23 +19,21 @@ const FormBBCodeUpload = ({
 		}
 	});
 	return (
-		<div className="component-wrapper flex-grow-1">
-			<Row className="flex-grow-1">
-				<Col xs={12}>
-					<Container className="h-100">
-						<Row className="h-100">
-							<TextAreaAutosize
-								className="form-control"
-								value={rawBBCode}
-								onChange={(e) => setRawBBCode(e.target.value)}
-								ref={rawBBCodeRef}
-								style={{ margin: "1rem 0" }}
-							/>
-						</Row>
-					</Container>
-				</Col>
-			</Row>
-		</div>
+		<Row>
+			<Col xs={12}>
+				<Container className="h-100">
+					<Row className="h-100">
+						<TextAreaAutosize
+							className="form-control"
+							value={rawBBCode}
+							onChange={(e) => setRawBBCode(e.target.value)}
+							ref={rawBBCodeRef}
+							style={{ margin: "1rem 0" }}
+						/>
+					</Row>
+				</Container>
+			</Col>
+		</Row>
 	);
 };
 

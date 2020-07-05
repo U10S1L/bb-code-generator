@@ -21,10 +21,6 @@ body {
 }
 
 /* Page Layout */
-.component-wrapper {
-	display: flex;
-	flex-direction: column;
-}
 .header {
 	display: flex;
 	align-items: center;
@@ -51,59 +47,6 @@ body {
 }
 
 /* Theme Colors */
-.bg-primary {
-	background-color: #1c2a3d;
-}
-.bg-info {
-	background-color: #c5c5c5 !important;
-}
-/* Buttons */
-.btn.btn-default {
-	background-color: #1c2a3d;
-	color: #eeeeee;
-	font-weight: bold;
-	text-shadow: none;
-	background-image: none;
-	float: none;
-	border-radius: 0;
-}
-.btn.btn-primary {
-	background-color: #033389;
-	color: #eeeeee;
-	font-weight: bold;
-	text-shadow: none;
-	background-image: none;
-	border: 0;
-	float: none;
-	border-radius: 0;
-}
-
-.btn.btn-primary:hover {
-	background-color: #002567;
-}
-
-.btn.btn-info {
-	background-color: #0ead8e;
-	font-weight: bold;
-	text-shadow: none;
-	background-image: none;
-	border-radius: 0;
-	border: 0;
-	float: none;
-}
-.btn.btn-info:hover {
-	background-color: #0c9076;
-}
-
-.btn.btn-danger {
-	background-color: #a90000;
-	border-radius: 0;
-	font-weight: bold;
-	text-shadow: none;
-	color: #eeeeee;
-	background-image: none;
-	border: 0;
-}
 
 .drag-handle {
 	cursor: pointer;

@@ -16,7 +16,8 @@ export enum Types {
 	UpdateForms = "UPDATE_FORMS",
 	AddForm = "ADD_FORM",
 	UpdateForm = "UPDATE_FORM",
-	DeleteForm = "DELETE_FORM"
+	DeleteForm = "DELETE_FORM",
+	DeleteAllForms = "DELETE_ALL_FORMS"
 }
 
 // Payloads
@@ -25,6 +26,7 @@ type FormsPayload = {
 	[Types.AddForm]: BBCodeFormType;
 	[Types.UpdateForm]: BBCodeFormType;
 	[Types.DeleteForm]: BBCodeFormType;
+	[Types.DeleteAllForms]: null;
 };
 
 // Actions
@@ -52,7 +54,8 @@ export const formsReducer = (
 			return state.filter(
 				(bbCodeForm) => bbCodeForm.uniqueId !== action.payload.uniqueId
 			);
-
+		case Types.DeleteAllForms:
+			return [];
 		default:
 			return state;
 	}

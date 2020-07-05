@@ -1,13 +1,15 @@
 import "./settings.css";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AppContext } from "../../context";
 import { Types } from "../../reducers";
 import { Row, Col, Button } from "react-bootstrap";
 import { DropEvent, FileRejection } from "react-dropzone";
 import Uploader from "../../components/Uploader/uploader";
+import StandardModal from "../../components/Modals/standardModal";
 
 const Settings = () => {
 	const { state, dispatch } = useContext(AppContext);
+	const [clearDataWarningVisible, setClearDataWarningVisible] = useState(false);
 
 	const exportState = () => {
 		var dataStr =
@@ -42,30 +44,45 @@ const Settings = () => {
 		});
 	};
 
+	const clearAllData = () => {
+		dispatch({ type: Types.DeleteAllForms, payload: null });
+		setClearDataWarningVisible(false);
+		localStorage.clear();
+	};
+
 	return (
-		<div className="component-wrapper flex-grow-1">
-			<Row>
-				<Col xs={12}>
-					<h3 className="header">Settings</h3>
-				</Col>
-			</Row>
-			<Row className="flex-grow-1">
-				<Col xs={12}>
-					<h4>Forms</h4>
-					<Row>
-						<Col xs={4}>
-							<Button onClick={() => exportState()}>Download</Button>
-						</Col>
-						<Col xs={4}>
-							<Uploader onDrop={onDrop} />
-						</Col>
-						<Col xs={4}>
-							<Button variant="danger">Clear All Data</Button>
-						</Col>
-					</Row>
-				</Col>
-			</Row>
-		</div>
+		<Row>
+			<Col xs={12}>
+				<h3 className="header">Settings</h3>
+			</Col>
+			<Col xs={12}>
+				<h4>Forms</h4>
+				<Row>
+					<Col xs={4}>
+						<Button onClick={() => exportState()}>Download</Button>
+					</Col>
+					<Col xs={4}>
+						<Uploader onDrop={onDrop} />
+					</Col>
+					<Col xs={4}>
+						<Button
+							variant="danger"
+							onClick={() => setClearDataWarningVisible(true)}>
+							Clear All Data
+						</Button>
+					</Col>
+				</Row>
+			</Col>
+			<StandardModal
+				visible={clearDataWarningVisible}
+				handleClose={() => setClearDataWarningVisible(false)}
+				handleContinue={clearAllData}
+				title="WARNING"
+				message="This will erase ALL cached data. You should probably only be doing this if something broke due to a bug. Consider exporting your existing data first."
+				closeBtnText="Cancel"
+				continueBtnText="Erase ALL Data"
+			/>
+		</Row>
 	);
 };
 

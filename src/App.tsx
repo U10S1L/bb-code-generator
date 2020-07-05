@@ -1,3 +1,4 @@
+import "./custom2.css";
 import "./styles.css";
 
 // import "./bootstrap-flatly.css";

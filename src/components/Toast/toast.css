@@ -1,0 +1,19 @@
+.Toastify__toast-container {
+	width: 320px;
+}
+.Toastify__toast--default {
+	background: #1c2a3d !important;
+	color: #fff !important;
+}
+.Toastify__toast--info {
+	background: #2a6088 !important;
+}
+.Toastify__toast--success {
+	background: #20c997 !important;
+}
+.Toastify__toast--warning {
+	background: #edd290 !important;
+}
+.Toastify__toast--error {
+	background: #bd3f5d !important;
+}

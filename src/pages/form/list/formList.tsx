@@ -70,20 +70,18 @@ const FormList = () => {
 	};
 
 	return (
-		<div className="component-wrapper flex-grow-1">
-			<Row className="flex-grow-1">
-				<Col xs={12}>
-					<h3 className="header">Forms</h3>
-				</Col>
-				<Col xs={12}>
-					<SortableFormContainer
-						useDragHandle
-						onSortEnd={reorderForms}
-						forms={state.forms}
-					/>
-				</Col>
-			</Row>
-		</div>
+		<Row>
+			<Col xs={12}>
+				<h3 className="header">Forms</h3>
+			</Col>
+			<Col xs={12}>
+				<SortableFormContainer
+					useDragHandle
+					onSortEnd={reorderForms}
+					forms={state.forms}
+				/>
+			</Col>
+		</Row>
 	);
 };
 

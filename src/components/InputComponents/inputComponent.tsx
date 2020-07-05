@@ -42,45 +42,43 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	};
 
 	return (
-		<Form.Group as={Row}>
-			<Form.Label column xs={3}>
+		<Form.Group>
+			<Form.Label>
 				{label}
 				<div className="small text-muted">{description}</div>
 			</Form.Label>
-			<Col xs={9}>
-				{inputs.map((inputType, i) => {
-					const canAddInput = multi;
-					const canRemoveInput = multi && inputs.length !== 1;
+			{inputs.map((inputType, i) => {
+				const canAddInput = multi;
+				const canRemoveInput = multi && inputs.length !== 1;
 
-					return (
-						<InputGroup key={i}>
-							{multi && (
-								<InputGroup.Prepend>
-									<InputGroup.Text>{`${i + 1}`}</InputGroup.Text>
-								</InputGroup.Prepend>
-							)}
-							<InputType
-								{...inputType}
-								setVal={(val: any) => updateInput(i, val)}
-								selectOptions={selectOptions}
-								type={type}
-							/>
-							<InputGroup.Append hidden={!multi}>
-								<Button
-									onClick={() => removeInput(inputType)}
-									disabled={!canRemoveInput}>
-									<FontAwesomeIcon icon="minus" />
-								</Button>
-								<Button
-									onClick={() => addNewInput(inputType, i)}
-									disabled={!canAddInput}>
-									<FontAwesomeIcon icon="plus" />
-								</Button>
-							</InputGroup.Append>
-						</InputGroup>
-					);
-				})}
-			</Col>
+				return (
+					<InputGroup key={i}>
+						{multi && (
+							<InputGroup.Prepend>
+								<InputGroup.Text>{`${i + 1}`}</InputGroup.Text>
+							</InputGroup.Prepend>
+						)}
+						<InputType
+							{...inputType}
+							setVal={(val: any) => updateInput(i, val)}
+							selectOptions={selectOptions}
+							type={type}
+						/>
+						<InputGroup.Append hidden={!multi}>
+							<Button
+								onClick={() => removeInput(inputType)}
+								disabled={!canRemoveInput}>
+								<FontAwesomeIcon icon="minus" />
+							</Button>
+							<Button
+								onClick={() => addNewInput(inputType, i)}
+								disabled={!canAddInput}>
+								<FontAwesomeIcon icon="plus" />
+							</Button>
+						</InputGroup.Append>
+					</InputGroup>
+				);
+			})}
 		</Form.Group>
 	);
 };

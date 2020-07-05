@@ -34,82 +34,80 @@ const FormBBCodeMatch = ({
 	};
 
 	return (
-		<div className="component-wrapper flex-grow-1">
-			<Row className="flex-grow-1">
-				<Col xs={12}>
-					<Container className="h-100">
-						<Row className="h-100">
-							<Col xs={4}>
-								<h5>Not Matched</h5>
-								{selectedInputComponents.map((inputComponent, i) => {
-									return (
-										!inputComponentIsMatched(inputComponent.uniqueId) && (
-											<Card key={i}>
-												<Card.Body>
-													<Card.Title>{inputComponent.label}</Card.Title>
-													<Card.Text>
-														<CopyToClipboard
-															text={inputComponent.uniqueId}
-															onCopy={() =>
-																SuccessToast("Unique ID Copied to Clipboard")
-															}>
-															<Button variant="light">
-																<FontAwesomeIcon icon="clipboard" />
-															</Button>
-														</CopyToClipboard>
-													</Card.Text>
-												</Card.Body>
-											</Card>
-										)
-									);
-								})}
-								<hr />
-								<h5>Matched</h5>
-								{selectedInputComponents.map((inputComponent, i) => {
-									return (
-										inputComponentIsMatched(inputComponent.uniqueId) && (
-											<Card key={i}>
-												<Card.Body>
-													<Card.Title>{inputComponent.label}</Card.Title>
-													<Card.Text>
-														<Button
-															variant="light"
-															onClick={() =>
-																goToUniqueIDInMatchedBBCode(
-																	inputComponent.uniqueId
-																)
-															}>
-															<FontAwesomeIcon icon="search" />
+		<Row>
+			<Col xs={12}>
+				<Container className="h-100">
+					<Row className="h-100">
+						<Col xs={4}>
+							<h5>Not Matched</h5>
+							{selectedInputComponents.map((inputComponent, i) => {
+								return (
+									!inputComponentIsMatched(inputComponent.uniqueId) && (
+										<Card key={i}>
+											<Card.Body>
+												<Card.Title>{inputComponent.label}</Card.Title>
+												<Card.Text>
+													<CopyToClipboard
+														text={inputComponent.uniqueId}
+														onCopy={() =>
+															SuccessToast("Unique ID Copied to Clipboard")
+														}>
+														<Button variant="light">
+															<FontAwesomeIcon icon="clipboard" />
 														</Button>
-														<CopyToClipboard
-															text={inputComponent.uniqueId}
-															onCopy={() =>
-																SuccessToast("Unique ID Copied to Clipboard")
-															}>
-															<Button variant="light">
-																<FontAwesomeIcon icon="clipboard" />
-															</Button>
-														</CopyToClipboard>
-													</Card.Text>
-												</Card.Body>
-											</Card>
-										)
-									);
-								})}
-							</Col>
-							<Col xs={8}>
-								<TextAreaAutosize
-									ref={matchedBBCodeRef}
-									className="form-control h-100"
-									value={matchedBBCode}
-									onChange={(e) => setMatchedBBCode(e.target.value)}
-								/>
-							</Col>
-						</Row>
-					</Container>
-				</Col>
-			</Row>
-		</div>
+													</CopyToClipboard>
+												</Card.Text>
+											</Card.Body>
+										</Card>
+									)
+								);
+							})}
+							<hr />
+							<h5>Matched</h5>
+							{selectedInputComponents.map((inputComponent, i) => {
+								return (
+									inputComponentIsMatched(inputComponent.uniqueId) && (
+										<Card key={i}>
+											<Card.Body>
+												<Card.Title>{inputComponent.label}</Card.Title>
+												<Card.Text>
+													<Button
+														variant="light"
+														onClick={() =>
+															goToUniqueIDInMatchedBBCode(
+																inputComponent.uniqueId
+															)
+														}>
+														<FontAwesomeIcon icon="search" />
+													</Button>
+													<CopyToClipboard
+														text={inputComponent.uniqueId}
+														onCopy={() =>
+															SuccessToast("Unique ID Copied to Clipboard")
+														}>
+														<Button variant="light">
+															<FontAwesomeIcon icon="clipboard" />
+														</Button>
+													</CopyToClipboard>
+												</Card.Text>
+											</Card.Body>
+										</Card>
+									)
+								);
+							})}
+						</Col>
+						<Col xs={8}>
+							<TextAreaAutosize
+								ref={matchedBBCodeRef}
+								className="form-control h-100"
+								value={matchedBBCode}
+								onChange={(e) => setMatchedBBCode(e.target.value)}
+							/>
+						</Col>
+					</Row>
+				</Container>
+			</Col>
+		</Row>
 	);
 };
 

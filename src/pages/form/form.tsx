@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useCallback } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import FormRenderer from "../../components/Form/Renderer/formRenderer";
 import { AppContext, BBCodeFormType } from "../../context";
-import { Button } from "react-bootstrap";
+import { Row, Col, Button, ButtonGroup } from "react-bootstrap";
 import FormCreator from "./creator/formCreator";
 import { Types } from "../../reducers";
 import { SuccessToast } from "../../components/Toast/toast";
@@ -10,6 +10,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import { formatDateTime, formatDate, formatUrl } from "../../formatters";
 import { InputComponentProps } from "../../types/form";
 import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import StandardModal from "../../components/Modals/standardModal";
 
 type FormParams = {
 	slug: string;
@@ -17,6 +19,11 @@ type FormParams = {
 type FormProps = RouteComponentProps<FormParams>;
 const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	const { state, dispatch } = useContext(AppContext);
+	const [pageModal, setPageModal] = useState<{
+		message: string;
+		visible: boolean;
+		continueAction: () => void;
+	}>();
 	let history = useHistory();
 
 	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType>(
@@ -191,36 +198,78 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	}, [bbCodeForm, formProgressString]);
 
 	return !editMode ? (
-		<div>
-			<div className="header">
-				<h3>{bbCodeForm.name}</h3>
+		<Row>
+			<Col xs={12}>
+				<div className="header">
+					<h3 className="mr-auto ml-0">{bbCodeForm.name}</h3>
+					<ButtonGroup>
+						<Button
+							variant="warning"
+							onClick={() =>
+								setPageModal({
+									visible: true,
+									continueAction: () => setBBCodeForm(getOriginalBBCodeForm),
+									message:
+										"This will erase the values in all of the form fields. Do you want to continue?"
+								})
+							}>
+							Clear Progress
+						</Button>
+						<Button
+							variant="secondary"
+							onClick={() =>
+								setPageModal({
+									visible: true,
+									continueAction: () => editBBCodeForm(),
+									message:
+										"Editing the form will erase values in all of the form fields. Do you want to continue?"
+								})
+							}>
+							Edit Form
+						</Button>
+						<Button variant="danger" onClick={() => deleteBBCodeForm()}>
+							Delete Form
+						</Button>
+					</ButtonGroup>
+				</div>
+			</Col>
+			<Col xs={12}>
+				<FormRenderer
+					bbCodeForm={bbCodeForm}
+					onUpdateBBCodeForm={(updatedBBCodeForm) =>
+						setBBCodeForm(updatedBBCodeForm)
+					}
+				/>
+			</Col>
+			<Col xs={12}>
+				<CopyToClipboard
+					text={generateBBCode()}
+					onCopy={() => SuccessToast("BBCode Copied To Clipboard")}>
+					<Button variant="info">Generate BBCode</Button>
+				</CopyToClipboard>
 				<Button
-					className="ml-auto"
-					variant="info"
-					onClick={() => editBBCodeForm()}>
-					Edit Form
+					variant="primary"
+					style={{ float: "right" }}
+					onClick={() => exportBBCodeForm()}>
+					<FontAwesomeIcon icon="download" /> Export
 				</Button>
-				<Button variant="danger" onClick={() => deleteBBCodeForm()}>
-					Delete Form
-				</Button>
-				<Button onClick={() => exportBBCodeForm()}>Export</Button>
-				<Button onClick={() => setBBCodeForm(getOriginalBBCodeForm())}>
-					Clear Stored Form Progress
-				</Button>
-			</div>
-
-			<FormRenderer
-				bbCodeForm={bbCodeForm}
-				onUpdateBBCodeForm={(updatedBBCodeForm) =>
-					setBBCodeForm(updatedBBCodeForm)
+			</Col>
+			<StandardModal
+				visible={pageModal?.visible || false}
+				handleClose={() =>
+					setPageModal({
+						visible: false,
+						continueAction: () => null,
+						message: ""
+					})
 				}
+				handleContinue={pageModal?.continueAction}
+				message={pageModal?.message}
+				title="Warning"
+				closeBtnText="Cancel"
+				continueBtnText="Continue"
 			/>
-			<CopyToClipboard
-				text={generateBBCode()}
-				onCopy={() => SuccessToast("BBCode Copied To Clipboard")}>
-				<Button>Generate BBCode</Button>
-			</CopyToClipboard>
-		</div>
+		</Row>
 	) : (
 		<FormCreator editMode={true} saveEdits={saveEdits} />
 	);

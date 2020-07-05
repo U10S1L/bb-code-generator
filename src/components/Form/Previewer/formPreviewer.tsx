@@ -1,26 +1,115 @@
 import "./formPreviewer.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BBCodeFormType } from "../../../context";
 import InputComponent from "../../InputComponents/inputComponent";
 import { Form, Button } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { InputComponentProps } from "../../../types/form";
+import { Row, Col } from "react-bootstrap";
+import {
+	SortableContainer,
+	SortableElement,
+	SortableHandle
+} from "react-sortable-hoc";
 
-type FormRendererProps = {
-    bbCodeForm: BBCodeFormType;
+type SelectedInputComponentProps = {
+	inputComponent: InputComponentProps;
+	editInputComponent: () => void;
+};
+type SortableSelectedInputComponentsProps = {
+	inputComponents: InputComponentProps[];
+	editInputComponent: (inputComponent: InputComponentProps) => void;
+};
+type FormPreviewerProps = {
+	bbCodeForm: BBCodeFormType;
+	onReorderSelectedInputComponent: (sortObject: {
+		oldIndex: number;
+		newIndex: number;
+	}) => void;
+	onEditSelectedInputComponent: (inputComponent: InputComponentProps) => void;
 };
 
-const FormRenderer = ({ bbCodeForm }: FormRendererProps) => {
-    return (
-        <div className="preview-wrapper">
-            <Form className="form-renderer preview">
-                <h4>{bbCodeForm.name}</h4>
-                {bbCodeForm.inputComponents != null &&
-                    bbCodeForm.inputComponents.map((inputComponent, i) => {
-                        return <InputComponent {...inputComponent} key={i} />;
-                    })}
-                <Button block>Generate BBCode</Button>
-            </Form>
-        </div>
-    );
+const DragHandle = SortableHandle(() => (
+	<div className="drag-handle">
+		<FontAwesomeIcon icon="bars" />
+	</div>
+));
+const SelectedInputComponent = SortableElement(
+	({ inputComponent, editInputComponent }: SelectedInputComponentProps) => {
+		return (
+			<Row className="preview-input-component">
+				<Col xs={1}>
+					<DragHandle />
+				</Col>
+				<Col xs={10}>
+					<div className="form-renderer preview">
+						<InputComponent {...inputComponent} />
+					</div>
+				</Col>
+				<Col xs={1}>
+					<Button onClick={editInputComponent}>
+						<FontAwesomeIcon icon={"edit"} />
+					</Button>
+				</Col>
+			</Row>
+		);
+	}
+);
+
+const SortableSelectedInputComponents = SortableContainer(
+	({
+		inputComponents,
+		editInputComponent
+	}: SortableSelectedInputComponentsProps) => {
+		return (
+			<ul>
+				{inputComponents &&
+					inputComponents.map((inputComponent, index) => (
+						<SelectedInputComponent
+							inputComponent={inputComponent}
+							index={index}
+							key={index}
+							editInputComponent={() => editInputComponent(inputComponent)}
+						/>
+					))}
+			</ul>
+		);
+	}
+);
+const FormPreviewer = ({
+	bbCodeForm,
+	onReorderSelectedInputComponent,
+	onEditSelectedInputComponent
+}: FormPreviewerProps) => {
+	const [bbCodeFormPreview, setBBCodeFormPreview] = useState(bbCodeForm);
+	useEffect(() => {
+		var bbCodeFormWithDefaults = {
+			...bbCodeForm,
+			inputComponents: bbCodeForm.inputComponents.map((inputComponent) => {
+				return {
+					...inputComponent,
+					inputs: inputComponent.inputs.map((input) => {
+						return {
+							...input,
+							val: inputComponent.defaultVal
+						};
+					})
+				};
+			})
+		};
+		setBBCodeFormPreview(bbCodeFormWithDefaults);
+	}, [bbCodeForm]);
+	return (
+		<Form>
+			<h4>{bbCodeFormPreview.name}</h4>
+			<SortableSelectedInputComponents
+				inputComponents={bbCodeFormPreview.inputComponents}
+				onSortEnd={onReorderSelectedInputComponent}
+				editInputComponent={onEditSelectedInputComponent}
+				useDragHandle
+			/>
+		</Form>
+	);
 };
 
-export default FormRenderer;
+export default FormPreviewer;
