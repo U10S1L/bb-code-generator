@@ -17,33 +17,32 @@ const Help = (props: Props) => {
 		<OverlayTrigger
 			rootClose
 			trigger="click"
-			placement="left-start"
 			overlay={
 				<Card
 					bg="dark"
 					text="white"
 					style={{
-						position: "fixed",
-						width: "50%",
+						width: "75%",
 						height: "80%",
 						overflowY: "auto",
 						border: "5px solid gray",
-						padding: "1rem"
+						padding: "1rem",
+						zIndex: 9999
 					}}>
 					<Card.Title dangerouslySetInnerHTML={htmlTitle()} />
 					<Card.Body dangerouslySetInnerHTML={htmlText()} />
 				</Card>
 			}>
 			<Button
-				variant="info"
+				variant="success"
 				style={{
 					position: "fixed",
-					bottom: 0,
-					right: 0,
-					zIndex: 1,
-					borderRadius: ".5"
+					bottom: 10,
+					right: 10,
+					zIndex: 9999,
+					fontWeight: "bold"
 				}}>
-				Help
+				?
 			</Button>
 		</OverlayTrigger>
 	);

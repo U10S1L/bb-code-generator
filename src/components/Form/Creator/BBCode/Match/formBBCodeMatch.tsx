@@ -36,10 +36,10 @@ const FormBBCodeMatch = ({
 	return (
 		<Row>
 			<Col xs={12}>
-				<Container className="h-100">
-					<Row className="h-100">
+				<Container>
+					<Row>
 						<Col xs={4}>
-							<h5>Not Matched</h5>
+							<h5 className="header">Not Matched</h5>
 							{selectedInputComponents.map((inputComponent, i) => {
 								return (
 									!inputComponentIsMatched(inputComponent.uniqueId) && (
@@ -54,7 +54,7 @@ const FormBBCodeMatch = ({
 														text={inputComponent.uniqueId}
 														onCopy={() =>
 															SuccessToast(
-																`🆔 for '${inputComponent.label}' copied.`
+																`🆔 for field '${inputComponent.label}' copied to clipboard.`
 															)
 														}>
 														<Button variant="light">
@@ -71,7 +71,7 @@ const FormBBCodeMatch = ({
 								);
 							})}
 							<hr />
-							<h5>Matched</h5>
+							<h5 className="header">Matched</h5>
 							{selectedInputComponents.map((inputComponent, i) => {
 								return (
 									inputComponentIsMatched(inputComponent.uniqueId) && (
@@ -113,13 +113,7 @@ const FormBBCodeMatch = ({
 							})}
 						</Col>
 						<Col xs={8}>
-							<h5>
-								Paste in the{" "}
-								<span role="img" aria-label="id">
-									🆔
-								</span>
-								s{" "}
-							</h5>
+							<h5 className="header">Matched BBCode</h5>
 							<TextAreaAutosize
 								ref={matchedBBCodeRef}
 								className="form-control h-100"

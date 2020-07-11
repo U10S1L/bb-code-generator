@@ -6,7 +6,7 @@
 
 .form-renderer.preview * {
 	pointer-events: none;
-	opacity: 0.75;
+	opacity: 0.95;
 }
 
 .form-renderer.preview .form-group {

@@ -1,3 +1,4 @@
+import "./form.css";
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import FormRenderer from "../../components/Form/Renderer/formRenderer";
@@ -198,7 +199,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	}, [bbCodeForm, formProgressString]);
 
 	return !editMode ? (
-		<Row>
+		<Row className="form">
 			<Col xs={12}>
 				<div className="header">
 					<h3 className="mr-auto ml-0">{bbCodeForm.name}</h3>
@@ -222,7 +223,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 									visible: true,
 									continueAction: () => editBBCodeForm(),
 									message:
-										"Editing the form will erase any values you've filled out. Do you want to continue?"
+										"Editing the form will erase any field values that you've filled out and cannot be undone. Do you wish to continue?"
 								})
 							}>
 							Edit Form

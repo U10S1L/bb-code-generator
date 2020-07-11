@@ -1,7 +1,6 @@
 type inputTypes =
 	| "shortText"
 	| "longText"
-	| "number"
 	| "dateTime"
 	| "dropdown"
 	| "checkbox"
@@ -15,7 +14,6 @@ export type InputComponentProps = {
 	typeName:
 		| "Short Text"
 		| "Long Text"
-		| "Number"
 		| "Date & Time"
 		| "Dropdown"
 		| "Checkbox"

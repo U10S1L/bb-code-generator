@@ -45,17 +45,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		description: "",
 		multi: false,
 		defaultVal: "",
-		type: "number",
-		typeName: "Number",
-		inputs: [{ type: "number", val: "" }],
-		onUpdateInputs: undefined
-	},
-	{
-		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
-		defaultVal: "",
 		type: "dateTime",
 		typeName: "Date & Time",
 		inputs: [{ type: "dateTime", val: "" }],

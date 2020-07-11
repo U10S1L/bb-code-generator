@@ -38,15 +38,13 @@ const SelectedInputComponent = SortableElement(
 	({ inputComponent, editInputComponent }: SelectedInputComponentProps) => {
 		return (
 			<Row className="preview-input-component">
-				<Col xs={1}>
-					<DragHandle />
-				</Col>
-				<Col xs={10}>
+				<Col xs={11}>
 					<div className="form-renderer preview">
 						<InputComponent {...inputComponent} />
 					</div>
 				</Col>
 				<Col xs={1}>
+					<DragHandle />
 					<Button onClick={editInputComponent}>
 						<FontAwesomeIcon icon={"edit"} />
 					</Button>

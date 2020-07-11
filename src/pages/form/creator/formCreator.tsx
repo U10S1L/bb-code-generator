@@ -16,13 +16,13 @@ var slugify = require("slugify");
 
 export enum FormCreationStep {
 	FORM_SETUP = "Form Setup",
-	INPUT_CREATION = "Input Creation",
+	FIELD_CREATION = "Field Creation",
 	BBCODE_UPLOAD = "Raw BBCode Upload",
 	BBCODE_MATCH = "BBCode Match"
 }
 const formCreationStepEnums = [
 	FormCreationStep.FORM_SETUP,
-	FormCreationStep.INPUT_CREATION,
+	FormCreationStep.FIELD_CREATION,
 	FormCreationStep.BBCODE_UPLOAD,
 	FormCreationStep.BBCODE_MATCH
 ];
@@ -60,8 +60,8 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
 				return `<ins>Form Setup</ins>`;
-			case FormCreationStep.INPUT_CREATION:
-				return `<ins>Input Creation</ins>`;
+			case FormCreationStep.FIELD_CREATION:
+				return `<ins>Field Creation</ins>`;
 			default:
 				return ``;
 		}
@@ -71,43 +71,70 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
 				return `
-				<b>1: Enter a name for your form.</b>
+				<b>Enter a name for the new form and then press "Next"</b>
 				<br><img src="https://i.imgur.com/pr1Arp0.gif" class="w-100"/>
 				<br><br>
 				<b>Optional: "Start From File"</b>
 				<br>
-				Drag and drop to start from a previously exported file, if you have one.
+				You can drag and drop the file from a previously exported form here, if you have one.
 				`;
-			case FormCreationStep.INPUT_CREATION:
+			case FormCreationStep.FIELD_CREATION:
 				return `
-				<b>1: Create text boxes of the appropriate input types.</b>
-				<br><small>Hint: the Label should be similar to the text on the left side of the colon in the BB Code Form.</small>
+				A BBCode form has <b>fields</b>. Each <b>field</b> contains two parts: a <b>label</b>, and an <b>value</b>.
 				<br>
-				<b>2: Fill in the information for the new input:</b>
-				<br>Label: required. Appears above the text box on the form.
-				<br>Description: optional. Will appear under the label on the form.
-				<br>Default Value: optional. Will auto populate the text box with a default value on the form.
-				<br><br>
-				<b>Repeat steps 1 & 2 for all of the inputs on the form.</b>
-				
-				<br><img src="https://i.imgur.com/L4Ajbae.gif" class="w-100"/>
-
-				<br>Hint: Look at the "Form Preview to catch a sneak peak of the finished product!" 
+				<img src="https://i.imgur.com/PNgBpKY.png" class="img-fluid"/>
+				<br><br><br>
+				<b>1: Select the most appropriate Input Type for the field you're adding.</b> 
+				<br>
+				<small>
+				- <b>Short Text</b>: Names, ranks, badge numbers, locations, etc.
+				<br>
+				- <b>Long Text</b>: Narratives, statements, etc.
+				<br>
+				- <b>Date & Time</b>: Any field requring a date & time together. Will format as DD/MMM/YYYY HH:MM
+				<br>
+				- <b>Date</b>: Will format as DD/MMM/YYYY.
+				<br>
+				- <b>Time</b>: Just a time, man.
+				<br>
+				- <b>Dropdown</b>: Good for when you know the options for a field. Example: "Evidence type", which is always MELEE, NARCOTICS, WEAPONS, or OTHER.
+				<br>
+				- <b>Checkbox</b>: Will render a [cb] (if it's unchecked) or [cbc] (if it's checked) when generating the BBCode.
+				</small>
+				<br>
+				<br>
+				<b>2: Fill in the details for the new field.</b>
+				<br>
+				<small>
+				- <b>Label</b>: required, will tell you which field you're filling in.
+				<br>
+				- <b>Description</b>: optional. Appears under the field's label (good for reminders, etc).
+				<br>
+				- <b>Default Value</b>: optional. Auto populates the field's value.
+				<br>
+				- <b>[*]</b>: Allow you to add more than one value for this field. Each value renders with a [*] in front. Used for fields where you type [*]s between [list][/list] tags.
+				</small>
+				<br>
+				<br>
+				<b>Repeat steps 1 & 2 for all of the fields on the form.</b>
+				<br>
+				<img src="https://i.imgur.com/L4Ajbae.gif" class="w-100"/>
+				<br>
+				Hint: Look at the "Form Preview to catch a sneak peak of the finished product!" 
 				`;
 
 			case FormCreationStep.BBCODE_UPLOAD:
 				return `
-				<b>1: Copy and paste the raw, unedited BB Code for the form.</b>
-				<br><img src="https://i.imgur.com/FxiuKVt.gif" class="w-100"/>
+				<b>1: Copy and paste the raw, unedited BBCode.</b>
+				<br><img src="https://i.imgur.com/ILgFqUc.gif" class="w-100"/>
 				`;
 			case FormCreationStep.BBCODE_MATCH:
 				return `
-				<b>1: Copy and paste the 🆔s for each input into the BB Code.</b>
-				<br><small>The 🆔 may look like jibberish, but don't worry - that's intentional.</small>
+				<b>1: Copy and paste the 🆔s for each field into the BB Code where you would ordinarily type the value.</b>
 				<br>
-				You should paste the 🆔 on the form in the same place that you would ordinarily type. 
-				<br><br>
-				For inputs that you marked as [*], the 🆔 should be the sole member between <code>[list][/list]</code>.
+				<small>- The 🆔 may look like jibberish, but don't worry - that's intentional.</small>
+				<br>
+				<small>- For fields that you marked as [*], the 🆔 should go between [list][/list] and should be the ONLY thing between the [list][/list]</small>
 				<br>
 				<img src="https://i.imgur.com/TYIQk0E.gif" class="w-100"/>
 				`;
@@ -125,10 +152,10 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				if (doesFormNameExist()) {
 					ErrorToast(`Form name must not already exist.`);
 				} else {
-					setFormCreationStep(FormCreationStep.INPUT_CREATION);
+					setFormCreationStep(FormCreationStep.FIELD_CREATION);
 				}
 				break;
-			case FormCreationStep.INPUT_CREATION:
+			case FormCreationStep.FIELD_CREATION:
 				setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
 				break;
 			case FormCreationStep.BBCODE_UPLOAD:
@@ -152,11 +179,11 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	};
 	const decrementFormCreationStep = (): void => {
 		switch (formCreationStep) {
-			case FormCreationStep.INPUT_CREATION:
+			case FormCreationStep.FIELD_CREATION:
 				setFormCreationStep(FormCreationStep.FORM_SETUP);
 				break;
 			case FormCreationStep.BBCODE_UPLOAD:
-				setFormCreationStep(FormCreationStep.INPUT_CREATION);
+				setFormCreationStep(FormCreationStep.FIELD_CREATION);
 				break;
 			case FormCreationStep.BBCODE_MATCH:
 				setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
@@ -312,14 +339,14 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 								disabled={
 									(formCreationStep === FormCreationStep.FORM_SETUP &&
 										bbCodeForm.name === "") ||
-									(formCreationStep === FormCreationStep.INPUT_CREATION &&
+									(formCreationStep === FormCreationStep.FIELD_CREATION &&
 										(bbCodeForm.inputComponents == null ||
 											bbCodeForm.inputComponents.length === 0)) ||
 									(formCreationStep === FormCreationStep.BBCODE_UPLOAD &&
 										bbCodeForm.rawBBCode === "")
 								}>
 								{(formCreationStep === FormCreationStep.FORM_SETUP ||
-									formCreationStep === FormCreationStep.INPUT_CREATION ||
+									formCreationStep === FormCreationStep.FIELD_CREATION ||
 									formCreationStep === FormCreationStep.BBCODE_UPLOAD) &&
 									"Next"}
 								{formCreationStep === FormCreationStep.BBCODE_MATCH && "Save"}
@@ -347,7 +374,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				/>
 			)}
 
-			{formCreationStep === FormCreationStep.INPUT_CREATION && (
+			{formCreationStep === FormCreationStep.FIELD_CREATION && (
 				<FormInputCreator
 					newBBCodeForm={bbCodeForm}
 					addInput={addSelectedInputComponent}

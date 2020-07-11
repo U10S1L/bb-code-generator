@@ -3,6 +3,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Image } from "react-bootstrap";
 import "./navbar.css";
 import { Page } from "../../constants/pages";
+import Clock from "react-live-clock";
 
 type NavigationBarProps = {
 	links: Page[];
@@ -31,6 +32,9 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 						);
 					})}
 				</Nav>
+				<span style={{ color: "white" }}>
+					<Clock timezone={"GMT"} />
+				</span>
 			</Navbar.Collapse>
 		</Navbar>
 	);

@@ -6,8 +6,11 @@ const Home = () => {
 	return (
 		<Row>
 			<Col xs={12} className="mt-4 mb-4">
-				<h2 className="home-header">How You Write BBCode</h2>
-				<div>
+				<h2 className="home-header">Fuck BBCode</h2>
+				<h6 className="small" style={{ textAlign: "center" }}>
+					A BBCode Form Generator
+				</h6>
+				<div style={{ display: "flex" }}>
 					<img
 						src="https://i.imgur.com/CqrxUdP.png"
 						alt="comparitive logo"
@@ -30,7 +33,7 @@ const Home = () => {
 				<p className="small">Yes, even the ones that don't exist yet.</p>
 			</Jumbotron>
 			<Col xs={12} className="mb-3">
-				<h2 className="home-header">4 Easy Steps</h2>
+				<h2 className="home-header">4 Step Process</h2>
 				<CardDeck>
 					<Card bg="primary" text="white" className="steps-card">
 						<Card.Img variant="top" src="https://i.imgur.com/zZYrUkw.png" />
@@ -44,7 +47,7 @@ const Home = () => {
 						<Card.Img variant="top" src="https://i.imgur.com/KfVk3IH.png" />
 						<Card.Body>
 							<Card.Title>
-								<h6 style={{ fontWeight: "bold" }}>2: Add the inputs.</h6>
+								<h6 style={{ fontWeight: "bold" }}>2: Add the fields.</h6>
 							</Card.Title>
 						</Card.Body>
 					</Card>
