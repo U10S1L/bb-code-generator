@@ -45,15 +45,23 @@ const FormBBCodeMatch = ({
 									!inputComponentIsMatched(inputComponent.uniqueId) && (
 										<Card key={i}>
 											<Card.Body>
-												<Card.Title>{inputComponent.label}</Card.Title>
+												<Card.Title>
+													{inputComponent.label}
+													{inputComponent.multi ? " [*]" : null}
+												</Card.Title>
 												<Card.Text>
 													<CopyToClipboard
 														text={inputComponent.uniqueId}
 														onCopy={() =>
-															SuccessToast("Unique ID Copied to Clipboard")
+															SuccessToast(
+																`🆔 for '${inputComponent.label}' copied.`
+															)
 														}>
 														<Button variant="light">
 															<FontAwesomeIcon icon="clipboard" />
+															<span role="img" aria-label="id">
+																🆔
+															</span>
 														</Button>
 													</CopyToClipboard>
 												</Card.Text>
@@ -69,7 +77,10 @@ const FormBBCodeMatch = ({
 									inputComponentIsMatched(inputComponent.uniqueId) && (
 										<Card key={i}>
 											<Card.Body>
-												<Card.Title>{inputComponent.label}</Card.Title>
+												<Card.Title>
+													{inputComponent.label}
+													{inputComponent.multi ? " [*]" : null}
+												</Card.Title>
 												<Card.Text>
 													<Button
 														variant="light"
@@ -83,10 +94,15 @@ const FormBBCodeMatch = ({
 													<CopyToClipboard
 														text={inputComponent.uniqueId}
 														onCopy={() =>
-															SuccessToast("Unique ID Copied to Clipboard")
+															SuccessToast(
+																`🆔 for '${inputComponent.label}' copied.`
+															)
 														}>
 														<Button variant="light">
 															<FontAwesomeIcon icon="clipboard" />
+															<span role="img" aria-label="id">
+																🆔
+															</span>
 														</Button>
 													</CopyToClipboard>
 												</Card.Text>
@@ -97,6 +113,13 @@ const FormBBCodeMatch = ({
 							})}
 						</Col>
 						<Col xs={8}>
+							<h5>
+								Paste in the{" "}
+								<span role="img" aria-label="id">
+									🆔
+								</span>
+								s{" "}
+							</h5>
 							<TextAreaAutosize
 								ref={matchedBBCodeRef}
 								className="form-control h-100"

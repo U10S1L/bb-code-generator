@@ -20,9 +20,14 @@ export const Dropdown = ({
 			readOnly={readOnly}>
 			{selectOptions?.map((selectOption, i) => {
 				return (
-					<option value={selectOption} key={i}>
-						{selectOption}
-					</option>
+					(selectOption !== " " || (selectOption === " " && val === " ")) && (
+						<option
+							value={selectOption}
+							key={i}
+							disabled={selectOption === " " && val !== " "}>
+							{selectOption}
+						</option>
+					)
 				);
 			})}
 		</Form.Control>

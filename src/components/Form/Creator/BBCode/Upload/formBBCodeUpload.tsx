@@ -26,6 +26,7 @@ const FormBBCodeUpload = ({
 						<TextAreaAutosize
 							className="form-control"
 							value={rawBBCode}
+							placeholder="Paste the Raw BB Code here."
 							onChange={(e) => setRawBBCode(e.target.value)}
 							ref={rawBBCodeRef}
 							style={{ margin: "1rem 0" }}

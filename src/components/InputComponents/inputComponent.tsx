@@ -20,7 +20,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 		// Insert new inputTypeItem after the item whose "+" button was clicked
 		currInputComponentInputs.splice(startIndex + 1, 0, {
 			...inputTypeItem,
-			val: "",
+			val: defaultVal,
 			uniqueId: `{<${inputTypeItem.type}>_${
 				Math.floor(Math.random() * (9999 - 0)) + 0
 			}}`

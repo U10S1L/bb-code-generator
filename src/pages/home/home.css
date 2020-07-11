@@ -1,0 +1,29 @@
+.image-comparison-col {
+	display: flex;
+	justify-content: space-between;
+	margin: 1rem 0;
+	height: 30vh;
+}
+
+.image-comparison-col img {
+	border: 3px solid gray;
+	width: 75%;
+}
+
+.image-comparison-col .text {
+	margin: auto;
+}
+
+.image-comparison-col .text.right {
+	text-align: right;
+}
+
+.steps-card {
+	flex-basis: 40% !important;
+	margin: 1rem auto;
+}
+
+.home-header {
+	font-weight: bold;
+	text-align: center;
+}

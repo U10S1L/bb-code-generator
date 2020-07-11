@@ -79,8 +79,8 @@ const FormNameCreator = ({
 				</InputGroup>
 			</Col>
 			<Col xs={12} lg={4}>
-				<h4 className="header">Upload From File</h4>
-				<Uploader onDrop={onDrop} />
+				<h4 className="header">Start From File</h4>
+				<Uploader onDrop={onDrop} styles={{ height: "10rem" }} />
 			</Col>
 			<StandardModal
 				visible={uploaderModalVisible}
@@ -89,7 +89,7 @@ const FormNameCreator = ({
 				title="WARNING"
 				message="This action will overwrite any form creation progress you might have. Are you sure you want to continue?"
 				closeBtnText="Cancel"
-				continueBtnText="Yes, any existing progress."
+				continueBtnText="Yes, overwrite any existing progress."
 			/>
 		</Row>
 	);

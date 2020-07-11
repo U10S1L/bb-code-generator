@@ -11,12 +11,13 @@ import { Button, ProgressBar, Row, Col } from "react-bootstrap";
 import arrayMove from "array-move";
 import { Types } from "../../../reducers";
 import { ErrorToast } from "../../../components/Toast/toast";
+import Help from "../../../components/Help/help";
 var slugify = require("slugify");
 
 export enum FormCreationStep {
 	FORM_SETUP = "Form Setup",
 	INPUT_CREATION = "Input Creation",
-	BBCODE_UPLOAD = "BBCode Upload",
+	BBCODE_UPLOAD = "Raw BBCode Upload",
 	BBCODE_MATCH = "BBCode Match"
 }
 const formCreationStepEnums = [
@@ -54,6 +55,66 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		rawBBCode: "",
 		matchedBBCode: ""
 	});
+
+	const getHelpTitle = () => {
+		switch (formCreationStep) {
+			case FormCreationStep.FORM_SETUP:
+				return `<ins>Form Setup</ins>`;
+			case FormCreationStep.INPUT_CREATION:
+				return `<ins>Input Creation</ins>`;
+			default:
+				return ``;
+		}
+	};
+
+	const getHelpText = () => {
+		switch (formCreationStep) {
+			case FormCreationStep.FORM_SETUP:
+				return `
+				<b>1: Enter a name for your form.</b>
+				<br><img src="https://i.imgur.com/pr1Arp0.gif" class="w-100"/>
+				<br><br>
+				<b>Optional: "Start From File"</b>
+				<br>
+				Drag and drop to start from a previously exported file, if you have one.
+				`;
+			case FormCreationStep.INPUT_CREATION:
+				return `
+				<b>1: Create text boxes of the appropriate input types.</b>
+				<br><small>Hint: the Label should be similar to the text on the left side of the colon in the BB Code Form.</small>
+				<br>
+				<b>2: Fill in the information for the new input:</b>
+				<br>Label: required. Appears above the text box on the form.
+				<br>Description: optional. Will appear under the label on the form.
+				<br>Default Value: optional. Will auto populate the text box with a default value on the form.
+				<br><br>
+				<b>Repeat steps 1 & 2 for all of the inputs on the form.</b>
+				
+				<br><img src="https://i.imgur.com/L4Ajbae.gif" class="w-100"/>
+
+				<br>Hint: Look at the "Form Preview to catch a sneak peak of the finished product!" 
+				`;
+
+			case FormCreationStep.BBCODE_UPLOAD:
+				return `
+				<b>1: Copy and paste the raw, unedited BB Code for the form.</b>
+				<br><img src="https://i.imgur.com/FxiuKVt.gif" class="w-100"/>
+				`;
+			case FormCreationStep.BBCODE_MATCH:
+				return `
+				<b>1: Copy and paste the 🆔s for each input into the BB Code.</b>
+				<br><small>The 🆔 may look like jibberish, but don't worry - that's intentional.</small>
+				<br>
+				You should paste the 🆔 on the form in the same place that you would ordinarily type. 
+				<br><br>
+				For inputs that you marked as [*], the 🆔 should be the sole member between <code>[list][/list]</code>.
+				<br>
+				<img src="https://i.imgur.com/TYIQk0E.gif" class="w-100"/>
+				`;
+			default:
+				return ``;
+		}
+	};
 
 	let history = useHistory();
 
@@ -242,24 +303,28 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 							</Button>
 						)}
 						<h3>{formCreationStep}</h3>
-						<Button
-							variant="info"
-							onClick={() => incrementFormCreationStep()}
-							disabled={
-								(formCreationStep === FormCreationStep.FORM_SETUP &&
-									bbCodeForm.name === "") ||
-								(formCreationStep === FormCreationStep.INPUT_CREATION &&
-									(bbCodeForm.inputComponents == null ||
-										bbCodeForm.inputComponents.length === 0)) ||
-								(formCreationStep === FormCreationStep.BBCODE_UPLOAD &&
-									bbCodeForm.rawBBCode === "")
-							}>
-							{formCreationStep === FormCreationStep.FORM_SETUP && "Start"}
-							{(formCreationStep === FormCreationStep.INPUT_CREATION ||
-								formCreationStep === FormCreationStep.BBCODE_UPLOAD) &&
-								"Next"}
-							{formCreationStep === FormCreationStep.BBCODE_MATCH && "Save"}
-						</Button>
+
+						{(formCreationStep !== FormCreationStep.BBCODE_MATCH ||
+							!editMode) && (
+							<Button
+								variant="info"
+								onClick={() => incrementFormCreationStep()}
+								disabled={
+									(formCreationStep === FormCreationStep.FORM_SETUP &&
+										bbCodeForm.name === "") ||
+									(formCreationStep === FormCreationStep.INPUT_CREATION &&
+										(bbCodeForm.inputComponents == null ||
+											bbCodeForm.inputComponents.length === 0)) ||
+									(formCreationStep === FormCreationStep.BBCODE_UPLOAD &&
+										bbCodeForm.rawBBCode === "")
+								}>
+								{(formCreationStep === FormCreationStep.FORM_SETUP ||
+									formCreationStep === FormCreationStep.INPUT_CREATION ||
+									formCreationStep === FormCreationStep.BBCODE_UPLOAD) &&
+									"Next"}
+								{formCreationStep === FormCreationStep.BBCODE_MATCH && "Save"}
+							</Button>
+						)}
 					</div>
 					<ProgressBar
 						now={
@@ -304,16 +369,26 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 					setMatchedBBCode={updateMatchedBBCode}
 				/>
 			)}
-			<Row>
-				<Col xs={12}>
-					{editMode && (
-						<div>
-							<Button onClick={() => saveEditedBBCodeForm()}>Save</Button>
-							<Button onClick={() => cancelEditBBCodeForm()}>Cancel</Button>
-						</div>
-					)}
-				</Col>
-			</Row>
+			{editMode && (
+				<Row style={{ marginTop: "3rem" }}>
+					<Col xs={12}>
+						<Button
+							style={{ float: "right" }}
+							variant="danger"
+							onClick={() => cancelEditBBCodeForm()}>
+							Cancel Edits
+						</Button>
+
+						<Button
+							style={{ float: "right" }}
+							variant="success"
+							onClick={() => saveEditedBBCodeForm()}>
+							Save Edits
+						</Button>
+					</Col>
+				</Row>
+			)}
+			<Help title={getHelpTitle()} text={getHelpText()}></Help>
 		</Fragment>
 	);
 };

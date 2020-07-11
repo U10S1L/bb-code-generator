@@ -222,7 +222,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 									visible: true,
 									continueAction: () => editBBCodeForm(),
 									message:
-										"Editing the form will erase values in all of the form fields. Do you want to continue?"
+										"Editing the form will erase any values you've filled out. Do you want to continue?"
 								})
 							}>
 							Edit Form

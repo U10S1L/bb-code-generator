@@ -90,12 +90,12 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		label: "",
 		description: "",
 		multi: false,
-		defaultVal: "",
+		defaultVal: " ",
 		type: "dropdown",
 		typeName: "Dropdown",
 		inputs: [{ type: "dropdown", val: "" }],
 		onUpdateInputs: undefined,
-		selectOptions: [""]
+		selectOptions: [" ", ""]
 	},
 	{
 		uniqueId: "",
@@ -383,28 +383,30 @@ const InputComponentModal = ({
 							<Form.Label>Options</Form.Label>
 							{selectOptions?.map((selectOption, i) => {
 								return (
-									<InputGroup key={i}>
-										{
-											<InputGroup.Prepend>
-												<InputGroup.Text>{`${i + 1}`}</InputGroup.Text>
-											</InputGroup.Prepend>
-										}
-										<FormControl
-											type="text"
-											value={selectOption}
-											onChange={(e) => updateSelectOption(e.target.value, i)}
-										/>
-										<InputGroup.Append>
-											<Button
-												onClick={() => removeSelectOption(i)}
-												disabled={selectOptions?.length === 1}>
-												<FontAwesomeIcon icon="minus" />
-											</Button>
-											<Button onClick={() => addSelectOption(i)}>
-												<FontAwesomeIcon icon="plus" />
-											</Button>
-										</InputGroup.Append>
-									</InputGroup>
+									i !== 0 && (
+										<InputGroup key={i}>
+											{
+												<InputGroup.Prepend>
+													<InputGroup.Text>{`${i}`}</InputGroup.Text>
+												</InputGroup.Prepend>
+											}
+											<FormControl
+												type="text"
+												value={selectOption}
+												onChange={(e) => updateSelectOption(e.target.value, i)}
+											/>
+											<InputGroup.Append>
+												<Button
+													onClick={() => removeSelectOption(i)}
+													disabled={selectOptions?.length === 2}>
+													<FontAwesomeIcon icon="minus" />
+												</Button>
+												<Button onClick={() => addSelectOption(i)}>
+													<FontAwesomeIcon icon="plus" />
+												</Button>
+											</InputGroup.Append>
+										</InputGroup>
+									)
 								);
 							})}
 						</Form.Group>
@@ -412,7 +414,7 @@ const InputComponentModal = ({
 					<Form.Check
 						type="switch"
 						id="isMulti"
-						label="Multi"
+						label="[*]"
 						checked={multi}
 						onChange={() => setMulti(!multi)}
 					/>
@@ -420,17 +422,19 @@ const InputComponentModal = ({
 			</Modal.Body>
 			<Modal.Footer>
 				<Button
+					variant="danger"
 					onClick={() =>
 						inputComponent &&
 						deleteInput &&
 						deleteInput(inputComponent.uniqueId)
-					}>
+					}
+					style={{ marginRight: "auto" }}>
 					Delete
 				</Button>
 				<Button variant="secondary" onClick={handleCancel}>
 					Cancel
 				</Button>
-				<Button variant="primary" onClick={submitForm}>
+				<Button variant="info" onClick={submitForm}>
 					{editMode ? "Save" : "Add"}
 				</Button>
 			</Modal.Footer>
