@@ -10,6 +10,7 @@ const Home = () => {
 				<div>
 					<img
 						src="https://i.imgur.com/CqrxUdP.png"
+						alt="comparitive logo"
 						className="img-fluid"
 						style={{ margin: "auto", flex: "1" }}></img>
 				</div>
