@@ -67,9 +67,9 @@ const Uploader = ({ onDrop, styles }: UploaderProps) => {
 		<div {...getRootProps({ style: dropzoneStyle })} className="form-control">
 			<input {...getInputProps()} />
 			{!isDragActive && !isDragAccept && !isDragReject && (
-				<span>Drop file here</span>
+				<span>Drop .json file here</span>
 			)}
-			{isDragAccept && <span>Drop file here</span>}
+			{isDragAccept && <span>Drop .json file here</span>}
 			{isDragReject && <span>Invalid File Type</span>}
 		</div>
 	);

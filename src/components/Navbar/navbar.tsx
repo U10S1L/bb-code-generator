@@ -4,6 +4,7 @@ import { Navbar, Nav, Image } from "react-bootstrap";
 import "./navbar.css";
 import { Page } from "../../constants/pages";
 import Clock from "react-live-clock";
+import logoImage from "../../images/logo.svg";
 
 type NavigationBarProps = {
 	links: Page[];
@@ -14,9 +15,7 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 		<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
 			<LinkContainer to={"/"} exact>
 				<Navbar.Brand>
-					<Image
-						style={{ width: "10rem" }}
-						src="https://media.discordapp.net/attachments/726623599200305192/726843029620785172/Untitled.png?width=717&height=152"></Image>
+					<Image style={{ width: "10rem" }} src={logoImage}></Image>
 				</Navbar.Brand>
 			</LinkContainer>
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />

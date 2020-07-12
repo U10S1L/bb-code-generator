@@ -56,15 +56,17 @@ const Settings = () => {
 				<h3 className="header">Settings</h3>
 			</Col>
 			<Col xs={12}>
-				<h4>Forms</h4>
 				<Row>
 					<Col xs={4}>
+						<h4 className="header">Download a Backup</h4>
 						<Button onClick={() => exportState()}>Download</Button>
 					</Col>
 					<Col xs={4}>
+						<h4 className="header">Upload From Backup</h4>
 						<Uploader onDrop={onDrop} />
 					</Col>
 					<Col xs={4}>
+						<h4 className="header">Danger Zone</h4>
 						<Button
 							variant="danger"
 							onClick={() => setClearDataWarningVisible(true)}>
