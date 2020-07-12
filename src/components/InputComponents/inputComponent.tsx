@@ -12,7 +12,8 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	multi,
 	inputs,
 	onUpdateInputs,
-	selectOptions
+	selectOptions,
+	orderNum
 }) => {
 	const addNewInput = (inputTypeItem: InputTypeProps, startIndex: number) => {
 		// Make a copy of the current inputComponentInputs
@@ -44,7 +45,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	return (
 		<Form.Group>
 			<Form.Label>
-				{label}
+				{orderNum}. {label}
 				<div className="small text-muted">{description}</div>
 			</Form.Label>
 			{inputs.map((inputType, i) => {

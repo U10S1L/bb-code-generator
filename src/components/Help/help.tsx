@@ -36,7 +36,10 @@ const Help = (props: Props) => {
 			<Button
 				variant="success"
 				style={{
+					width: "3rem",
+					height: "3rem",
 					position: "fixed",
+					border: ".25rem solid #fed48b",
 					bottom: 10,
 					right: 10,
 					zIndex: 9999,

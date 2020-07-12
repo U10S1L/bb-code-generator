@@ -24,7 +24,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		multi: false,
 		defaultVal: "",
 		type: "shortText",
-		typeName: "Short Text",
+		typeName: "Text Line",
 		inputs: [{ type: "shortText", val: "" }],
 		onUpdateInputs: undefined
 	},
@@ -35,7 +35,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		multi: false,
 		defaultVal: "",
 		type: "longText",
-		typeName: "Long Text",
+		typeName: "Text Box",
 		inputs: [{ type: "longText", val: "" }],
 		onUpdateInputs: undefined
 	},
@@ -105,7 +105,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		multi: false,
 		defaultVal: JSON.stringify({ text: "", link: "" }),
 		type: "url",
-		typeName: "Url",
+		typeName: "Text & Link",
 		inputs: [{ type: "url", val: JSON.stringify({ text: "", link: "" }) }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]

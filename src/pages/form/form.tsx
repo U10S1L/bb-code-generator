@@ -199,7 +199,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	}, [bbCodeForm, formProgressString]);
 
 	return !editMode ? (
-		<Row className="form">
+		<Row>
 			<Col xs={12}>
 				<div className="header">
 					<h3 className="mr-auto ml-0">{bbCodeForm.name}</h3>
@@ -211,7 +211,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 									visible: true,
 									continueAction: () => setBBCodeForm(getOriginalBBCodeForm),
 									message:
-										"This will erase the values in all of the form fields. Do you want to continue?"
+										"This will erase any saved values in the form fields. Do you want to continue?"
 								})
 							}>
 							Clear Progress
@@ -228,7 +228,16 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 							}>
 							Edit Form
 						</Button>
-						<Button variant="danger" onClick={() => deleteBBCodeForm()}>
+						<Button
+							variant="danger"
+							onClick={() => {
+								setPageModal({
+									visible: true,
+									continueAction: () => deleteBBCodeForm(),
+									message:
+										"This will delete the form. You might want to consider exporting it first... do you wish to continue?"
+								});
+							}}>
 							Delete Form
 						</Button>
 					</ButtonGroup>

@@ -30,11 +30,11 @@ const StandardModal = ({
 			</Modal.Header>
 			<Modal.Body>{message}</Modal.Body>
 			<Modal.Footer>
-				<Button variant="secondary" onClick={handleClose}>
+				<Button variant="danger" onClick={handleClose} className="mr-auto">
 					{closeBtnText}
 				</Button>
 				<Button
-					variant="danger"
+					variant="success"
 					onClick={() => {
 						handleContinue && handleContinue();
 						handleClose();

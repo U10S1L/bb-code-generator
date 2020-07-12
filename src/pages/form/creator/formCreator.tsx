@@ -87,9 +87,9 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				<b>1: Select the most appropriate Input Type for the field you're adding.</b> 
 				<br>
 				<small>
-				- <b>Short Text</b>: Names, ranks, badge numbers, locations, etc.
+				- <b>Text Line</b>: Names, ranks, badge numbers, locations, etc.
 				<br>
-				- <b>Long Text</b>: Narratives, statements, etc.
+				- <b>Text Box</b>: Narratives, statements, etc.
 				<br>
 				- <b>Date & Time</b>: Any field requring a date & time together. Will format as DD/MMM/YYYY HH:MM
 				<br>

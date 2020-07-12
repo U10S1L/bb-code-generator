@@ -37,6 +37,7 @@ const FormRenderer = ({
 								onUpdateInputComponentInputs(i, updatedInputs)
 							}
 							key={i}
+							orderNum={i + 1}
 						/>
 					);
 				})}

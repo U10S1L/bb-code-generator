@@ -12,14 +12,14 @@ export type InputComponentProps = {
 	uniqueId: string;
 	type: inputTypes;
 	typeName:
-		| "Short Text"
-		| "Long Text"
+		| "Text Line"
+		| "Text Box"
 		| "Date & Time"
 		| "Dropdown"
 		| "Checkbox"
 		| "Date"
 		| "Time"
-		| "Url";
+		| "Text & Link";
 	label?: string; // User-created
 	description?: string;
 	multi?: boolean;
@@ -27,6 +27,7 @@ export type InputComponentProps = {
 	inputs: InputTypeProps[];
 	onUpdateInputs?: (inputs: InputTypeProps[]) => void;
 	selectOptions?: string[];
+	orderNum?: number;
 };
 
 export type InputTypeProps = {

@@ -15,6 +15,7 @@ import {
 type SelectedInputComponentProps = {
 	inputComponent: InputComponentProps;
 	editInputComponent: () => void;
+	num: number;
 };
 type SortableSelectedInputComponentsProps = {
 	inputComponents: InputComponentProps[];
@@ -35,12 +36,16 @@ const DragHandle = SortableHandle(() => (
 	</div>
 ));
 const SelectedInputComponent = SortableElement(
-	({ inputComponent, editInputComponent }: SelectedInputComponentProps) => {
+	({
+		inputComponent,
+		editInputComponent,
+		num
+	}: SelectedInputComponentProps) => {
 		return (
 			<Row className="preview-input-component">
-				<Col xs={11}>
+				<Col xs={10}>
 					<div className="form-renderer preview">
-						<InputComponent {...inputComponent} />
+						<InputComponent {...inputComponent} orderNum={num} />
 					</div>
 				</Col>
 				<Col xs={1}>
@@ -67,6 +72,7 @@ const SortableSelectedInputComponents = SortableContainer(
 							inputComponent={inputComponent}
 							index={index}
 							key={index}
+							num={index + 1}
 							editInputComponent={() => editInputComponent(inputComponent)}
 						/>
 					))}
