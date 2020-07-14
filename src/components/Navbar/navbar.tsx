@@ -24,7 +24,7 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 					{links.map((link, i) => {
 						return (
 							link.id !== "home" && (
-								<LinkContainer to={link.path} key={i} exact>
+								<LinkContainer to={link.path} key={i}>
 									<Nav.Link>{link.name}</Nav.Link>
 								</LinkContainer>
 							)
@@ -32,7 +32,7 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 					})}
 				</Nav>
 				<span style={{ color: "white" }}>
-					<Clock timezone={"GMT"} />
+					<Clock timezone={"GMT"} /> <span className="text-muted">(GMT)</span>
 				</span>
 			</Navbar.Collapse>
 		</Navbar>

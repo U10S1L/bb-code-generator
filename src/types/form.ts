@@ -1,3 +1,5 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+
 type inputTypes =
 	| "shortText"
 	| "longText"
@@ -20,6 +22,7 @@ export type InputComponentProps = {
 		| "Date"
 		| "Time"
 		| "Text & Link";
+	typeIcon: IconDefinition;
 	label?: string; // User-created
 	description?: string;
 	multi?: boolean;

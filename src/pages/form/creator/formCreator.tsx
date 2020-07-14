@@ -172,7 +172,8 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 						slug: slugify(bbCodeForm.name)
 					}
 				});
-				history.push(`/form/${slugify(bbCodeForm.name)}`);
+				// history.push(`/form/${slugify(bbCodeForm.name)}`);
+				history.push(`/forms/list`);
 				localStorage.removeItem("newBBCodeForm");
 				break;
 		}

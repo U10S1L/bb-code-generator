@@ -22,8 +22,8 @@ const Help = (props: Props) => {
 					bg="dark"
 					text="white"
 					style={{
-						width: "75%",
-						height: "80%",
+						width: "35%",
+						height: "50%",
 						overflowY: "auto",
 						border: "5px solid gray",
 						padding: "1rem",
@@ -36,16 +36,15 @@ const Help = (props: Props) => {
 			<Button
 				variant="success"
 				style={{
-					width: "3rem",
+					width: "4rem",
 					height: "3rem",
 					position: "fixed",
-					border: ".25rem solid #fed48b",
 					bottom: 10,
 					right: 10,
 					zIndex: 9999,
 					fontWeight: "bold"
 				}}>
-				?
+				Help
 			</Button>
 		</OverlayTrigger>
 	);

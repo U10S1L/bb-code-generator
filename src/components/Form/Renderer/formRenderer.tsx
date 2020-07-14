@@ -31,14 +31,15 @@ const FormRenderer = ({
 			{bbCodeForm.inputComponents != null &&
 				bbCodeForm.inputComponents.map((inputComponent, i) => {
 					return (
-						<InputComponent
-							{...inputComponent}
-							onUpdateInputs={(updatedInputs) =>
-								onUpdateInputComponentInputs(i, updatedInputs)
-							}
-							key={i}
-							orderNum={i + 1}
-						/>
+						<div style={{ marginBottom: "1rem" }} key={i}>
+							<InputComponent
+								{...inputComponent}
+								onUpdateInputs={(updatedInputs) =>
+									onUpdateInputComponentInputs(i, updatedInputs)
+								}
+								orderNum={i + 1}
+							/>
+						</div>
 					);
 				})}
 		</Form>

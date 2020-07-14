@@ -4,11 +4,6 @@
 	margin-bottom: 1rem;
 }
 
-.form-renderer.preview * {
-	pointer-events: none;
-	opacity: 0.95;
-}
-
 .form-renderer.preview .form-group {
 	margin-bottom: 0;
 }

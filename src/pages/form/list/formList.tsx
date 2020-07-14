@@ -25,7 +25,7 @@ const SortableFormElement = SortableElement(
 	({ form }: SortableFormElementProps) => {
 		return (
 			<div className="form-element">
-				<Card>
+				<Card bg="light" color="white" style={{ borderRadius: 0 }}>
 					<Card.Body>
 						<Card.Title>
 							<div>{form.name}</div>
@@ -34,7 +34,7 @@ const SortableFormElement = SortableElement(
 					</Card.Body>
 				</Card>
 				<LinkContainer to={`/form/${form.slug}`} exact>
-					<Button className="form-element-go-button">
+					<Button className="form-element-go-button" variant="info">
 						<FontAwesomeIcon icon="arrow-right"></FontAwesomeIcon>
 					</Button>
 				</LinkContainer>
@@ -72,7 +72,7 @@ const FormList = () => {
 	return (
 		<Row>
 			<Col xs={12}>
-				<h3 className="header">Forms</h3>
+				<h3 className="header">My Forms</h3>
 			</Col>
 			<Col xs={12}>
 				<SortableFormContainer

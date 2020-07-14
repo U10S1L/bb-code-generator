@@ -24,7 +24,15 @@ import {
 	faPlus,
 	faMinus,
 	faSearch,
-	faDownload
+	faDownload,
+	faTextWidth,
+	faTextHeight,
+	faCalendarTimes,
+	faCalendarAlt,
+	faClock,
+	faCaretSquareDown,
+	faCheckSquare,
+	faLink
 } from "@fortawesome/free-solid-svg-icons";
 import SwitchRoutes from "./SwitchRoutes";
 
@@ -42,7 +50,15 @@ library.add(
 	faPlus,
 	faMinus,
 	faSearch,
-	faDownload
+	faDownload,
+	faTextWidth,
+	faTextHeight,
+	faCalendarTimes,
+	faCalendarAlt,
+	faClock,
+	faCaretSquareDown,
+	faCheckSquare,
+	faLink
 );
 
 const App = () => {

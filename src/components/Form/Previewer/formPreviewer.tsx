@@ -4,7 +4,7 @@ import { BBCodeFormType } from "../../../context";
 import InputComponent from "../../InputComponents/inputComponent";
 import { Form, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps } from "../../../types/form";
+import { InputComponentProps, InputTypeProps } from "../../../types/form";
 import { Row, Col } from "react-bootstrap";
 import {
 	SortableContainer,
@@ -15,6 +15,7 @@ import {
 type SelectedInputComponentProps = {
 	inputComponent: InputComponentProps;
 	editInputComponent: () => void;
+	onUpdateInputComponentInputs: (inputs: InputTypeProps[]) => void;
 	num: number;
 };
 type SortableSelectedInputComponentsProps = {
@@ -39,20 +40,27 @@ const SelectedInputComponent = SortableElement(
 	({
 		inputComponent,
 		editInputComponent,
+		onUpdateInputComponentInputs,
 		num
 	}: SelectedInputComponentProps) => {
 		return (
 			<Row className="preview-input-component">
 				<Col xs={10}>
-					<div className="form-renderer preview">
-						<InputComponent {...inputComponent} orderNum={num} />
-					</div>
+					<InputComponent
+						{...inputComponent}
+						onUpdateInputs={(inputs: InputTypeProps[]) =>
+							onUpdateInputComponentInputs(inputs)
+						}
+						orderNum={num}
+					/>
+				</Col>
+				<Col xs={1}>
+					<Button onClick={editInputComponent} variant="secondary">
+						<FontAwesomeIcon icon={"edit"} />
+					</Button>
 				</Col>
 				<Col xs={1}>
 					<DragHandle />
-					<Button onClick={editInputComponent}>
-						<FontAwesomeIcon icon={"edit"} />
-					</Button>
 				</Col>
 			</Row>
 		);
@@ -64,16 +72,37 @@ const SortableSelectedInputComponents = SortableContainer(
 		inputComponents,
 		editInputComponent
 	}: SortableSelectedInputComponentsProps) => {
+		const [previewInputComponents, setPreviewInputComponents] = useState(
+			inputComponents
+		);
+
+		const onUpdatePreviewInputComponent = (
+			inputComponentIndex: number,
+			inputComponentInputs: InputTypeProps[]
+		) => {
+			var newPreviewInputComponents = previewInputComponents.concat();
+			newPreviewInputComponents[
+				inputComponentIndex
+			].inputs = inputComponentInputs;
+			setPreviewInputComponents(newPreviewInputComponents);
+		};
+
+		useEffect(() => {
+			setPreviewInputComponents(inputComponents);
+		}, [inputComponents]);
 		return (
 			<ul>
-				{inputComponents &&
-					inputComponents.map((inputComponent, index) => (
+				{previewInputComponents &&
+					previewInputComponents.map((inputComponent, index) => (
 						<SelectedInputComponent
 							inputComponent={inputComponent}
 							index={index}
 							key={index}
 							num={index + 1}
 							editInputComponent={() => editInputComponent(inputComponent)}
+							onUpdateInputComponentInputs={(updatedInputs) =>
+								onUpdatePreviewInputComponent(index, updatedInputs)
+							}
 						/>
 					))}
 			</ul>

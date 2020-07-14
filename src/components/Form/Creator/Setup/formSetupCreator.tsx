@@ -4,6 +4,7 @@ import StandardModal from "../../../Modals/standardModal";
 import Uploader from "../../../Uploader/uploader";
 import { FileRejection, DropEvent } from "react-dropzone";
 import { BBCodeFormType } from "../../../../context";
+import { QuestionMarkTooltip } from "../../../Help/Tooltip/tooltips";
 
 type FormNameCreatorProps = {
 	val: string;
@@ -79,7 +80,13 @@ const FormNameCreator = ({
 				</InputGroup>
 			</Col>
 			<Col xs={12} lg={4}>
-				<h4 className="header">Start From File</h4>
+				<h4 className="header">
+					Start From File{" "}
+					<QuestionMarkTooltip
+						text="If you downloaded an exported form, drop it here to start the setup process from those presets."
+						id="startFromFile"
+					/>
+				</h4>
 				<Uploader onDrop={onDrop} styles={{ height: "10rem" }} />
 			</Col>
 			<StandardModal

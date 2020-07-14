@@ -214,7 +214,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 										"This will erase any saved values in the form fields. Do you want to continue?"
 								})
 							}>
-							Clear Progress
+							Clear
 						</Button>
 						<Button
 							variant="secondary"
@@ -226,7 +226,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 										"Editing the form will erase any field values that you've filled out and cannot be undone. Do you wish to continue?"
 								})
 							}>
-							Edit Form
+							Edit
 						</Button>
 						<Button
 							variant="danger"
@@ -238,12 +238,12 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 										"This will delete the form. You might want to consider exporting it first... do you wish to continue?"
 								});
 							}}>
-							Delete Form
+							Delete
 						</Button>
 					</ButtonGroup>
 				</div>
 			</Col>
-			<Col xs={12}>
+			<Col xs={12} className="mt-3">
 				<FormRenderer
 					bbCodeForm={bbCodeForm}
 					onUpdateBBCodeForm={(updatedBBCodeForm) =>
@@ -251,18 +251,18 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 					}
 				/>
 			</Col>
-			<Col xs={12}>
+			<Col xs={12} style={{ display: "flex", alignItems: "center" }}>
+				<Button variant="primary" onClick={() => exportBBCodeForm()}>
+					<FontAwesomeIcon icon="download" /> Export{" "}
+				</Button>
+
 				<CopyToClipboard
 					text={generateBBCode()}
 					onCopy={() => SuccessToast("BBCode Copied To Clipboard")}>
-					<Button variant="info">Generate BBCode</Button>
+					<Button variant="info" style={{ marginLeft: "auto" }}>
+						Generate BBCode
+					</Button>
 				</CopyToClipboard>
-				<Button
-					variant="primary"
-					style={{ float: "right" }}
-					onClick={() => exportBBCodeForm()}>
-					<FontAwesomeIcon icon="download" /> Export
-				</Button>
 			</Col>
 			<StandardModal
 				visible={pageModal?.visible || false}

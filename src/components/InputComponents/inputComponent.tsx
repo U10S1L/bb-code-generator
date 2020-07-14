@@ -43,7 +43,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	};
 
 	return (
-		<Form.Group>
+		<Form.Group style={{ marginBottom: "0" }}>
 			<Form.Label>
 				{orderNum}. {label}
 				<div className="small text-muted">{description}</div>

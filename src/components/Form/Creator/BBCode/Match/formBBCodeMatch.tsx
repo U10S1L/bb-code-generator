@@ -39,7 +39,7 @@ const FormBBCodeMatch = ({
 				<Container>
 					<Row>
 						<Col xs={4}>
-							<h5 className="header">Not Matched</h5>
+							<h5 className="header">Unmatched Fields</h5>
 							{selectedInputComponents.map((inputComponent, i) => {
 								return (
 									!inputComponentIsMatched(inputComponent.uniqueId) && (
@@ -54,11 +54,10 @@ const FormBBCodeMatch = ({
 														text={inputComponent.uniqueId}
 														onCopy={() =>
 															SuccessToast(
-																`🆔 for field '${inputComponent.label}' copied to clipboard.`
+																`Copied 🆔 for field '${inputComponent.label}' to clipboard. Paste it in the BBCode.`
 															)
 														}>
 														<Button variant="light">
-															<FontAwesomeIcon icon="clipboard" />
 															<span role="img" aria-label="id">
 																🆔
 															</span>
@@ -71,7 +70,7 @@ const FormBBCodeMatch = ({
 								);
 							})}
 							<hr />
-							<h5 className="header">Matched</h5>
+							<h5 className="header">Matched Fields</h5>
 							{selectedInputComponents.map((inputComponent, i) => {
 								return (
 									inputComponentIsMatched(inputComponent.uniqueId) && (
@@ -91,20 +90,20 @@ const FormBBCodeMatch = ({
 														}>
 														<FontAwesomeIcon icon="search" />
 													</Button>
-													<CopyToClipboard
+													{/* Leaving this commented out since copying from already matched fields probably isn't a use case */}
+													{/* <CopyToClipboard
 														text={inputComponent.uniqueId}
 														onCopy={() =>
 															SuccessToast(
-																`🆔 for '${inputComponent.label}' copied.`
+																`🆔 for '${inputComponent.label}' copied to clipboard.`
 															)
 														}>
 														<Button variant="light">
-															<FontAwesomeIcon icon="clipboard" />
 															<span role="img" aria-label="id">
 																🆔
 															</span>
 														</Button>
-													</CopyToClipboard>
+													</CopyToClipboard> */}
 												</Card.Text>
 											</Card.Body>
 										</Card>
@@ -113,7 +112,14 @@ const FormBBCodeMatch = ({
 							})}
 						</Col>
 						<Col xs={8}>
-							<h5 className="header">Matched BBCode</h5>
+							<h5 className="header">
+								BBCode With Field
+								<span role="img" aria-label="id">
+									🆔
+								</span>
+								s
+							</h5>
+
 							<TextAreaAutosize
 								ref={matchedBBCodeRef}
 								className="form-control h-100"

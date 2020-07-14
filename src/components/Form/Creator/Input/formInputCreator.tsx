@@ -15,6 +15,17 @@ import {
 import FormPreviewer from "../../Previewer/formPreviewer";
 import { BBCodeFormType } from "../../../../context";
 import InputType from "../../../InputComponents/inputType";
+import { QuestionMarkTooltip } from "../../../Help/Tooltip/tooltips";
+import {
+	faTextWidth,
+	faTextHeight,
+	faCalendarTimes,
+	faCalendarAlt,
+	faClock,
+	faCaretSquareDown,
+	faCheckSquare,
+	faLink
+} from "@fortawesome/free-solid-svg-icons";
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
@@ -25,6 +36,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "shortText",
 		typeName: "Text Line",
+		typeIcon: faTextWidth,
 		inputs: [{ type: "shortText", val: "" }],
 		onUpdateInputs: undefined
 	},
@@ -36,6 +48,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "longText",
 		typeName: "Text Box",
+		typeIcon: faTextHeight,
 		inputs: [{ type: "longText", val: "" }],
 		onUpdateInputs: undefined
 	},
@@ -47,6 +60,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "dateTime",
 		typeName: "Date & Time",
+		typeIcon: faCalendarTimes,
 		inputs: [{ type: "dateTime", val: "" }],
 		onUpdateInputs: undefined
 	},
@@ -58,6 +72,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "date",
 		typeName: "Date",
+		typeIcon: faCalendarAlt,
 		inputs: [{ type: "date", val: "" }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]
@@ -70,6 +85,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "time",
 		typeName: "Time",
+		typeIcon: faClock,
 		inputs: [{ type: "time", val: "" }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]
@@ -82,6 +98,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: " ",
 		type: "dropdown",
 		typeName: "Dropdown",
+		typeIcon: faCaretSquareDown,
 		inputs: [{ type: "dropdown", val: "" }],
 		onUpdateInputs: undefined,
 		selectOptions: [" ", ""]
@@ -94,6 +111,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "checkbox",
 		typeName: "Checkbox",
+		typeIcon: faCheckSquare,
 		inputs: [{ type: "checkbox", val: "false" }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]
@@ -106,6 +124,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: JSON.stringify({ text: "", link: "" }),
 		type: "url",
 		typeName: "Text & Link",
+		typeIcon: faLink,
 		inputs: [{ type: "url", val: JSON.stringify({ text: "", link: "" }) }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]
@@ -178,16 +197,47 @@ const FormInputCreator = ({
 
 	return (
 		<Row>
-			<Col xs={12} sm={2} className="input-selector-container">
-				<h4 className="header">Input Types</h4>
+			<Col xs={12} md={2} className="input-selector-container">
+				<div style={{ display: "flex", alignItems: "center" }}>
+					<h4 className="header">Field Types </h4>
+					<QuestionMarkTooltip
+						id="fieldTypes"
+						text={`
+				- <b>Text Line</b>: Names, ranks, badge numbers, locations...
+				<br>
+				- <b>Text Box</b>: Narratives, statements...
+				<br>
+				- <b>Date & Time</b>: Date and Time together. Will format as DD/MMM/YYYY HH:MM
+				<br>
+				- <b>Date</b>: Will format as DD/MMM/YYYY.
+				<br>
+				- <b>Dropdown</b>: Good for if a field's possible values don't change. 
+				<br>
+				- <b>Checkbox</b>: Generates a [cb] (unchecked) or [cbc] (checked) 
+				<br>
+				- <b>Text & Link</b>: Generates a [url=LINK]TEXT[/url]
+					`}
+					/>
+				</div>
 				<div className="input-selector">
 					<label className="mt-1" />
 					<div className="input-types">
 						{inputComponentChoiceList.map((inputComponent, i) => {
 							return (
 								<div key={i} className="btn-col">
-									<Button onClick={() => addNewInputComponent(inputComponent)}>
-										{inputComponent.typeName}
+									<Button
+										onClick={() => addNewInputComponent(inputComponent)}
+										style={{
+											display: "flex",
+											justifyContent: "space-between"
+										}}>
+										<span style={{ textAlign: "left" }}>
+											{inputComponent.typeName}
+										</span>
+										<FontAwesomeIcon
+											icon={inputComponent.typeIcon}
+											fixedWidth
+										/>
 									</Button>
 								</div>
 							);
@@ -195,7 +245,7 @@ const FormInputCreator = ({
 					</div>
 				</div>
 			</Col>
-			<Col xs={12} sm={10}>
+			<Col xs={12} md={10}>
 				<Container fluid>
 					<h4 className="header">Form Preview</h4>
 					<FormPreviewer
@@ -332,14 +382,17 @@ const InputComponentModal = ({
 			keyboard={false}>
 			<Modal.Header>
 				<Modal.Title>
-					<div style={{ overflowWrap: "anywhere" }}>{label}</div>
-					<div className="small text-muted">{inputComponent?.typeName}</div>
+					{inputComponent && (
+						<FontAwesomeIcon icon={inputComponent.typeIcon} fixedWidth />
+					)}
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form>
 					<Form.Group>
-						<Form.Label>Label</Form.Label>
+						<Form.Label style={{ display: "flex", alignItems: "center" }}>
+							<span>Name *</span>
+						</Form.Label>
 						<Form.Control
 							value={label}
 							type="text"
@@ -349,7 +402,13 @@ const InputComponentModal = ({
 						/>
 					</Form.Group>
 					<Form.Group>
-						<Form.Label>Description</Form.Label>
+						<Form.Label style={{ display: "flex", alignItems: "center" }}>
+							Description
+							<QuestionMarkTooltip
+								id="description"
+								text="Useful for reminders of what to write, etc."
+							/>
+						</Form.Label>
 						<Form.Control
 							value={description}
 							type="text"
@@ -359,7 +418,13 @@ const InputComponentModal = ({
 					{inputComponent?.type !== undefined &&
 						inputComponent?.type !== "dropdown" && (
 							<Form.Group>
-								<Form.Label>Default Value</Form.Label>
+								<Form.Label style={{ display: "flex", alignItems: "center" }}>
+									Default
+									<QuestionMarkTooltip
+										id="defaultValue"
+										text="Setting a default will auto-populate the field's value."
+									/>
+								</Form.Label>
 								<InputType
 									type={inputComponent?.type}
 									val={defaultVal}
@@ -400,13 +465,19 @@ const InputComponentModal = ({
 							})}
 						</Form.Group>
 					)}
-					<Form.Check
-						type="switch"
-						id="isMulti"
-						label="[*]"
-						checked={multi}
-						onChange={() => setMulti(!multi)}
-					/>
+					<div style={{ display: "flex", alignItems: "center" }}>
+						<Form.Check
+							type="switch"
+							id="isMulti"
+							label="[*]"
+							checked={multi}
+							onChange={() => setMulti(!multi)}
+						/>
+						<QuestionMarkTooltip
+							id="multi"
+							text="Allows you to add multiple values. Each value will generate with a [*] in front (for going between [list][/list] tags in your raw BBCode)."
+						/>
+					</div>
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
@@ -416,14 +487,16 @@ const InputComponentModal = ({
 						inputComponent &&
 						deleteInput &&
 						deleteInput(inputComponent.uniqueId)
-					}
-					style={{ marginRight: "auto" }}>
+					}>
 					Delete
 				</Button>
-				<Button variant="secondary" onClick={handleCancel}>
+				<Button
+					variant="warning"
+					onClick={handleCancel}
+					style={{ marginRight: "auto" }}>
 					Cancel
 				</Button>
-				<Button variant="info" onClick={submitForm}>
+				<Button variant="success" onClick={submitForm}>
 					{editMode ? "Save" : "Add"}
 				</Button>
 			</Modal.Footer>
