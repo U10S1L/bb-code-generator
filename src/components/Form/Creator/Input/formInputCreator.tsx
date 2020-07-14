@@ -469,13 +469,13 @@ const InputComponentModal = ({
 						<Form.Check
 							type="switch"
 							id="isMulti"
-							label="[*]"
+							label="Multi"
 							checked={multi}
 							onChange={() => setMulti(!multi)}
 						/>
 						<QuestionMarkTooltip
 							id="multi"
-							text="Allows you to add multiple values. Each value will generate with a [*] in front (for going between [list][/list] tags in your raw BBCode)."
+							text="Allows you to add multiple values. Each value will generate on a new line. Make sure you add a [*] in front (for going between [list][/list]) if you need that!"
 						/>
 					</div>
 				</Form>

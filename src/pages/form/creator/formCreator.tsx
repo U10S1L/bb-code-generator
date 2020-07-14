@@ -112,7 +112,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				<br>
 				- <b>Default Value</b>: optional. Auto populates the field's value.
 				<br>
-				- <b>[*]</b>: Allow you to add more than one value for this field. Each value renders with a [*] in front. Used for fields where you type [*]s between [list][/list] tags.
+				- <b>Multi</b>: Allow you to add more than one value for this field. Each value generates on a new line. (Remember to put [*] in the default value (if you have one) if the Multi field is between [list][/list] tags!).
 				</small>
 				<br>
 				<br>
@@ -134,7 +134,6 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				<br>
 				<small>- The 🆔 may look like jibberish, but don't worry - that's intentional.</small>
 				<br>
-				<small>- For fields that you marked as [*], the 🆔 should go between [list][/list] and should be the ONLY thing between the [list][/list]</small>
 				<br>
 				<img src="https://i.imgur.com/TYIQk0E.gif" class="w-100"/>
 				`;

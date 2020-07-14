@@ -47,7 +47,7 @@ const FormBBCodeMatch = ({
 											<Card.Body>
 												<Card.Title>
 													{inputComponent.label}
-													{inputComponent.multi ? " [*]" : null}
+													{inputComponent.multi ? " (Multi)" : null}
 												</Card.Title>
 												<Card.Text>
 													<CopyToClipboard
@@ -78,7 +78,7 @@ const FormBBCodeMatch = ({
 											<Card.Body>
 												<Card.Title>
 													{inputComponent.label}
-													{inputComponent.multi ? " [*]" : null}
+													{inputComponent.multi ? " (Multi)" : null}
 												</Card.Title>
 												<Card.Text>
 													<Button

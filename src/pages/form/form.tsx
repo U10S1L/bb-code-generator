@@ -104,8 +104,8 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 						inputComponent.inputs.indexOf(input) === 0 ||
 						inputComponent.inputs.indexOf(input) ===
 							inputComponent.inputs.length
-							? `\n[*] ${input.val}\n`
-							: `[*] ${input.val}\n`;
+							? `\n${input.val}\n`
+							: `${input.val}\n`;
 				});
 			} else {
 				inputComponentVal =
