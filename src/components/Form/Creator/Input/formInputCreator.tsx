@@ -475,7 +475,7 @@ const InputComponentModal = ({
 						/>
 						<QuestionMarkTooltip
 							id="multi"
-							text="Allows you to add multiple values. Each value will generate on a new line. Make sure you add a [*] in front (for going between [list][/list]) if you need that!"
+							text="Will allows you to add multiple values for this field. Each value will generate on a new line. (Make sure you add a [*] in the default if this will be going between [list][/list])"
 						/>
 					</div>
 				</Form>
