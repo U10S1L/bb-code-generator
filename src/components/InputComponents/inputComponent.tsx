@@ -45,7 +45,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	return (
 		<Form.Group style={{ marginBottom: "0" }}>
 			<Form.Label>
-				{orderNum}. {label}
+				{orderNum ? `${orderNum}. ${label}` : `${label}`}
 				<div className="small text-muted">{description}</div>
 			</Form.Label>
 			{inputs.map((inputType, i) => {

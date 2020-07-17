@@ -53,7 +53,9 @@ const Settings = () => {
 	return (
 		<Row>
 			<Col xs={12}>
-				<h3 className="header">Settings</h3>
+				<div className="header">
+					<h3>Settings</h3>
+				</div>
 			</Col>
 			<Col xs={12}>
 				<Row>

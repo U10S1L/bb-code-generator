@@ -41,6 +41,22 @@ export const formatDateTime = (dateTime: Date): string => {
 	}
 };
 
+export const formatDateTimeWithSeconds = (dateTime: Date): string => {
+	if (!isNaN(dateTime.getDate())) {
+		return `${dateTime.getDate().toString()}/${getMonthString(
+			dateTime.getMonth()
+		)}/${dateTime.getFullYear()} ${dateTime
+			.getHours()
+			.toString()
+			.padStart(2, "0")}:${dateTime
+			.getMinutes()
+			.toString()
+			.padStart(2, "0")}:${dateTime.getSeconds().toString().padStart(2, "0")}`;
+	} else {
+		return "";
+	}
+};
+
 // Formats Date object to DD/MMM/YYYY
 export const formatDate = (date: Date): string => {
 	if (!isNaN(date.getUTCDate())) {

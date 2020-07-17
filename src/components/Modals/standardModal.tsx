@@ -22,6 +22,7 @@ const StandardModal = ({
 		<Modal
 			show={visible}
 			onHide={handleClose}
+			animation={false}
 			backdrop="static"
 			keyboard={false}
 			centered>

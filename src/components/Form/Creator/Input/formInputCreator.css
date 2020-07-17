@@ -40,3 +40,25 @@
 .selected-input-component .type-text {
 	font-size: 0.9rem;
 }
+
+.modal-header {
+	display: flex;
+	flex-direction: column;
+}
+.modal-header .field-preview-header {
+	display: flex;
+	align-items: center;
+}
+.modal-header .field-preview-header h5 {
+	font-weight: bold;
+	margin-bottom: 0;
+}
+.modal-header .form-group {
+	width: 100%;
+}
+
+.field-preview {
+	border: 2px solid lightgray;
+	padding: 0.5rem;
+	width: 100%;
+}

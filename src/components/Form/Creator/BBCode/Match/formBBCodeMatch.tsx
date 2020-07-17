@@ -5,6 +5,7 @@ import { InputComponentProps } from "../../../../../types/form";
 import { SuccessToast } from "../../../../Toast/toast";
 import CopyToClipboard from "react-copy-to-clipboard";
 import TextAreaAutosize from "react-textarea-autosize";
+import { QuestionMarkTooltip } from "../../../../Help/Tooltip/tooltips";
 type FormBBCodeMatchProps = {
 	selectedInputComponents: InputComponentProps[];
 	matchedBBCode: string;
@@ -33,6 +34,15 @@ const FormBBCodeMatch = ({
 		}
 	};
 
+	const deleteUniqueIDInMatchedBBCode = (uniqueId: string) => {
+		if (matchedBBCodeRef.current != null) {
+			goToUniqueIDInMatchedBBCode(uniqueId);
+			matchedBBCodeRef.current.setRangeText("");
+			matchedBBCodeRef.current.focus();
+			setMatchedBBCode(matchedBBCodeRef.current.value);
+		}
+	};
+
 	return (
 		<Row>
 			<Col xs={12}>
@@ -47,7 +57,9 @@ const FormBBCodeMatch = ({
 											<Card.Body>
 												<Card.Title>
 													{inputComponent.label}
-													{inputComponent.multi ? " (Multi)" : null}
+													<span className="text-muted small">
+														{inputComponent.multi ? " (Multi)" : null}
+													</span>
 												</Card.Title>
 												<Card.Text>
 													<CopyToClipboard
@@ -78,7 +90,9 @@ const FormBBCodeMatch = ({
 											<Card.Body>
 												<Card.Title>
 													{inputComponent.label}
-													{inputComponent.multi ? " (Multi)" : null}
+													<span className="text-muted small">
+														{inputComponent.multi ? " (Multi)" : null}
+													</span>
 												</Card.Title>
 												<Card.Text>
 													<Button
@@ -104,6 +118,15 @@ const FormBBCodeMatch = ({
 															</span>
 														</Button>
 													</CopyToClipboard> */}
+													<Button
+														variant="light"
+														onClick={() =>
+															deleteUniqueIDInMatchedBBCode(
+																inputComponent.uniqueId
+															)
+														}>
+														<FontAwesomeIcon icon="times"></FontAwesomeIcon>
+													</Button>
 												</Card.Text>
 											</Card.Body>
 										</Card>
@@ -113,18 +136,19 @@ const FormBBCodeMatch = ({
 						</Col>
 						<Col xs={8}>
 							<h5 className="header">
-								BBCode With Field
-								<span role="img" aria-label="id">
-									🆔
-								</span>
-								s
+								BBCode
+								<QuestionMarkTooltip
+									id="bbCodeMatchIDs"
+									text={`Paste each <span role="img" aria-label="id"> 🆔 </span> into the BBCode below where you would normally type the value.`}
+								/>
 							</h5>
 
 							<TextAreaAutosize
 								ref={matchedBBCodeRef}
-								className="form-control h-100"
+								className="form-control"
 								value={matchedBBCode}
 								onChange={(e) => setMatchedBBCode(e.target.value)}
+								minRows={15}
 							/>
 						</Col>
 					</Row>

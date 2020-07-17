@@ -9,6 +9,9 @@ export type BBCodeFormType = {
 	inputComponents: InputComponentProps[];
 	rawBBCode: string;
 	matchedBBCode: string;
+	createdTimestamp: number;
+	updatedTimestamp: number;
+	progressTimestamp?: number;
 };
 
 // Defaults

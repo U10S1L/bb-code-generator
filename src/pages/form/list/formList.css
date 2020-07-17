@@ -4,6 +4,10 @@
 	flex: 1;
 	width: 50%;
 }
+.form-element .drag-handle {
+	margin: auto;
+	margin-right: 2rem;
+}
 
 .form-element .card {
 	width: 100%;

@@ -54,7 +54,20 @@ body {
 .header h4,
 .header h5,
 .header h6 {
-	margin: auto;
+	margin-right: auto;
+	margin-left: 0;
+	font-weight: normal;
+	text-align: left;
+	margin-bottom: 1px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-bottom: 0;
 }
 
 /* Spinner */

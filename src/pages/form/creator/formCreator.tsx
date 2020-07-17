@@ -1,4 +1,3 @@
-import "./formCreator.css";
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { AppContext, BBCodeFormType } from "../../../context";
 import FormSetupCreator from "../../../components/Form/Creator/Setup/formSetupCreator";
@@ -44,7 +43,9 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		name: "",
 		inputComponents: [],
 		rawBBCode: "",
-		matchedBBCode: ""
+		matchedBBCode: "",
+		createdTimestamp: Date.now(),
+		updatedTimestamp: Date.now()
 	});
 
 	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<BBCodeFormType>({
@@ -53,7 +54,9 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		name: "",
 		inputComponents: [],
 		rawBBCode: "",
-		matchedBBCode: ""
+		matchedBBCode: "",
+		createdTimestamp: Date.now(),
+		updatedTimestamp: Date.now()
 	});
 
 	const getHelpTitle = () => {
@@ -168,7 +171,9 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 						uniqueId: `{<${bbCodeForm.name}>_${
 							Math.floor(Math.random() * (9999 - 0)) + 0
 						}}`,
-						slug: slugify(bbCodeForm.name)
+						slug: slugify(bbCodeForm.name),
+						createdTimestamp: Date.now(),
+						updatedTimestamp: Date.now()
 					}
 				});
 				// history.push(`/form/${slugify(bbCodeForm.name)}`);
@@ -278,7 +283,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		if (doesFormNameExist()) {
 			ErrorToast("Form name already exists.");
 		} else {
-			saveEdits(bbCodeForm);
+			saveEdits({ ...bbCodeForm, updatedTimestamp: Date.now() });
 		}
 	};
 
@@ -329,7 +334,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 								Back
 							</Button>
 						)}
-						<h3>{formCreationStep}</h3>
+						<h3 style={{ margin: "auto" }}>{formCreationStep}</h3>
 
 						{(formCreationStep !== FormCreationStep.BBCODE_MATCH ||
 							!editMode) && (
@@ -361,6 +366,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 						}
 						label={`${formCreationStepEnums.indexOf(formCreationStep) + 1} / 4`}
 						variant="info"
+						style={{ marginTop: ".5rem" }}
 					/>
 				</Col>
 			</Row>

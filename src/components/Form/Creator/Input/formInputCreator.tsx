@@ -1,7 +1,7 @@
 import "./formInputCreator.css";
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps } from "../../../../types/form";
+import { InputComponentProps, InputTypeProps } from "../../../../types/form";
 import {
 	Container,
 	Row,
@@ -26,6 +26,7 @@ import {
 	faCheckSquare,
 	faLink
 } from "@fortawesome/free-solid-svg-icons";
+import InputComponent from "../../../InputComponents/inputComponent";
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
@@ -141,6 +142,16 @@ type FormInputCreatorProps = {
 		newIndex: number;
 	}) => void;
 };
+
+type InputComponentModalProps = {
+	visible: boolean;
+	inputComponent?: InputComponentProps;
+	editMode?: boolean;
+	handleCancel?: () => void;
+	handleSubmit?: (inputComponent: InputComponentProps) => void;
+	deleteInput?: (uniqueId: string) => void;
+};
+
 const FormInputCreator = ({
 	newBBCodeForm,
 	addInput,
@@ -198,26 +209,8 @@ const FormInputCreator = ({
 	return (
 		<Row>
 			<Col xs={12} md={2} className="input-selector-container">
-				<div style={{ display: "flex", alignItems: "center" }}>
-					<h4 className="header">Field Types </h4>
-					<QuestionMarkTooltip
-						id="fieldTypes"
-						text={`
-				- <b>Text Line</b>: Names, ranks, badge numbers, locations...
-				<br>
-				- <b>Text Box</b>: Narratives, statements...
-				<br>
-				- <b>Date & Time</b>: Date and Time together. Will format as DD/MMM/YYYY HH:MM
-				<br>
-				- <b>Date</b>: Will format as DD/MMM/YYYY.
-				<br>
-				- <b>Dropdown</b>: Good for if a field's possible values don't change. 
-				<br>
-				- <b>Checkbox</b>: Generates a [cb] (unchecked) or [cbc] (checked) 
-				<br>
-				- <b>Text & Link</b>: Generates a [url=LINK]TEXT[/url]
-					`}
-					/>
+				<div className="header">
+					<h4>Field Types</h4>
 				</div>
 				<div className="input-selector">
 					<label className="mt-1" />
@@ -229,7 +222,8 @@ const FormInputCreator = ({
 										onClick={() => addNewInputComponent(inputComponent)}
 										style={{
 											display: "flex",
-											justifyContent: "space-between"
+											justifyContent: "space-between",
+											alignItems: "center"
 										}}>
 										<span style={{ textAlign: "left" }}>
 											{inputComponent.typeName}
@@ -280,14 +274,6 @@ const FormInputCreator = ({
 	);
 };
 
-type InputComponentModalProps = {
-	visible: boolean;
-	inputComponent?: InputComponentProps;
-	editMode?: boolean;
-	handleCancel?: () => void;
-	handleSubmit?: (inputComponent: InputComponentProps) => void;
-	deleteInput?: (uniqueId: string) => void;
-};
 const InputComponentModal = ({
 	inputComponent,
 	visible,
@@ -307,6 +293,9 @@ const InputComponentModal = ({
 	);
 	const [multi, setMulti] = useState(
 		inputComponent ? inputComponent.multi : false
+	);
+	const [inputs, setInputs] = useState(
+		inputComponent ? inputComponent.inputs : []
 	);
 
 	const labelRef = useRef<HTMLInputElement>(null!);
@@ -332,7 +321,6 @@ const InputComponentModal = ({
 				multi,
 				selectOptions
 			};
-
 			handleSubmit && handleSubmit(newInputComponent);
 		}
 	};
@@ -372,6 +360,15 @@ const InputComponentModal = ({
 		}
 	}, [label, labelValid, isValidLabel]);
 
+	useEffect(() => {
+		var inputComponentInputsWithDefaults = inputComponent
+			? inputComponent.inputs.map((input) => {
+					return { ...input, val: defaultVal };
+			  })
+			: [];
+		setInputs(inputComponentInputsWithDefaults);
+	}, [defaultVal, inputComponent]);
+
 	return (
 		<Modal
 			show={visible}
@@ -380,12 +377,28 @@ const InputComponentModal = ({
 			centered
 			backdrop="static"
 			keyboard={false}>
-			<Modal.Header>
-				<Modal.Title>
-					{inputComponent && (
-						<FontAwesomeIcon icon={inputComponent.typeIcon} fixedWidth />
-					)}
-				</Modal.Title>
+			<Modal.Header style={{ display: "flex" }}>
+				{inputComponent && (
+					<div className="field-preview">
+						<div className="field-preview-header">
+							<h5>Field Preview</h5>
+							<QuestionMarkTooltip
+								id="inputFieldPreview"
+								text="See (and interact with) how this field will render on the form based on what you enter below."
+							/>
+						</div>
+						<InputComponent
+							{...inputComponent}
+							label={label}
+							multi={multi}
+							defaultVal={defaultVal}
+							description={description}
+							inputs={inputs}
+							selectOptions={selectOptions}
+							onUpdateInputs={(inputs: InputTypeProps[]) => setInputs(inputs)}
+						/>
+					</div>
+				)}
 			</Modal.Header>
 			<Modal.Body>
 				<Form>
@@ -406,7 +419,7 @@ const InputComponentModal = ({
 							Description
 							<QuestionMarkTooltip
 								id="description"
-								text="Useful for reminders of what to write, etc."
+								text="Useful for reminders of what to write in the input. Appears below the Name."
 							/>
 						</Form.Label>
 						<Form.Control
@@ -475,7 +488,7 @@ const InputComponentModal = ({
 						/>
 						<QuestionMarkTooltip
 							id="multi"
-							text="Will allows you to add multiple values for this field. Each value will generate on a new line. (Make sure you add a [*] in the default if this will be going between [list][/list])"
+							text="Allows you to add more than one value, and each value will generate on a new line. (Make sure you add a [*] in the default if this will be going between [list][/list])"
 						/>
 					</div>
 				</Form>

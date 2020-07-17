@@ -1,5 +1,5 @@
 import "./formList.css";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import {
 	SortableContainer,
@@ -20,17 +20,20 @@ const DragHandle = SortableHandle(() => (
 
 type SortableFormElementProps = {
 	form: BBCodeFormType;
+	showDragHandle: boolean;
+};
+type SortableFormsContainerProps = {
+	forms: BBCodeFormType[];
+	showDragHandles: boolean;
 };
 const SortableFormElement = SortableElement(
-	({ form }: SortableFormElementProps) => {
+	({ form, showDragHandle }: SortableFormElementProps) => {
 		return (
 			<div className="form-element">
+				{showDragHandle && <DragHandle />}
 				<Card bg="light" color="white" style={{ borderRadius: 0 }}>
 					<Card.Body>
-						<Card.Title>
-							<div>{form.name}</div>
-						</Card.Title>
-						<DragHandle />
+						<Card.Title>{form.name}</Card.Title>
 					</Card.Body>
 				</Card>
 				<LinkContainer to={`/form/${form.slug}`} exact>
@@ -43,16 +46,18 @@ const SortableFormElement = SortableElement(
 	}
 );
 
-type SortableFormsContainerProps = {
-	forms: BBCodeFormType[];
-};
 const SortableFormContainer = SortableContainer(
-	({ forms }: SortableFormsContainerProps) => {
+	({ forms, showDragHandles }: SortableFormsContainerProps) => {
 		return (
 			<ul>
 				{forms &&
 					forms.map((form, index) => (
-						<SortableFormElement form={form} key={index} index={index} />
+						<SortableFormElement
+							form={form}
+							showDragHandle={showDragHandles}
+							key={index}
+							index={index}
+						/>
 					))}
 			</ul>
 		);
@@ -61,6 +66,7 @@ const SortableFormContainer = SortableContainer(
 
 const FormList = () => {
 	const { state, dispatch } = useContext(AppContext);
+	const [isChangingOrder, setIsChangingOrder] = useState(false);
 
 	const reorderForms = (sortObject: { oldIndex: number; newIndex: number }) => {
 		dispatch({
@@ -72,13 +78,21 @@ const FormList = () => {
 	return (
 		<Row>
 			<Col xs={12}>
-				<h3 className="header">My Forms</h3>
+				<div className="header">
+					<h3>My Forms</h3>
+					<Button
+						variant={isChangingOrder ? "success" : "secondary"}
+						onClick={() => setIsChangingOrder(!isChangingOrder)}>
+						{isChangingOrder ? "Save Order" : "Change Order"}
+					</Button>
+				</div>
 			</Col>
-			<Col xs={12}>
+			<Col xs={12} style={{ marginTop: "1rem" }}>
 				<SortableFormContainer
 					useDragHandle
 					onSortEnd={reorderForms}
 					forms={state.forms}
+					showDragHandles={isChangingOrder}
 				/>
 			</Col>
 		</Row>

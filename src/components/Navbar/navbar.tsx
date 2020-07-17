@@ -1,6 +1,6 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Navbar, Nav, Image } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import "./navbar.css";
 import { Page } from "../../constants/pages";
 import Clock from "react-live-clock";
@@ -15,7 +15,11 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 		<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
 			<LinkContainer to={"/"} exact>
 				<Navbar.Brand>
-					<Image style={{ width: "10rem" }} src={logoImage}></Image>
+					<img
+						alt="logo"
+						style={{ width: "9rem" }}
+						src={logoImage}
+						className="img-fluid"></img>
 				</Navbar.Brand>
 			</LinkContainer>
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -31,8 +35,19 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 						);
 					})}
 				</Nav>
-				<span style={{ color: "white" }}>
-					<Clock timezone={"GMT"} /> <span className="text-muted">(GMT)</span>
+				<span
+					style={{
+						color: "rgba(255,255,255,.5)",
+						fontWeight: "normal",
+						textTransform: "uppercase"
+					}}
+					className="text-muted small">
+					<Clock
+						timezone={"GMT"}
+						format={"DD/MMM/YYYY HH:mm:ss"}
+						ticking={true}
+					/>{" "}
+					<span className="text-muted">(GMT)</span>
 				</span>
 			</Navbar.Collapse>
 		</Navbar>

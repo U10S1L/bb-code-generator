@@ -30,6 +30,7 @@ export const QuestionMarkTooltip = ({
 		alignItems: "center",
 		lineHeight: "normal",
 		marginLeft: "1rem",
+		flexShrink: 0,
 		...styles
 	};
 

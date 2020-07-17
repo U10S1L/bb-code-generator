@@ -30,6 +30,7 @@ const FormBBCodeUpload = ({
 							onChange={(e) => setRawBBCode(e.target.value)}
 							ref={rawBBCodeRef}
 							style={{ margin: "1rem 0" }}
+							minRows={15}
 						/>
 					</Row>
 				</Container>

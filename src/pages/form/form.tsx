@@ -8,7 +8,12 @@ import FormCreator from "./creator/formCreator";
 import { Types } from "../../reducers";
 import { SuccessToast } from "../../components/Toast/toast";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { formatDateTime, formatDate, formatUrl } from "../../formatters";
+import {
+	formatDateTimeWithSeconds,
+	formatDateTime,
+	formatDate,
+	formatUrl
+} from "../../formatters";
 import { InputComponentProps } from "../../types/form";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,7 +39,9 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 			name: "",
 			inputComponents: [],
 			rawBBCode: "",
-			matchedBBCode: ""
+			matchedBBCode: "",
+			createdTimestamp: Date.now(),
+			updatedTimestamp: Date.now()
 		}
 	);
 	const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
@@ -69,7 +76,9 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 			name: "",
 			inputComponents: [],
 			rawBBCode: "",
-			matchedBBCode: ""
+			matchedBBCode: "",
+			createdTimestamp: Date.now(),
+			updatedTimestamp: Date.now()
 		};
 	}, [bbCodeForm.uniqueId, state.forms]);
 
@@ -129,8 +138,6 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	};
 
 	const editBBCodeForm = () => {
-		// TODO: Warning first
-
 		localStorage.removeItem(formProgressString);
 		localStorage.setItem(
 			"editBBCodeForm",
@@ -145,7 +152,6 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	};
 
 	const deleteBBCodeForm = () => {
-		// TODO: Some kind of warning like you can't undo this. And then navigate to home page
 		localStorage.removeItem(formProgressString);
 		dispatch({ type: Types.DeleteForm, payload: bbCodeForm });
 		history.push("/forms/list");
@@ -181,10 +187,10 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	useEffect(() => {
 		// Initial loading of the BBCodeForm
 		const formProgress = localStorage.getItem(formProgressString);
-		if (formProgress != null) {
-			setBBCodeForm(JSON.parse(formProgress));
-		} else {
+		if (formProgress == null) {
 			setBBCodeForm(getOriginalBBCodeForm());
+		} else {
+			setBBCodeForm(JSON.parse(formProgress));
 		}
 	}, [
 		match.params.slug,
@@ -201,8 +207,21 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 	return !editMode ? (
 		<Row>
 			<Col xs={12}>
-				<div className="header">
-					<h3 className="mr-auto ml-0">{bbCodeForm.name}</h3>
+				<div
+					className="header"
+					style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+					<div>
+						<h3>{bbCodeForm.name}</h3>
+						{bbCodeForm.progressTimestamp && (
+							<h6 className="small">
+								Auto Saved:{" "}
+								{formatDateTimeWithSeconds(
+									new Date(bbCodeForm.progressTimestamp)
+								)}{" "}
+								<h6 className="small text-muted">(Local Time)</h6>
+							</h6>
+						)}
+					</div>
 					<ButtonGroup>
 						<Button
 							variant="warning"
@@ -211,7 +230,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 									visible: true,
 									continueAction: () => setBBCodeForm(getOriginalBBCodeForm),
 									message:
-										"This will erase any saved values in the form fields. Do you want to continue?"
+										"This will erase any values in the form fields. Do you want to continue?"
 								})
 							}>
 							Clear
@@ -223,7 +242,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 									visible: true,
 									continueAction: () => editBBCodeForm(),
 									message:
-										"Editing the form will erase any field values that you've filled out and cannot be undone. Do you wish to continue?"
+										"Editing the form will erase any values that you've typed in the form fields, which cannot be undone. Do you wish to continue?"
 								})
 							}>
 							Edit
@@ -247,7 +266,10 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 				<FormRenderer
 					bbCodeForm={bbCodeForm}
 					onUpdateBBCodeForm={(updatedBBCodeForm) =>
-						setBBCodeForm(updatedBBCodeForm)
+						setBBCodeForm({
+							...updatedBBCodeForm,
+							progressTimestamp: Date.now()
+						})
 					}
 				/>
 			</Col>
