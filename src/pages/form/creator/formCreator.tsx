@@ -15,14 +15,14 @@ var slugify = require("slugify");
 
 export enum FormCreationStep {
 	FORM_SETUP = "Form Setup",
-	FIELD_CREATION = "Field Creation",
 	BBCODE_UPLOAD = "Raw BBCode Upload",
+	FIELD_CREATION = "Field Creation",
 	BBCODE_MATCH = "BBCode Match"
 }
 const formCreationStepEnums = [
 	FormCreationStep.FORM_SETUP,
-	FormCreationStep.FIELD_CREATION,
 	FormCreationStep.BBCODE_UPLOAD,
+	FormCreationStep.FIELD_CREATION,
 	FormCreationStep.BBCODE_MATCH
 ];
 
@@ -154,13 +154,13 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				if (doesFormNameExist()) {
 					ErrorToast(`Form name must not already exist.`);
 				} else {
-					setFormCreationStep(FormCreationStep.FIELD_CREATION);
+					setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
 				}
 				break;
-			case FormCreationStep.FIELD_CREATION:
-				setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
-				break;
 			case FormCreationStep.BBCODE_UPLOAD:
+				setFormCreationStep(FormCreationStep.FIELD_CREATION);
+				break;
+			case FormCreationStep.FIELD_CREATION:
 				setFormCreationStep(FormCreationStep.BBCODE_MATCH);
 				break;
 			case FormCreationStep.BBCODE_MATCH:
@@ -184,11 +184,11 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	};
 	const decrementFormCreationStep = (): void => {
 		switch (formCreationStep) {
-			case FormCreationStep.FIELD_CREATION:
+			case FormCreationStep.BBCODE_UPLOAD:
 				setFormCreationStep(FormCreationStep.FORM_SETUP);
 				break;
-			case FormCreationStep.BBCODE_UPLOAD:
-				setFormCreationStep(FormCreationStep.FIELD_CREATION);
+			case FormCreationStep.FIELD_CREATION:
+				setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
 				break;
 			case FormCreationStep.BBCODE_MATCH:
 				setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);

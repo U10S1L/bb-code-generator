@@ -27,6 +27,7 @@ import {
 	faLink
 } from "@fortawesome/free-solid-svg-icons";
 import InputComponent from "../../../InputComponents/inputComponent";
+import BBCodeVisualizer from "../BBCode/Visualizer/bbCodeVisualizer";
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
@@ -270,6 +271,9 @@ const FormInputCreator = ({
 					}
 				/>
 			)}
+			<Row>
+				<BBCodeVisualizer bbCode={newBBCodeForm.rawBBCode} />
+			</Row>
 		</Row>
 	);
 };
