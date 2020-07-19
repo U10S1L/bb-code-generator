@@ -1,11 +1,11 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
 import { AppContext, BBCodeFormType } from "../../../context";
-import FormSetupCreator from "../../../components/Form/Creator/Setup/formSetupCreator";
-import FormInputCreator from "../../../components/Form/Creator/Input/formInputCreator";
-import FormBBCodeMatch from "../../../components/Form/Creator/BBCode/Match/formBBCodeMatch";
-import FormBBCodeUpload from "../../../components/Form/Creator/BBCode/Upload/formBBCodeUpload";
+import FormSetupCreator from "components/Form/Creator/Setup/formSetupCreator";
+import FormInputCreator from "components/Form/Creator/Input/formInputCreator";
+import FormBBCodeMatch from "components/Form/Creator/BBCode/Match/formBBCodeMatch";
+import FormBBCodeUpload from "components/Form/Creator/BBCode/Upload/formBBCodeUpload";
 import { useHistory } from "react-router-dom";
-import { InputComponentProps } from "../../../types/form";
+import { InputComponentProps } from "types/form";
 import { Button, Row, Col } from "react-bootstrap";
 import arrayMove from "array-move";
 import { Types } from "../../../reducers";
@@ -164,7 +164,6 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 						updatedTimestamp: Date.now()
 					}
 				});
-				// history.push(`/form/${slugify(bbCodeForm.name)}`);
 				history.push(`/forms/list`);
 				localStorage.removeItem("newBBCodeForm");
 				break;

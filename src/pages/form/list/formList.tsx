@@ -189,10 +189,17 @@ const FormList = () => {
 			<Col xs={12}>
 				<div className="header">
 					<h3>My Forms</h3>
+					{state.forms.length > 1 && (
+						<Button
+							variant={isChangingOrder ? "success" : "secondary"}
+							onClick={() => setIsChangingOrder(!isChangingOrder)}>
+							{isChangingOrder ? "Save Order" : "Change Order"}
+						</Button>
+					)}
 					<Button
-						variant={isChangingOrder ? "success" : "secondary"}
-						onClick={() => setIsChangingOrder(!isChangingOrder)}>
-						{isChangingOrder ? "Save Order" : "Change Order"}
+						variant="secondary"
+						onClick={() => history.push("/forms/new")}>
+						Add Form
 					</Button>
 				</div>
 			</Col>

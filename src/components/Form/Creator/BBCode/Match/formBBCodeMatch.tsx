@@ -48,25 +48,26 @@ const FormBBCodeMatch = ({
 			<Col xs={12}>
 				<Row>
 					<Col xs={4}>
-						<h5 className="header">Unmatched Fields</h5>
+						<h5 className="header">Input Fields</h5>
 						{selectedInputComponents.map((inputComponent, i) => {
+							const matched = inputComponentIsMatched(inputComponent.uniqueId);
 							return (
-								!inputComponentIsMatched(inputComponent.uniqueId) && (
-									<Card key={i}>
-										<Card.Body>
-											<Card.Title>
-												{inputComponent.label}
-												<span className="text-muted small">
-													{inputComponent.multi &&
-													inputComponent.type !== "listItem"
-														? " (Multi)"
-														: null}
-													{inputComponent.type === "listItem"
-														? " (List Items [*])"
-														: null}
-												</span>
-											</Card.Title>
-											<Card.Text>
+								<Card key={i} style={{ borderRadius: 0 }}>
+									<Card.Body>
+										<Card.Title>
+											{inputComponent.label}
+											<span className="text-muted small">
+												{inputComponent.multi &&
+												inputComponent.type !== "listItem"
+													? " (Multi)"
+													: null}
+												{inputComponent.type === "listItem"
+													? " (List Items [*])"
+													: null}
+											</span>
+										</Card.Title>
+										<Card.Text>
+											{!matched ? (
 												<CopyToClipboard
 													text={inputComponent.uniqueId}
 													onCopy={() =>
@@ -80,60 +81,39 @@ const FormBBCodeMatch = ({
 														</span>
 													</Button>
 												</CopyToClipboard>
-											</Card.Text>
-										</Card.Body>
-									</Card>
-								)
-							);
-						})}
-						<hr />
-						<h5 className="header">Matched Fields</h5>
-						{selectedInputComponents.map((inputComponent, i) => {
-							return (
-								inputComponentIsMatched(inputComponent.uniqueId) && (
-									<Card key={i}>
-										<Card.Body>
-											<Card.Title>
-												{inputComponent.label}
-												<span className="text-muted small">
-													{inputComponent.multi ? " (Multi)" : null}
-												</span>
-											</Card.Title>
-											<Card.Text>
-												<Button
-													variant="light"
-													onClick={() =>
-														goToUniqueIDInMatchedBBCode(inputComponent.uniqueId)
-													}>
-													<FontAwesomeIcon icon="search" />
-												</Button>
-												{/* Leaving this commented out since copying from already matched fields probably isn't a use case */}
-												{/* <CopyToClipboard
-														text={inputComponent.uniqueId}
-														onCopy={() =>
-															SuccessToast(
-																`🆔 for '${inputComponent.label}' copied to clipboard.`
+											) : (
+												<div>
+													<Button
+														variant="light"
+														onClick={() =>
+															goToUniqueIDInMatchedBBCode(
+																inputComponent.uniqueId
 															)
 														}>
-														<Button variant="light">
-															<span role="img" aria-label="id">
-																🆔
-															</span>
-														</Button>
-													</CopyToClipboard> */}
-												<Button
-													variant="light"
-													onClick={() =>
-														deleteUniqueIDInMatchedBBCode(
-															inputComponent.uniqueId
-														)
-													}>
-													<FontAwesomeIcon icon="times"></FontAwesomeIcon>
-												</Button>
-											</Card.Text>
-										</Card.Body>
-									</Card>
-								)
+														<FontAwesomeIcon icon="search" />
+													</Button>
+													<Button
+														variant="light"
+														onClick={() =>
+															deleteUniqueIDInMatchedBBCode(
+																inputComponent.uniqueId
+															)
+														}>
+														<FontAwesomeIcon icon="times"></FontAwesomeIcon>
+													</Button>
+												</div>
+											)}
+											<div
+												style={{ display: "flex", justifyContent: "flex-end" }}>
+												{!matched ? (
+													<span style={{ color: "red" }}>Unmatched</span>
+												) : (
+													<span style={{ color: "green" }}>Matched</span>
+												)}
+											</div>
+										</Card.Text>
+									</Card.Body>
+								</Card>
 							);
 						})}
 					</Col>
