@@ -29,7 +29,9 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 				<Nav className="mr-auto">
 					{links.map((link, i) => {
 						return (
-							link.id !== "home" && (
+							link.id !== "home" &&
+							link.id !== "signIn" &&
+							link.id !== "signUp" && (
 								<LinkContainer to={link.path} key={i}>
 									<Nav.Link>{link.name}</Nav.Link>
 								</LinkContainer>
@@ -37,6 +39,9 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 						);
 					})}
 				</Nav>
+				<LinkContainer to={"/auth/signin"}>
+					<Nav.Link>Sign In</Nav.Link>
+				</LinkContainer>
 				<span
 					style={{
 						color: "rgba(255,255,255,.5)",
