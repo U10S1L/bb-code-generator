@@ -8,6 +8,7 @@ import { Checkbox } from "./Checkbox/checkbox";
 import { Date } from "./Date/date";
 import { Time } from "./Time/time";
 import { Url } from "./Url/url";
+import ListItem from "./ListItem/ListItem";
 
 const InputType = (props: InputTypeProps) => {
 	switch (props.type) {
@@ -27,6 +28,8 @@ const InputType = (props: InputTypeProps) => {
 			return <Time {...props} />;
 		case "url":
 			return <Url {...props} />;
+		case "listItem":
+			return <ListItem {...props} />;
 	}
 };
 export default InputType;

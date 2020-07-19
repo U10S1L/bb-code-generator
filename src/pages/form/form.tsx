@@ -101,6 +101,8 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 					input.val = formatDate(new Date(input.val));
 				} else if (inputComponent.type === "url") {
 					input.val = formatUrl(JSON.parse(input.val));
+				} else if (inputComponent.type === "listItem") {
+					input.val = `[*] ${input.val}`;
 				}
 			});
 		});

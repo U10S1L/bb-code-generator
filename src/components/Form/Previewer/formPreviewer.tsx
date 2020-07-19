@@ -91,7 +91,7 @@ const SortableSelectedInputComponents = SortableContainer(
 			setPreviewInputComponents(inputComponents);
 		}, [inputComponents]);
 		return (
-			<ul>
+			<ul style={{ padding: 0 }}>
 				{previewInputComponents &&
 					previewInputComponents.map((inputComponent, index) => (
 						<SelectedInputComponent

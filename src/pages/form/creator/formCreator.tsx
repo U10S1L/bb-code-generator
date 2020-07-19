@@ -6,7 +6,7 @@ import FormBBCodeMatch from "../../../components/Form/Creator/BBCode/Match/formB
 import FormBBCodeUpload from "../../../components/Form/Creator/BBCode/Upload/formBBCodeUpload";
 import { useHistory } from "react-router-dom";
 import { InputComponentProps } from "../../../types/form";
-import { Button, ProgressBar, Row, Col } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import arrayMove from "array-move";
 import { Types } from "../../../reducers";
 import { ErrorToast } from "../../../components/Toast/toast";
@@ -19,12 +19,6 @@ export enum FormCreationStep {
 	FIELD_CREATION = "Field Creation",
 	BBCODE_MATCH = "BBCode Match"
 }
-const formCreationStepEnums = [
-	FormCreationStep.FORM_SETUP,
-	FormCreationStep.BBCODE_UPLOAD,
-	FormCreationStep.FIELD_CREATION,
-	FormCreationStep.BBCODE_MATCH
-];
 
 type FormCreatorProps = {
 	editMode: boolean;
@@ -191,7 +185,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
 				break;
 			case FormCreationStep.BBCODE_MATCH:
-				setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
+				setFormCreationStep(FormCreationStep.FIELD_CREATION);
 				break;
 		}
 	};
@@ -326,7 +320,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		<Fragment>
 			<Row>
 				<Col xs={12}>
-					<div className="header">
+					<div className="header" style={{ border: 0 }}>
 						{formCreationStep !== FormCreationStep.FORM_SETUP && (
 							<Button
 								variant="secondary"
@@ -358,7 +352,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 							</Button>
 						)}
 					</div>
-					<ProgressBar
+					{/* <ProgressBar
 						now={
 							((formCreationStepEnums.indexOf(formCreationStep) + 1) /
 								formCreationStepEnums.length) *
@@ -367,7 +361,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 						label={`${formCreationStepEnums.indexOf(formCreationStep) + 1} / 4`}
 						variant="info"
 						style={{ marginTop: ".5rem" }}
-					/>
+					/> */}
 				</Col>
 			</Row>
 			{formCreationStep === FormCreationStep.FORM_SETUP && (
@@ -403,10 +397,10 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				/>
 			)}
 			{editMode && (
-				<Row style={{ marginTop: "3rem" }}>
+				<Row style={{ marginTop: "3rem", paddingBottom: ".5rem" }}>
 					<Col xs={12}>
 						<Button
-							style={{ float: "right" }}
+							style={{ float: "left" }}
 							variant="danger"
 							onClick={() => cancelEditBBCodeForm()}>
 							Cancel Edits

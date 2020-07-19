@@ -3,6 +3,7 @@ import { Form, InputGroup, Button } from "react-bootstrap";
 import { InputComponentProps, InputTypeProps } from "../../types/form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputType from "../InputComponents/inputType";
+import Clock from "react-live-clock";
 
 const InputComponent: React.FC<InputComponentProps> = ({
 	label,
@@ -47,6 +48,17 @@ const InputComponent: React.FC<InputComponentProps> = ({
 			<Form.Label>
 				{orderNum ? `${orderNum}. ${label}` : `${label}`}
 				<div className="small text-muted">{description}</div>
+				{type === "date" ||
+					type === "time" ||
+					(type === "dateTime" && (
+						<div className="small text-muted">
+							Dates/times should be entered in GMT (
+							<span style={{ textTransform: "uppercase" }}>
+								<Clock timezone={"GMT"} format={"DD/MMM/YYYY HH:mm"} />{" "}
+							</span>
+							<span className="text-muted">)</span>
+						</div>
+					))}
 			</Form.Label>
 			{inputs.map((inputType, i) => {
 				const canAddInput = multi;
@@ -54,9 +66,9 @@ const InputComponent: React.FC<InputComponentProps> = ({
 
 				return (
 					<InputGroup key={i}>
-						{multi && (
+						{type === "listItem" && (
 							<InputGroup.Prepend>
-								<InputGroup.Text>{`${i + 1}`}</InputGroup.Text>
+								<InputGroup.Text>{`[*]`}</InputGroup.Text>
 							</InputGroup.Prepend>
 						)}
 						<InputType
@@ -67,11 +79,13 @@ const InputComponent: React.FC<InputComponentProps> = ({
 						/>
 						<InputGroup.Append hidden={!multi}>
 							<Button
+								variant="secondary"
 								onClick={() => removeInput(inputType)}
 								disabled={!canRemoveInput}>
 								<FontAwesomeIcon icon="minus" />
 							</Button>
 							<Button
+								variant="secondary"
 								onClick={() => addNewInput(inputType, i)}
 								disabled={!canAddInput}>
 								<FontAwesomeIcon icon="plus" />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 type BBCodeVisualierProps = {
 	bbCode: string;
 };
@@ -59,6 +60,13 @@ const bbCodeElems: BBCodeElem[] = [
 		htmlClose: `</div>`
 	},
 	{
+		type: "left",
+		bbOpen: escapedRegExp("[left]"),
+		bbClose: escapedRegExp("[/left]"),
+		htmlOpen: `<div align="left">`,
+		htmlClose: `</div>`
+	},
+	{
 		type: "checkboxOpen",
 		bbOpen: escapedRegExp("[cb]"),
 		bbClose: escapedRegExp("[/cb]"),
@@ -78,6 +86,27 @@ const bbCodeElems: BBCodeElem[] = [
 		bbClose: escapedRegExp(`[/img]`),
 		htmlOpen: `<img src="`,
 		htmlClose: `"/>`
+	},
+	{
+		type: "url",
+		bbOpen: new RegExp(/\[url=\w*\]/, "g"),
+		bbClose: escapedRegExp("[/url]"),
+		htmlOpen: `<a href="#" style="border-bottom: 1px dotted #6b6b6b;" >`,
+		htmlClose: `</a>`
+	},
+	{
+		type: "list",
+		bbOpen: escapedRegExp("[list]"),
+		bbClose: escapedRegExp("[/list]"),
+		htmlOpen: `<ul>`,
+		htmlClose: `</ul>`
+	},
+	{
+		type: "listitem",
+		bbOpen: escapedRegExp("[*]"),
+		bbClose: escapedRegExp(""),
+		htmlOpen: "<li>",
+		htmlClose: ""
 	},
 	{
 		type: `divbox`,
@@ -112,9 +141,8 @@ const bbCodeElems: BBCodeElem[] = [
 			"g"
 		),
 		bbClose: new RegExp(/\[\/aligntable\]/, "g"),
-		htmlOpen: `<div><table>`,
-		htmlClose: `</td></tr></tbody></table></div>`,
-		htmlOpenStyles: ""
+		htmlOpen: `<div>`,
+		htmlClose: `</div>`
 	}
 ];
 
@@ -136,7 +164,7 @@ const BBCodeVisualizer = ({ bbCode }: BBCodeVisualierProps) => {
 						console.log(openBBTag);
 						newlyConvertedBBCode = newlyConvertedBBCode.replace(
 							openBBTag[0],
-							`<div style="float: ${openBBTag[1]}; margin-left: ${openBBTag[3]}px; margin-right: ${openBBTag[4]}px;"><table style="width: ${openBBTag[2]}px; border-width: ${openBBTag[5]}px; border-color: ${openBBTag[6]}; background-color: ${openBBTag[7]}; "><tbody><tr><td>`
+							`<div style="margin-left: ${openBBTag[3]}px; margin-right: ${openBBTag[4]}px;  border-width: ${openBBTag[5]}px; border-color: ${openBBTag[6]}; background-color: ${openBBTag[7]}; ">`
 						);
 					}
 					newlyConvertedBBCode = newlyConvertedBBCode.replace(
@@ -145,7 +173,6 @@ const BBCodeVisualizer = ({ bbCode }: BBCodeVisualierProps) => {
 					);
 
 					break;
-				// BBCode Tags with non-nested customizeable styles
 				case "divbox":
 				case "divbox2":
 				case "color":
@@ -153,7 +180,7 @@ const BBCodeVisualizer = ({ bbCode }: BBCodeVisualierProps) => {
 					for (const openBBTag of openBBTags) {
 						newlyConvertedBBCode = newlyConvertedBBCode.replace(
 							openBBTag[0],
-							`${bbCodeElem.htmlOpen} style=" ${bbCodeElem.htmlOpenStyles} ${openBBTag[1]}; ">`
+							`${bbCodeElem.htmlOpen}  style=" ${bbCodeElem.htmlOpenStyles} ${openBBTag[1]}; ">`
 						);
 					}
 					newlyConvertedBBCode = newlyConvertedBBCode.replace(
@@ -187,22 +214,21 @@ const BBCodeVisualizer = ({ bbCode }: BBCodeVisualierProps) => {
 
 	function htmlBBCode() {
 		return {
-			__html: convertedBBCode.replace(new RegExp(/\r?\n+/, "g"), "<br />")
+			__html: convertedBBCode
 		};
 	}
 
 	return (
-		<div style={{ display: "table", tableLayout: "fixed", width: "100%" }}>
-			<div style={{ width: "76%", display: "table-cell" }}>
-				<div
-					dangerouslySetInnerHTML={htmlBBCode()}
-					style={{
-						overflow: "auto",
-						fontFamily: "Tahoma, Arial, Helvetica, sans-serif",
-						lineHeight: "21px",
-						fontSize: "14px"
-					}}></div>
-			</div>
+		<div style={{ display: "flex", justifyContent: "center" }}>
+			<div
+				dangerouslySetInnerHTML={htmlBBCode()}
+				style={{
+					overflow: "auto",
+					fontFamily: "Tahoma, Arial, Helvetica, sans-serif",
+					lineHeight: "21px",
+					fontSize: "14px",
+					whiteSpace: "pre-wrap"
+				}}></div>
 		</div>
 	);
 };

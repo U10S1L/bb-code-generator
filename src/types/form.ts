@@ -8,20 +8,22 @@ type inputTypes =
 	| "checkbox"
 	| "date"
 	| "time"
-	| "url";
+	| "url"
+	| "listItem";
 
 export type InputComponentProps = {
 	uniqueId: string;
 	type: inputTypes;
 	typeName:
-		| "Text Line"
-		| "Text Box"
+		| "Single Line"
+		| "Multi Line"
 		| "Date & Time"
 		| "Dropdown"
 		| "Checkbox"
 		| "Date"
 		| "Time"
-		| "Text & Link";
+		| "Hyperlink"
+		| "List Items [*]";
 	typeIcon: IconDefinition;
 	label?: string; // User-created
 	description?: string;

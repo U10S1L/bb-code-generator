@@ -33,7 +33,9 @@ import {
 	faClock,
 	faCaretSquareDown,
 	faCheckSquare,
-	faLink
+	faLink,
+	faCircle,
+	faExclamationCircle
 } from "@fortawesome/free-solid-svg-icons";
 import SwitchRoutes from "./SwitchRoutes";
 
@@ -60,13 +62,17 @@ library.add(
 	faClock,
 	faCaretSquareDown,
 	faCheckSquare,
-	faLink
+	faLink,
+	faCircle,
+	faExclamationCircle
 );
 
 const App = () => {
 	return (
 		<AppProvider>
-			<Container style={{ backgroundColor: "white", minHeight: "100vh" }}>
+			<Container
+				id="#app-container"
+				style={{ backgroundColor: "white", minHeight: "100vh" }}>
 				<NavigationBar links={pages} style={{ margin: "0 -15px" }} />
 				<ToastContainer
 					hideProgressBar={true}

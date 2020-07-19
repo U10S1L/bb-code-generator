@@ -17,6 +17,7 @@ const Help = (props: Props) => {
 		<OverlayTrigger
 			rootClose
 			trigger="click"
+			placement="right"
 			overlay={
 				<Card
 					bg="dark"
@@ -35,12 +36,13 @@ const Help = (props: Props) => {
 			}>
 			<Button
 				variant="success"
+				id="help-button"
 				style={{
 					width: "4rem",
 					height: "3rem",
 					position: "fixed",
-					bottom: 10,
-					right: 10,
+					top: "50%",
+					left: "1rem",
 					zIndex: 9999,
 					fontWeight: "bold"
 				}}>

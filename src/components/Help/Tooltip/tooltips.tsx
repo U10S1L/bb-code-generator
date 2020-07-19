@@ -1,14 +1,14 @@
 import React from "react";
-import { OverlayTrigger, Tooltip, Button } from "react-bootstrap";
+import { OverlayTrigger, Tooltip, Button, Card } from "react-bootstrap";
 
-type QuestionMarkTooltipProps = {
+type ShapeTooltipProps = {
 	text: string;
 	id: string;
 	styles?: React.CSSProperties;
 };
 type ButtonTooltipProps = {
 	buttonLabel: string;
-	content: string;
+	content: JSX.Element;
 	id: string;
 	styles?: React.CSSProperties;
 	variant: any;
@@ -17,20 +17,18 @@ export const QuestionMarkTooltip = ({
 	text,
 	id,
 	styles
-}: QuestionMarkTooltipProps) => {
+}: ShapeTooltipProps) => {
 	var tooltipStyles = {
 		backgroundColor: "rgba(42, 96, 136, .4)",
 		color: "white",
-		fontSize: ".9rem",
+		fontSize: ".8rem",
 		width: "1.0rem",
 		height: "1.0rem",
 		borderRadius: "50%",
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
 		lineHeight: "normal",
 		marginLeft: "1rem",
-		flexShrink: 0,
+		display: "flex",
+		justifyContent: "center",
 		...styles
 	};
 
@@ -52,7 +50,7 @@ export const QuestionMarkTooltip = ({
 	);
 };
 
-export const ButtonTooltip = ({
+export const BBCodeVisualizerButton = ({
 	variant,
 	content,
 	id,
@@ -71,11 +69,17 @@ export const ButtonTooltip = ({
 	}
 	return (
 		<OverlayTrigger
-			placement={"auto"}
+			placement="right"
+			rootClose
+			trigger="click"
 			overlay={
-				<Tooltip id={`tooltip-${id}`}>
-					<div dangerouslySetInnerHTML={htmlContent()}></div>
-				</Tooltip>
+				<Card
+					bg="dark"
+					text="dark"
+					id={`tooltip-${id}`}
+					style={{ overflowY: "auto", width: "40%", height: "50%" }}>
+					{content}
+				</Card>
 			}>
 			<Button
 				variant={variant}

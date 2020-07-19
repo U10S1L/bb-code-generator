@@ -49,7 +49,7 @@ const SortableFormElement = SortableElement(
 const SortableFormContainer = SortableContainer(
 	({ forms, showDragHandles }: SortableFormsContainerProps) => {
 		return (
-			<ul>
+			<ul style={{ padding: 0 }}>
 				{forms &&
 					forms.map((form, index) => (
 						<SortableFormElement
