@@ -1,6 +1,7 @@
 import "./toast.css";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import { toast } from "react-toastify";
 
 export const SuccessToast = (message) => {
 	return toast.info(message, {

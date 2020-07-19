@@ -1,19 +1,23 @@
 import "./formList.css";
+
+import { Button, ButtonGroup, Card, Col, Row } from "react-bootstrap";
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Row, Col, Card, Button, ButtonGroup } from "react-bootstrap";
 import {
 	SortableContainer,
 	SortableElement,
 	SortableHandle,
 	arrayMove
 } from "react-sortable-hoc";
-import { AppContext, BBCodeFormType } from "context";
+
+import { AppContext } from "context/context";
+import { BBCodeFormType } from "types/formTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Types } from "reducers";
-import { LinkContainer } from "react-router-bootstrap";
-import StandardModal from "components/Modals/standardModal";
 import FormCreator from "pages/form/creator/formCreator";
+import { LinkContainer } from "react-router-bootstrap";
+import StandardModal from "components/modals/standardModal";
+import { Types } from "types/contextTypes";
+import { useHistory } from "react-router-dom";
+
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
 		<FontAwesomeIcon icon="bars" />

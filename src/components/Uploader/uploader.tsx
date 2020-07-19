@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
-import { useDropzone } from "react-dropzone";
 import { DropEvent, FileRejection } from "react-dropzone";
+import React, { useMemo } from "react";
+
+import { useDropzone } from "react-dropzone";
 
 const baseStyle: React.CSSProperties = {
 	flex: 1,

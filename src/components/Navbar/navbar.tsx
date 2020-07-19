@@ -1,9 +1,11 @@
-import React from "react";
-import { LinkContainer } from "react-router-bootstrap";
-import { Navbar, Nav } from "react-bootstrap";
 import "./navbar.css";
-import { Page } from "constants/pages";
+
+import { Nav, Navbar } from "react-bootstrap";
+
 import Clock from "react-live-clock";
+import { LinkContainer } from "react-router-bootstrap";
+import { Page } from "constants/pages";
+import React from "react";
 import logoImage from "images/logo.svg";
 
 type NavigationBarProps = {
