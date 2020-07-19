@@ -1,5 +1,6 @@
 import { BBCodeFormType } from "types/formTypes";
 import { Types } from "types/contextTypes";
+
 //  https://dev.to/elisealcala/react-context-with-usereducer-and-typescript-4obm
 type ActionMap<M extends { [index: string]: any }> = {
 	[Key in keyof M]: M[Key] extends undefined

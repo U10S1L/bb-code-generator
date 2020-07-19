@@ -31,13 +31,13 @@ import {
 
 import { AppProvider } from "context/context";
 import { Container } from "react-bootstrap";
+import Firebase from "components/firebase/firebase";
+import FirebaseContext from "context/firebaseContext";
 import NavigationBar from "./components/navbar/navbar";
-// import "./bootstrap-flatly.css";
 import React from "react";
 import SwitchRoutes from "./SwitchRoutes";
-// FontAwesome
+import app from "firebase/app";
 import { library } from "@fortawesome/fontawesome-svg-core";
-// Site Pages
 import pages from "./constants/pages";
 
 // FontAwesome Library Setup
@@ -70,19 +70,21 @@ library.add(
 
 const App = () => {
 	return (
-		<AppProvider>
-			<Container
-				id="#app-container"
-				style={{ backgroundColor: "white", minHeight: "100vh" }}>
-				<NavigationBar links={pages} style={{ margin: "0 -15px" }} />
-				<ToastContainer
-					hideProgressBar={true}
-					autoClose={2500}
-					transition={Slide}
-				/>
-				<SwitchRoutes />
-			</Container>
-		</AppProvider>
+		<FirebaseContext.Provider value={new Firebase() as unknown | app.app.App}>
+			<AppProvider>
+				<Container
+					id="#app-container"
+					style={{ backgroundColor: "white", minHeight: "100vh" }}>
+					<NavigationBar links={pages} style={{ margin: "0 -15px" }} />
+					<ToastContainer
+						hideProgressBar={true}
+						autoClose={2500}
+						transition={Slide}
+					/>
+					<SwitchRoutes />
+				</Container>
+			</AppProvider>
+		</FirebaseContext.Provider>
 	);
 };
 
