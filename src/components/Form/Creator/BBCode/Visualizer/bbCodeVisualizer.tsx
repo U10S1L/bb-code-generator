@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 type BBCodeVisualierProps = {
 	bbCode: string;
@@ -151,7 +151,7 @@ const bbCodeElems: BBCodeElem[] = [
 const BBCodeVisualizer = ({ bbCode }: BBCodeVisualierProps) => {
 	const [convertedBBCode, setConvertedBBCode] = useState(bbCode);
 
-	const convertBBCode = () => {
+	const convertBBCode = useCallback(() => {
 		var newlyConvertedBBCode = convertedBBCode.concat();
 
 		bbCodeElems.forEach((bbCodeElem) => {
@@ -198,19 +198,14 @@ const BBCodeVisualizer = ({ bbCode }: BBCodeVisualierProps) => {
 						bbCodeElem.htmlClose
 					);
 			}
-
-			// Handle simple BBCode elements first ([b], [u], etc )
 		});
 
-		// Handle complex BBCode Elements ([img]src[/img], [divbox=#XXXXXX], etc)
-		const imageEscapedRegEx = escapedRegExp("[img][/img]");
-
 		setConvertedBBCode(newlyConvertedBBCode);
-	};
+	}, [convertedBBCode]);
 
 	useEffect(() => {
 		convertBBCode();
-	}, [bbCode]);
+	}, [bbCode, convertBBCode]);
 
 	function htmlBBCode() {
 		return {
@@ -227,7 +222,8 @@ const BBCodeVisualizer = ({ bbCode }: BBCodeVisualierProps) => {
 					fontFamily: "Tahoma, Arial, Helvetica, sans-serif",
 					lineHeight: "21px",
 					fontSize: "14px",
-					whiteSpace: "pre-wrap"
+					whiteSpace: "pre-wrap",
+					width: "100%"
 				}}></div>
 		</div>
 	);

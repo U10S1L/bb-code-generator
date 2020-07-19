@@ -1,17 +1,16 @@
 import React from "react";
 import { OverlayTrigger, Tooltip, Button, Card } from "react-bootstrap";
+import BBCodeVisualizer from "../../Form/Creator/BBCode/Visualizer/bbCodeVisualizer";
 
 type ShapeTooltipProps = {
 	text: string;
 	id: string;
 	styles?: React.CSSProperties;
 };
-type ButtonTooltipProps = {
-	buttonLabel: string;
-	content: JSX.Element;
+type BBCodeVisualizerTooltipProps = {
 	id: string;
 	styles?: React.CSSProperties;
-	variant: any;
+	bbCode: string;
 };
 export const QuestionMarkTooltip = ({
 	text,
@@ -51,40 +50,43 @@ export const QuestionMarkTooltip = ({
 };
 
 export const BBCodeVisualizerButton = ({
-	variant,
-	content,
 	id,
 	styles,
-	buttonLabel
-}: ButtonTooltipProps) => {
+	bbCode
+}: BBCodeVisualizerTooltipProps) => {
 	const tooltipStyles = {
 		display: "inline",
 		...styles
 	};
-	function htmlContent() {
-		return { __html: content };
-	}
-	function htmlButtonLabel() {
-		return { __html: buttonLabel };
-	}
+
 	return (
 		<OverlayTrigger
-			placement="right"
+			placement="bottom"
 			rootClose
 			trigger="click"
 			overlay={
 				<Card
 					bg="dark"
-					text="dark"
 					id={`tooltip-${id}`}
-					style={{ overflowY: "auto", width: "40%", height: "50%" }}>
-					{content}
+					style={{
+						overflowY: "auto",
+						width: "40%",
+						height: "50%",
+						zIndex: 9999
+					}}>
+					<Card.Body>
+						<div style={{ color: "white" }}>Test</div>
+
+						<BBCodeVisualizer bbCode={bbCode} />
+					</Card.Body>
 				</Card>
 			}>
-			<Button
-				variant={variant}
-				style={tooltipStyles}
-				dangerouslySetInnerHTML={htmlButtonLabel()}></Button>
+			<Button variant="secondary" style={tooltipStyles}>
+				BBCode Visualizer
+				{/* <div>
+					<FontAwesomeIcon icon="caret-square-down" />
+				</div> */}
+			</Button>
 		</OverlayTrigger>
 	);
 };

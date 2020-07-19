@@ -3,9 +3,7 @@ import React, { useContext, useState, useEffect, useCallback } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import FormRenderer from "../../components/Form/Renderer/formRenderer";
 import { AppContext, BBCodeFormType } from "../../context";
-import { Row, Col, Button, ButtonGroup } from "react-bootstrap";
-import FormCreator from "./creator/formCreator";
-import { Types } from "../../reducers";
+import { Row, Col, Button } from "react-bootstrap";
 import { SuccessToast } from "../../components/Toast/toast";
 import CopyToClipboard from "react-copy-to-clipboard";
 import {
@@ -15,7 +13,6 @@ import {
 	formatUrl
 } from "../../formatters";
 import { InputComponentProps } from "../../types/form";
-import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StandardModal from "../../components/Modals/standardModal";
 
@@ -24,14 +21,13 @@ type FormParams = {
 };
 type FormProps = RouteComponentProps<FormParams>;
 const BBCodeForm: React.FC<FormProps> = ({ match }) => {
-	const { state, dispatch } = useContext(AppContext);
+	const { state } = useContext(AppContext);
+
 	const [pageModal, setPageModal] = useState<{
 		message: string;
 		visible: boolean;
 		continueAction: () => void;
 	}>();
-	let history = useHistory();
-
 	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType>(
 		state.forms.find((form) => form.slug === match.params.slug) || {
 			uniqueId: "",
@@ -45,7 +41,6 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 		}
 	);
 	const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
-	const [editMode, setEditMode] = useState(false);
 
 	const getOriginalBBCodeForm = useCallback(() => {
 		let originalBBCodeForm = state.forms.find(
@@ -139,26 +134,6 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 		return generatedBBCode;
 	};
 
-	const editBBCodeForm = () => {
-		localStorage.removeItem(formProgressString);
-		localStorage.setItem(
-			"editBBCodeForm",
-			JSON.stringify(getOriginalBBCodeForm())
-		);
-		setEditMode(true);
-	};
-	const saveEdits = (bbCodeForm: BBCodeFormType) => {
-		localStorage.removeItem("editBBCodeForm");
-		dispatch({ type: Types.UpdateForm, payload: bbCodeForm });
-		setEditMode(false);
-	};
-
-	const deleteBBCodeForm = () => {
-		localStorage.removeItem(formProgressString);
-		dispatch({ type: Types.DeleteForm, payload: bbCodeForm });
-		history.push("/forms/list");
-	};
-
 	const exportBBCodeForm = () => {
 		// Sanitize the BBCode Form before exporting
 		var sanitizedBBCodeForm = state.forms.find(
@@ -206,7 +181,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 		localStorage.setItem(formProgressString, JSON.stringify(bbCodeForm));
 	}, [bbCodeForm, formProgressString]);
 
-	return !editMode ? (
+	return (
 		<Row>
 			<Col xs={12}>
 				<div
@@ -215,53 +190,28 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 					<div>
 						<h3>{bbCodeForm.name}</h3>
 						{bbCodeForm.progressTimestamp && (
-							<h6 className="small">
+							<h6 className="small text-muted">
 								Auto Saved:{" "}
 								{formatDateTimeWithSeconds(
 									new Date(bbCodeForm.progressTimestamp)
 								)}{" "}
-								<h6 className="small text-muted">(Local Time)</h6>
+								(Local Time)
 							</h6>
 						)}
 					</div>
-					<ButtonGroup>
-						<Button
-							variant="warning"
-							onClick={() =>
-								setPageModal({
-									visible: true,
-									continueAction: () => setBBCodeForm(getOriginalBBCodeForm),
-									message:
-										"This will erase any values in the form fields. Do you want to continue?"
-								})
-							}>
-							Clear
-						</Button>
-						<Button
-							variant="secondary"
-							onClick={() =>
-								setPageModal({
-									visible: true,
-									continueAction: () => editBBCodeForm(),
-									message:
-										"Editing the form will erase any values that you've typed in the form fields, which cannot be undone. Do you wish to continue?"
-								})
-							}>
-							Edit
-						</Button>
-						<Button
-							variant="danger"
-							onClick={() => {
-								setPageModal({
-									visible: true,
-									continueAction: () => deleteBBCodeForm(),
-									message:
-										"This will delete the form. You might want to consider exporting it first... do you wish to continue?"
-								});
-							}}>
-							Delete
-						</Button>
-					</ButtonGroup>
+
+					<Button
+						variant="warning"
+						onClick={() =>
+							setPageModal({
+								visible: true,
+								continueAction: () => setBBCodeForm(getOriginalBBCodeForm),
+								message:
+									"This will erase any values in the form fields. Do you want to continue?"
+							})
+						}>
+						Clear
+					</Button>
 				</div>
 			</Col>
 			<Col xs={12} className="mt-3">
@@ -304,8 +254,6 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 				continueBtnText="Continue"
 			/>
 		</Row>
-	) : (
-		<FormCreator editMode={true} saveEdits={saveEdits} />
 	);
 };
 

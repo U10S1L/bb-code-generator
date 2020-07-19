@@ -23,7 +23,7 @@ const Help = (props: Props) => {
 					bg="dark"
 					text="white"
 					style={{
-						width: "35%",
+						width: "45%",
 						height: "50%",
 						overflowY: "auto",
 						border: "5px solid gray",

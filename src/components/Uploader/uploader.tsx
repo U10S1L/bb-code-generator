@@ -47,7 +47,6 @@ const Uploader = ({ onDrop, styles }: UploaderProps) => {
 		isDragReject
 	} = useDropzone({
 		onDrop,
-		noClick: true,
 		multiple: false,
 		accept: "application/json"
 	});

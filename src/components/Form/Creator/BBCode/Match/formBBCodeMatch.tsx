@@ -57,7 +57,13 @@ const FormBBCodeMatch = ({
 											<Card.Title>
 												{inputComponent.label}
 												<span className="text-muted small">
-													{inputComponent.multi ? " (Multi)" : null}
+													{inputComponent.multi &&
+													inputComponent.type !== "listItem"
+														? " (Multi)"
+														: null}
+													{inputComponent.type === "listItem"
+														? " (List Items [*])"
+														: null}
 												</span>
 											</Card.Title>
 											<Card.Text>

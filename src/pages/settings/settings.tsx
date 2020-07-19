@@ -17,7 +17,10 @@ const Settings = () => {
 			encodeURIComponent(JSON.stringify(state));
 		var downloadAnchorNode = document.createElement("a");
 		downloadAnchorNode.setAttribute("href", dataStr);
-		downloadAnchorNode.setAttribute("download", "bbCodeGeneratorExport.json");
+		downloadAnchorNode.setAttribute(
+			"download",
+			`backup_${new Date().getTime()}.json`
+		);
 		document.body.appendChild(downloadAnchorNode); // required for firefox
 		downloadAnchorNode.click();
 		downloadAnchorNode.remove();

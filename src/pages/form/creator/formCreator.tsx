@@ -14,8 +14,8 @@ import Help from "../../../components/Help/help";
 var slugify = require("slugify");
 
 export enum FormCreationStep {
-	FORM_SETUP = "Form Setup",
-	BBCODE_UPLOAD = "Raw BBCode Upload",
+	FORM_SETUP = "Setup",
+	BBCODE_UPLOAD = "Raw BBCode",
 	FIELD_CREATION = "Field Creation",
 	BBCODE_MATCH = "BBCode Match"
 }
@@ -68,12 +68,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
 				return `
-				<b>Enter a name for the new form and then press "Next"</b>
-				<br><img src="https://i.imgur.com/pr1Arp0.gif" class="w-100"/>
-				<br><br>
-				<b>Optional: "Start From File"</b>
-				<br>
-				You can drag and drop the file from a previously exported form here, if you have one.
+				<img src="https://i.imgur.com/9tkj0Yh.gif" class="w-100"/>
 				`;
 			case FormCreationStep.FIELD_CREATION:
 				return `
@@ -122,8 +117,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 
 			case FormCreationStep.BBCODE_UPLOAD:
 				return `
-				<b>1: Copy and paste the raw, unedited BBCode.</b>
-				<br><img src="https://i.imgur.com/ILgFqUc.gif" class="w-100"/>
+				<img src="https://i.imgur.com/eGzbtMX.gif" class="w-100"/>
 				`;
 			case FormCreationStep.BBCODE_MATCH:
 				return `
@@ -400,17 +394,16 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				<Row style={{ marginTop: "3rem", paddingBottom: ".5rem" }}>
 					<Col xs={12}>
 						<Button
-							style={{ float: "left" }}
-							variant="danger"
-							onClick={() => cancelEditBBCodeForm()}>
-							Cancel Edits
-						</Button>
-
-						<Button
 							style={{ float: "right" }}
 							variant="success"
 							onClick={() => saveEditedBBCodeForm()}>
 							Save Edits
+						</Button>
+						<Button
+							style={{ float: "right" }}
+							variant="danger"
+							onClick={() => cancelEditBBCodeForm()}>
+							Cancel Edits
 						</Button>
 					</Col>
 				</Row>

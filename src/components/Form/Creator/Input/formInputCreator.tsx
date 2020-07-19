@@ -30,7 +30,6 @@ import {
 	faCircle
 } from "@fortawesome/free-solid-svg-icons";
 import InputComponent from "../../../InputComponents/inputComponent";
-import BBCodeVisualizer from "../BBCode/Visualizer/bbCodeVisualizer";
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
@@ -225,14 +224,15 @@ const FormInputCreator = ({
 
 	return (
 		<Row>
+			<Col xs={12} style={{ display: "flex", justifyContent: "center" }}>
+				<BBCodeVisualizerButton
+					id="visualizedBBCode>"
+					styles={{ zIndex: 9999 }}
+					bbCode={newBBCodeForm.rawBBCode}
+				/>
+			</Col>
 			<Col xs={12} md={2} className="input-selector-container">
 				<h4 className="header">Field Types</h4>
-				<BBCodeVisualizerButton
-					buttonLabel="My Form"
-					id="visualizedBBCode"
-					variant="warning"
-					content={<BBCodeVisualizer bbCode={newBBCodeForm.rawBBCode} />}
-				/>
 				<div className="input-selector">
 					<label className="mt-1" />
 					<div className="input-types">
@@ -294,9 +294,6 @@ const FormInputCreator = ({
 					}
 				/>
 			)}
-			{/* <Row>
-				<BBCodeVisualizer bbCode={newBBCodeForm.rawBBCode} />
-			</Row> */}
 		</Row>
 	);
 };
