@@ -3,9 +3,9 @@ import React, { useRef } from "react";
 
 import CopyToClipboard from "react-copy-to-clipboard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps } from "types/form";
-import { QuestionMarkTooltip } from "components/Help/Tooltip/tooltips";
-import { SuccessToast } from "components/Toast/toast";
+import { InputComponentProps } from "types/formTypes";
+import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
+import { SuccessToast } from "components/toast/toast";
 import TextAreaAutosize from "react-textarea-autosize";
 
 type FormBBCodeMatchProps = {

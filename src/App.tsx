@@ -1,5 +1,5 @@
-import "./custom2.css";
-import "./styles.css";
+import "styles/custom2.css";
+import "styles/styles.css";
 
 import { Slide, ToastContainer } from "react-toastify";
 import {
@@ -29,9 +29,9 @@ import {
 	faTimes
 } from "@fortawesome/free-solid-svg-icons";
 
-import { AppProvider } from "./context";
+import { AppProvider } from "context/context";
 import { Container } from "react-bootstrap";
-import NavigationBar from "./components/Navbar/navbar";
+import NavigationBar from "./components/navbar/navbar";
 // import "./bootstrap-flatly.css";
 import React from "react";
 import SwitchRoutes from "./SwitchRoutes";

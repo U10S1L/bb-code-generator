@@ -2,7 +2,7 @@ import "./formPreviewer.css";
 
 import { Button, Form } from "react-bootstrap";
 import { Col, Row } from "react-bootstrap";
-import { InputComponentProps, InputTypeProps } from "types/form";
+import { InputComponentProps, InputTypeProps } from "types/formTypes";
 import React, { useEffect, useState } from "react";
 import {
 	SortableContainer,
@@ -10,9 +10,9 @@ import {
 	SortableHandle
 } from "react-sortable-hoc";
 
-import { BBCodeFormType } from "context";
+import { BBCodeFormType } from "types/formTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import InputComponent from "components/InputComponents/inputComponent";
+import InputComponent from "components/inputComponents/inputComponent";
 
 type SelectedInputComponentProps = {
 	inputComponent: InputComponentProps;

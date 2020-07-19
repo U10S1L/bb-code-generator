@@ -1,15 +1,15 @@
-import { AppContext, BBCodeFormType } from "context";
+import { BBCodeFormType, InputComponentProps } from "types/formTypes";
 import { Button, Col, Row } from "react-bootstrap";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 
-import { ErrorToast } from "components/Toast/toast";
-import FormBBCodeMatch from "components/Form/Creator/BBCode/Match/formBBCodeMatch";
-import FormBBCodeUpload from "components/Form/Creator/BBCode/Upload/formBBCodeUpload";
-import FormInputCreator from "components/Form/Creator/Input/formInputCreator";
-import FormSetupCreator from "components/Form/Creator/Setup/formSetupCreator";
-import Help from "components/Help/help";
-import { InputComponentProps } from "types/form";
-import { Types } from "reducers";
+import { AppContext } from "context/context";
+import { ErrorToast } from "components/toast/toast";
+import FormBBCodeMatch from "components/bbCode/match/formBBCodeMatch";
+import FormBBCodeUpload from "components/bbCode/upload/formBBCodeUpload";
+import FormInputCreator from "components/form/creator/input/formInputCreator";
+import FormSetupCreator from "components/form/creator/setup/formSetupCreator";
+import Help from "components/help/help";
+import { Types } from "types/contextTypes";
 import arrayMove from "array-move";
 import { useHistory } from "react-router-dom";
 

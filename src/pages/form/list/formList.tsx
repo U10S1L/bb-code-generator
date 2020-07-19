@@ -1,6 +1,5 @@
 import "./formList.css";
 
-import { AppContext, BBCodeFormType } from "context";
 import { Button, ButtonGroup, Card, Col, Row } from "react-bootstrap";
 import React, { useContext, useState } from "react";
 import {
@@ -10,11 +9,13 @@ import {
 	arrayMove
 } from "react-sortable-hoc";
 
+import { AppContext } from "context/context";
+import { BBCodeFormType } from "types/formTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormCreator from "pages/form/creator/formCreator";
 import { LinkContainer } from "react-router-bootstrap";
-import StandardModal from "components/Modals/standardModal";
-import { Types } from "reducers";
+import StandardModal from "components/modals/standardModal";
+import { Types } from "types/contextTypes";
 import { useHistory } from "react-router-dom";
 
 const DragHandle = SortableHandle(() => (

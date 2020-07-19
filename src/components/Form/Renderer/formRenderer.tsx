@@ -1,7 +1,7 @@
-import { BBCodeFormType } from "context";
+import { BBCodeFormType } from "types/formTypes";
 import { Form } from "react-bootstrap";
-import InputComponent from "components/InputComponents/inputComponent";
-import { InputTypeProps } from "types/form";
+import InputComponent from "components/inputComponents/inputComponent";
+import { InputTypeProps } from "types/formTypes";
 import React from "react";
 
 type FormRendererProps = {

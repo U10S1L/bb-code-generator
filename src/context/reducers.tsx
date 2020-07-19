@@ -1,4 +1,5 @@
-import { BBCodeFormType } from "./context";
+import { BBCodeFormType } from "types/formTypes";
+import { Types } from "types/contextTypes";
 //  https://dev.to/elisealcala/react-context-with-usereducer-and-typescript-4obm
 type ActionMap<M extends { [index: string]: any }> = {
 	[Key in keyof M]: M[Key] extends undefined
@@ -10,15 +11,6 @@ type ActionMap<M extends { [index: string]: any }> = {
 				payload: M[Key];
 		  };
 };
-
-export enum Types {
-	// Forms
-	UpdateForms = "UPDATE_FORMS",
-	AddForm = "ADD_FORM",
-	UpdateForm = "UPDATE_FORM",
-	DeleteForm = "DELETE_FORM",
-	DeleteAllForms = "DELETE_ALL_FORMS"
-}
 
 // Payloads
 type FormsPayload = {

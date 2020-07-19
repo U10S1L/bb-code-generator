@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 
-import { AppContext } from "./context";
-import Form from "./pages/form/form";
-import pages from "./constants/pages";
+import { AppContext } from "context/context";
+import Form from "pages/form/form";
+import pages from "constants/pages";
 
 // This must be a separate component (as opposed to being in App.tsx) because we need access to Context
 const SwitchRoutes = () => {

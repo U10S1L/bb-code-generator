@@ -1,4 +1,4 @@
-import { InputTypeProps } from "types/form";
+import { InputTypeProps } from "types/formTypes";
 import React from "react";
 import TextAreaAutosize from "react-textarea-autosize";
 

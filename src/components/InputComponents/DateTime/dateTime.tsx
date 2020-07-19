@@ -1,5 +1,5 @@
 import { Form } from "react-bootstrap";
-import { InputTypeProps } from "types/form";
+import { InputTypeProps } from "types/formTypes";
 import React from "react";
 
 export const DateTime = ({

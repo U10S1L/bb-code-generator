@@ -1,25 +1,13 @@
 import { FormsActions, formsReducer } from "./reducers";
 import React, { createContext, useEffect, useReducer } from "react";
 
-import { InputComponentProps } from "./types/form";
-
-export type BBCodeFormType = {
-	uniqueId: string;
-	slug: string;
-	name: string;
-	inputComponents: InputComponentProps[];
-	rawBBCode: string;
-	matchedBBCode: string;
-	createdTimestamp: number;
-	updatedTimestamp: number;
-	progressTimestamp?: number;
-};
+import { BBCodeFormType } from "types/formTypes";
 
 // Defaults
 const forms: BBCodeFormType[] = [];
 
 // Initial State
-export type InitialStateType = {
+type InitialStateType = {
 	forms: BBCodeFormType[];
 };
 const initialState = (): InitialStateType => {

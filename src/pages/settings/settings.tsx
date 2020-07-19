@@ -4,10 +4,10 @@ import { Button, Col, Row } from "react-bootstrap";
 import { DropEvent, FileRejection } from "react-dropzone";
 import React, { useContext, useState } from "react";
 
-import { AppContext } from "context";
-import StandardModal from "components/Modals/standardModal";
-import { Types } from "reducers";
-import Uploader from "components/Uploader/uploader";
+import { AppContext } from "context/context";
+import StandardModal from "components/modals/standardModal";
+import { Types } from "types/contextTypes";
+import Uploader from "components/uploader/uploader";
 
 const Settings = () => {
 	const { state, dispatch } = useContext(AppContext);
