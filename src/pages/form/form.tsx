@@ -1,20 +1,20 @@
 import "./form.css";
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import FormRenderer from "../../components/Form/Renderer/formRenderer";
-import { AppContext, BBCodeFormType } from "../../context";
+import FormRenderer from "components/Form/Renderer/formRenderer";
+import { AppContext, BBCodeFormType } from "context";
 import { Row, Col, Button } from "react-bootstrap";
-import { SuccessToast } from "../../components/Toast/toast";
+import { SuccessToast } from "components/Toast/toast";
 import CopyToClipboard from "react-copy-to-clipboard";
 import {
 	formatDateTimeWithSeconds,
 	formatDateTime,
 	formatDate,
 	formatUrl
-} from "../../formatters";
-import { InputComponentProps } from "../../types/form";
+} from "formatters";
+import { InputComponentProps } from "types/form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import StandardModal from "../../components/Modals/standardModal";
+import StandardModal from "components/Modals/standardModal";
 
 type FormParams = {
 	slug: string;

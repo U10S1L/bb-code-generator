@@ -1,11 +1,11 @@
 import "./settings.css";
 import React, { useContext, useState } from "react";
-import { AppContext } from "../../context";
-import { Types } from "../../reducers";
+import { AppContext } from "context";
+import { Types } from "reducers";
 import { Row, Col, Button } from "react-bootstrap";
 import { DropEvent, FileRejection } from "react-dropzone";
-import Uploader from "../../components/Uploader/uploader";
-import StandardModal from "../../components/Modals/standardModal";
+import Uploader from "components/Uploader/uploader";
+import StandardModal from "components/Modals/standardModal";
 
 const Settings = () => {
 	const { state, dispatch } = useContext(AppContext);

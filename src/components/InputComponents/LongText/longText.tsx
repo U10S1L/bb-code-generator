@@ -1,5 +1,5 @@
 import React from "react";
-import { InputTypeProps } from "../../../types/form";
+import { InputTypeProps } from "types/form";
 import TextAreaAutosize from "react-textarea-autosize";
 
 const LongText = ({ placeholder, readOnly, val, setVal }: InputTypeProps) => {

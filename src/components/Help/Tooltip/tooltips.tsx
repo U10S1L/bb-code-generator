@@ -1,6 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Tooltip, Button, Card } from "react-bootstrap";
-import BBCodeVisualizer from "../../Form/Creator/BBCode/Visualizer/bbCodeVisualizer";
+import BBCodeVisualizer from "components/Form/Creator/BBCode/Visualizer/bbCodeVisualizer";
 
 type ShapeTooltipProps = {
 	text: string;

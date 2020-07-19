@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from "react";
-import { AppContext, BBCodeFormType } from "../../../context";
+import { AppContext, BBCodeFormType } from "context";
 import FormSetupCreator from "components/Form/Creator/Setup/formSetupCreator";
 import FormInputCreator from "components/Form/Creator/Input/formInputCreator";
 import FormBBCodeMatch from "components/Form/Creator/BBCode/Match/formBBCodeMatch";
@@ -8,9 +8,9 @@ import { useHistory } from "react-router-dom";
 import { InputComponentProps } from "types/form";
 import { Button, Row, Col } from "react-bootstrap";
 import arrayMove from "array-move";
-import { Types } from "../../../reducers";
-import { ErrorToast } from "../../../components/Toast/toast";
-import Help from "../../../components/Help/help";
+import { Types } from "reducers";
+import { ErrorToast } from "components/Toast/toast";
+import Help from "components/Help/help";
 var slugify = require("slugify");
 
 export enum FormCreationStep {

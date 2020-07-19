@@ -2,9 +2,9 @@ import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav } from "react-bootstrap";
 import "./navbar.css";
-import { Page } from "../../constants/pages";
+import { Page } from "constants/pages";
 import Clock from "react-live-clock";
-import logoImage from "../../images/logo.svg";
+import logoImage from "images/logo.svg";
 
 type NavigationBarProps = {
 	links: Page[];

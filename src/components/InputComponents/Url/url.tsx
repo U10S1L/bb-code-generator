@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, InputGroup } from "react-bootstrap";
-import { InputTypeProps } from "../../../types/form";
+import { InputTypeProps } from "types/form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Url = ({ readOnly, val, setVal }: InputTypeProps) => {

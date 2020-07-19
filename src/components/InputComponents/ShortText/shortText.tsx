@@ -1,6 +1,6 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { InputTypeProps } from "../../../types/form";
+import { InputTypeProps } from "types/form";
 
 const ShortText = ({ placeholder, readOnly, val, setVal }: InputTypeProps) => {
 	return (

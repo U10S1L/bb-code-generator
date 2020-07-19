@@ -1,7 +1,7 @@
 import "./formInputCreator.css";
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps, InputTypeProps } from "../../../../types/form";
+import { InputComponentProps, InputTypeProps } from "types/form";
 import {
 	Row,
 	Col,
@@ -11,13 +11,13 @@ import {
 	Modal,
 	FormControl
 } from "react-bootstrap";
-import FormPreviewer from "../../Previewer/formPreviewer";
-import { BBCodeFormType } from "../../../../context";
-import InputType from "../../../InputComponents/inputType";
+import FormPreviewer from "components/Form/Previewer/formPreviewer";
+import { BBCodeFormType } from "context";
+import InputType from "components/InputComponents/inputType";
 import {
 	QuestionMarkTooltip,
 	BBCodeVisualizerButton
-} from "../../../Help/Tooltip/tooltips";
+} from "components/Help/Tooltip/tooltips";
 import {
 	faTextWidth,
 	faTextHeight,
@@ -29,7 +29,7 @@ import {
 	faLink,
 	faCircle
 } from "@fortawesome/free-solid-svg-icons";
-import InputComponent from "../../../InputComponents/inputComponent";
+import InputComponent from "components/InputComponents/inputComponent";
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{

@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps } from "../../../../../types/form";
-import { SuccessToast } from "../../../../Toast/toast";
+import { InputComponentProps } from "types/form";
+import { SuccessToast } from "components/Toast/toast";
 import CopyToClipboard from "react-copy-to-clipboard";
 import TextAreaAutosize from "react-textarea-autosize";
-import { QuestionMarkTooltip } from "../../../../Help/Tooltip/tooltips";
+import { QuestionMarkTooltip } from "components/Help/Tooltip/tooltips";
 type FormBBCodeMatchProps = {
 	selectedInputComponents: InputComponentProps[];
 	matchedBBCode: string;

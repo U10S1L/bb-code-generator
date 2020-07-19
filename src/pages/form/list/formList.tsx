@@ -8,12 +8,12 @@ import {
 	SortableHandle,
 	arrayMove
 } from "react-sortable-hoc";
-import { AppContext, BBCodeFormType } from "../../../context";
+import { AppContext, BBCodeFormType } from "context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Types } from "../../../reducers";
+import { Types } from "reducers";
 import { LinkContainer } from "react-router-bootstrap";
-import StandardModal from "../../../components/Modals/standardModal";
-import FormCreator from "../creator/formCreator";
+import StandardModal from "components/Modals/standardModal";
+import FormCreator from "pages/form/creator/formCreator";
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
 		<FontAwesomeIcon icon="bars" />

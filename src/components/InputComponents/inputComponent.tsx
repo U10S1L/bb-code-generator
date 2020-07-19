@@ -1,8 +1,8 @@
 import React from "react";
 import { Form, InputGroup, Button } from "react-bootstrap";
-import { InputComponentProps, InputTypeProps } from "../../types/form";
+import { InputComponentProps, InputTypeProps } from "types/form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import InputType from "../InputComponents/inputType";
+import InputType from "components/InputComponents/inputType";
 import Clock from "react-live-clock";
 
 const InputComponent: React.FC<InputComponentProps> = ({

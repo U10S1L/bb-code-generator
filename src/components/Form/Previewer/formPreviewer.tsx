@@ -1,10 +1,10 @@
 import "./formPreviewer.css";
 import React, { useState, useEffect } from "react";
-import { BBCodeFormType } from "../../../context";
-import InputComponent from "../../InputComponents/inputComponent";
+import { BBCodeFormType } from "context";
+import InputComponent from "components/InputComponents/inputComponent";
 import { Form, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps, InputTypeProps } from "../../../types/form";
+import { InputComponentProps, InputTypeProps } from "types/form";
 import { Row, Col } from "react-bootstrap";
 import {
 	SortableContainer,
