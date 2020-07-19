@@ -1,6 +1,8 @@
 import "./home.css";
+
+import { Col, Jumbotron, Row } from "react-bootstrap";
+
 import React from "react";
-import { Row, Col, Jumbotron } from "react-bootstrap";
 
 const Home = () => {
 	return (

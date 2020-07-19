@@ -1,16 +1,18 @@
-import React, { Fragment, useState, useEffect, useContext } from "react";
 import { AppContext, BBCodeFormType } from "context";
-import FormSetupCreator from "components/Form/Creator/Setup/formSetupCreator";
-import FormInputCreator from "components/Form/Creator/Input/formInputCreator";
+import { Button, Col, Row } from "react-bootstrap";
+import React, { Fragment, useContext, useEffect, useState } from "react";
+
+import { ErrorToast } from "components/Toast/toast";
 import FormBBCodeMatch from "components/Form/Creator/BBCode/Match/formBBCodeMatch";
 import FormBBCodeUpload from "components/Form/Creator/BBCode/Upload/formBBCodeUpload";
-import { useHistory } from "react-router-dom";
-import { InputComponentProps } from "types/form";
-import { Button, Row, Col } from "react-bootstrap";
-import arrayMove from "array-move";
-import { Types } from "reducers";
-import { ErrorToast } from "components/Toast/toast";
+import FormInputCreator from "components/Form/Creator/Input/formInputCreator";
+import FormSetupCreator from "components/Form/Creator/Setup/formSetupCreator";
 import Help from "components/Help/help";
+import { InputComponentProps } from "types/form";
+import { Types } from "reducers";
+import arrayMove from "array-move";
+import { useHistory } from "react-router-dom";
+
 var slugify = require("slugify");
 
 export enum FormCreationStep {

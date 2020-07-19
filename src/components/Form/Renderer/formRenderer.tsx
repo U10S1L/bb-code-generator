@@ -1,8 +1,8 @@
-import React from "react";
 import { BBCodeFormType } from "context";
-import InputComponent from "components/InputComponents/inputComponent";
 import { Form } from "react-bootstrap";
+import InputComponent from "components/InputComponents/inputComponent";
 import { InputTypeProps } from "types/form";
+import React from "react";
 
 type FormRendererProps = {
 	bbCodeForm: BBCodeFormType;

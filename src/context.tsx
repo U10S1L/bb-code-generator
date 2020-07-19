@@ -1,5 +1,6 @@
-import React, { createContext, useReducer, useEffect } from "react";
-import { formsReducer, FormsActions } from "./reducers";
+import { FormsActions, formsReducer } from "./reducers";
+import React, { createContext, useEffect, useReducer } from "react";
+
 import { InputComponentProps } from "./types/form";
 
 export type BBCodeFormType = {

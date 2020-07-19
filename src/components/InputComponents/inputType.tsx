@@ -1,14 +1,14 @@
-import React from "react";
-import ShortText from "./ShortText/shortText";
-import LongText from "./LongText/longText";
-import { InputTypeProps } from "types/form";
-import { DateTime } from "./DateTime/dateTime";
-import { Dropdown } from "./Dropdown/dropdown";
 import { Checkbox } from "./Checkbox/checkbox";
 import { Date } from "./Date/date";
+import { DateTime } from "./DateTime/dateTime";
+import { Dropdown } from "./Dropdown/dropdown";
+import { InputTypeProps } from "types/form";
+import ListItem from "./ListItem/ListItem";
+import LongText from "./LongText/longText";
+import React from "react";
+import ShortText from "./ShortText/shortText";
 import { Time } from "./Time/time";
 import { Url } from "./Url/url";
-import ListItem from "./ListItem/ListItem";
 
 const InputType = (props: InputTypeProps) => {
 	switch (props.type) {

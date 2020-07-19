@@ -1,43 +1,44 @@
 import "./custom2.css";
 import "./styles.css";
 
-// import "./bootstrap-flatly.css";
-import React from "react";
-import NavigationBar from "./components/Navbar/navbar";
-import { ToastContainer, Slide } from "react-toastify";
-import { Container } from "react-bootstrap";
-import { AppProvider } from "./context";
-// Site Pages
-import pages from "./constants/pages";
-// FontAwesome
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { Slide, ToastContainer } from "react-toastify";
 import {
-	faTimes,
-	faQuestionCircle,
-	faClipboard,
-	faEdit,
-	faCheck,
-	faEye,
 	faArrowLeft,
 	faArrowRight,
 	faBars,
-	faPlus,
-	faMinus,
-	faSearch,
-	faDownload,
-	faFont,
-	faTextWidth,
-	faTextHeight,
-	faCalendarTimes,
 	faCalendarAlt,
-	faClock,
+	faCalendarTimes,
 	faCaretSquareDown,
+	faCheck,
 	faCheckSquare,
-	faLink,
 	faCircle,
-	faExclamationCircle
+	faClipboard,
+	faClock,
+	faDownload,
+	faEdit,
+	faExclamationCircle,
+	faEye,
+	faFont,
+	faLink,
+	faMinus,
+	faPlus,
+	faQuestionCircle,
+	faSearch,
+	faTextHeight,
+	faTextWidth,
+	faTimes
 } from "@fortawesome/free-solid-svg-icons";
+
+import { AppProvider } from "./context";
+import { Container } from "react-bootstrap";
+import NavigationBar from "./components/Navbar/navbar";
+// import "./bootstrap-flatly.css";
+import React from "react";
 import SwitchRoutes from "./SwitchRoutes";
+// FontAwesome
+import { library } from "@fortawesome/fontawesome-svg-core";
+// Site Pages
+import pages from "./constants/pages";
 
 // FontAwesome Library Setup
 library.add(

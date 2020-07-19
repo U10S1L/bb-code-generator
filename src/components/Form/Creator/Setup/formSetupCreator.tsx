@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Row, Col, InputGroup, Form, FormGroup } from "react-bootstrap";
-import StandardModal from "components/Modals/standardModal";
-import Uploader from "components/Uploader/uploader";
-import { FileRejection, DropEvent } from "react-dropzone";
+import { Col, Form, FormGroup, InputGroup, Row } from "react-bootstrap";
+import { DropEvent, FileRejection } from "react-dropzone";
+import React, { useEffect, useRef, useState } from "react";
+
 import { BBCodeFormType } from "context";
 import { QuestionMarkTooltip } from "components/Help/Tooltip/tooltips";
+import StandardModal from "components/Modals/standardModal";
+import Uploader from "components/Uploader/uploader";
 
 type FormNameCreatorProps = {
 	val: string;

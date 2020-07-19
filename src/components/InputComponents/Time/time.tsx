@@ -1,6 +1,6 @@
-import React from "react";
 import { Form } from "react-bootstrap";
 import { InputTypeProps } from "types/form";
+import React from "react";
 
 export const Time = ({
 	placeholder,
