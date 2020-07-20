@@ -1,6 +1,6 @@
 import "firebase/auth";
 
-import app from "firebase/app";
+import app, { FirebaseError } from "firebase/app";
 
 const devConfig = {
 	apiKey: process.env.REACT_APP_DEV_API_KEY,
@@ -33,11 +33,34 @@ class Firebase {
 	}
 
 	// Auth API
-	doCreateUserWithEmailAndPassword = (email: string, password: string) => {
-		this.auth.createUserWithEmailAndPassword(email, password);
+	doCreateUserWithEmailAndPassword = (
+		email: string,
+		password: string
+	): Promise<{
+		authUser?: app.auth.UserCredential;
+		errorCode?: string;
+	}> => {
+		return this.auth
+			.createUserWithEmailAndPassword(email, password)
+			.then((authUser: app.auth.UserCredential) => {
+				return { authUser };
+			})
+			.catch((error: FirebaseError) => {
+				return { errorCode: error.code };
+			});
 	};
-	doSignInWithEmailAndPassword = (email: string, password: string) => {
-		this.auth.signInWithEmailAndPassword(email, password);
+	doSignInWithEmailAndPassword = (
+		email: string,
+		password: string
+	): Promise<{ errorCode?: string }> => {
+		return this.auth
+			.signInWithEmailAndPassword(email, password)
+			.then(() => {
+				return {};
+			})
+			.catch((error: FirebaseError) => {
+				return { errorCode: error.code };
+			});
 	};
 	doSignOut = () => this.auth.signOut();
 	doPasswordReset = (email: string) => this.auth.sendPasswordResetEmail(email);

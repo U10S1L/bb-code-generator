@@ -70,7 +70,7 @@ library.add(
 
 const App = () => {
 	return (
-		<FirebaseContext.Provider value={new Firebase() as unknown | app.app.App}>
+		<FirebaseContext.Provider value={new Firebase()}>
 			<AppProvider>
 				<Container
 					id="#app-container"

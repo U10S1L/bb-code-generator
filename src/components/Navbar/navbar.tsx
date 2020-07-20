@@ -6,6 +6,7 @@ import Clock from "react-live-clock";
 import { LinkContainer } from "react-router-bootstrap";
 import { Page } from "constants/pages";
 import React from "react";
+import SignOutButton from "components/auth/signOutButton";
 import logoImage from "images/logo.svg";
 
 type NavigationBarProps = {
@@ -42,6 +43,7 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 				<LinkContainer to={"/auth/signin"}>
 					<Nav.Link>Sign In</Nav.Link>
 				</LinkContainer>
+				<SignOutButton />
 				<span
 					style={{
 						color: "rgba(255,255,255,.5)",
