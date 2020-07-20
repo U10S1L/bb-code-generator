@@ -1,25 +1,25 @@
 import { Button, Form } from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
 
-import FirebaseContext from "context/firebaseContext";
+import { AppContext } from "context/context";
 import { useHistory } from "react-router-dom";
 
 const SignInForm = () => {
-	const defaultSignInInfo = {
+	const defaultSignIn = {
 		email: "",
 		password: "",
 		errorMessage: ""
 	};
-	const [signInInfo, setSignInInfo] = useState(defaultSignInInfo);
+	const [signIn, setSignIn] = useState(defaultSignIn);
 	const [isSignInValid, setIsSignInValid] = useState(false);
 
-	const firebaseContext = useContext(FirebaseContext);
+	const { state } = useContext(AppContext);
 
 	let history = useHistory();
 
-	const signIn = () => {
-		firebaseContext
-			?.doSignInWithEmailAndPassword(signInInfo.email, signInInfo.password)
+	const handleSignIn = () => {
+		state.firebase
+			.doSignInWithEmailAndPassword(signIn.email, signIn.password)
 			.then((response) => {
 				if (!response.errorCode) {
 					// Yay signed in success
@@ -32,16 +32,16 @@ const SignInForm = () => {
 						case "auth/wrong-password":
 							errorMessage = "Incorrect password or email address.";
 					}
-					setSignInInfo({ ...signInInfo, errorMessage });
+					setSignIn({ ...signIn, errorMessage });
 				}
 			});
 	};
 
 	useEffect(() => {
 		setIsSignInValid(
-			defaultSignInInfo.email !== null && defaultSignInInfo.password !== null
+			defaultSignIn.email !== null && defaultSignIn.password !== null
 		);
-	}, [signInInfo]);
+	}, [signIn, defaultSignIn.email, defaultSignIn.password]);
 
 	return (
 		<Form>
@@ -49,9 +49,9 @@ const SignInForm = () => {
 				<Form.Label>Email</Form.Label>
 				<Form.Control
 					type="text"
-					value={signInInfo.email}
+					value={signIn.email}
 					onChange={(e) => {
-						setSignInInfo({ ...signInInfo, email: e.target.value });
+						setSignIn({ ...signIn, email: e.target.value });
 					}}
 				/>
 			</Form.Group>
@@ -59,16 +59,14 @@ const SignInForm = () => {
 				<Form.Label>Password</Form.Label>
 				<Form.Control
 					type="password"
-					value={signInInfo.password}
-					onChange={(e) =>
-						setSignInInfo({ ...signInInfo, password: e.target.value })
-					}
+					value={signIn.password}
+					onChange={(e) => setSignIn({ ...signIn, password: e.target.value })}
 				/>
 			</Form.Group>
 			<Button
 				disabled={!isSignInValid}
 				variant="success"
-				onClick={() => signIn()}>
+				onClick={() => handleSignIn()}>
 				Sign In
 			</Button>
 			Forgot Password?

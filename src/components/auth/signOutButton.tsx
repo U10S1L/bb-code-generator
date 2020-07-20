@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 
+import { AppContext } from "context/context";
 import { Button } from "react-bootstrap";
-import FirebaseContext from "context/firebaseContext";
 
 const SignOutButton = () => {
-	const firebaseContext = useContext(FirebaseContext);
+	const { state } = useContext(AppContext);
 
 	return (
-		<Button variant="link" onClick={() => firebaseContext?.doSignOut()}>
+		<Button variant="link" onClick={() => state.firebase.doSignOut()}>
 			Sign Out
 		</Button>
 	);

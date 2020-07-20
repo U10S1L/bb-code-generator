@@ -1,36 +1,36 @@
 import { Button, Form } from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
 
-import FirebaseContext from "context/firebaseContext";
+import { AppContext } from "context/context";
 import { useHistory } from "react-router-dom";
 
 const SignUpForm = () => {
-	const defaultSignUpInfo = {
+	const defaultSignUp = {
 		username: "",
 		email: "",
 		password1: "",
 		password2: "",
 		errorMessage: ""
 	};
-	const [signUpInfo, setSignUpInfo] = useState<{
+	const [signUp, setSignUp] = useState<{
 		username: string;
 		email: string;
 		password1: string;
 		password2: string;
 		errorMessage: string;
-	}>(defaultSignUpInfo);
+	}>(defaultSignUp);
 	const [isSignUpInfoValid, setIsSignUpInfoValid] = useState(false);
 
-	const firebaseContext = useContext(FirebaseContext);
+	const { state } = useContext(AppContext);
 
 	let history = useHistory();
 
-	const signUp = () => {
-		firebaseContext
-			?.doCreateUserWithEmailAndPassword(signUpInfo.email, signUpInfo.password1)
+	const handleSignUp = () => {
+		state.firebase
+			.doCreateUserWithEmailAndPassword(signUp.email, signUp.password1)
 			.then((response) => {
 				if (response.authUser) {
-					setSignUpInfo(defaultSignUpInfo);
+					setSignUp(defaultSignUp);
 					history.push("/forms/list");
 					// Use the auth user
 				} else if (response.errorCode) {
@@ -46,69 +46,63 @@ const SignUpForm = () => {
 						case "auth/email-already-in-use":
 							errorMessage =
 								"An account already exists with the email address " +
-								signUpInfo.email;
+								signUp.email;
 							break;
 						default:
 							errorMessage = "There was an issue creating your account.";
 					}
-					setSignUpInfo({ ...signUpInfo, errorMessage });
+					setSignUp({ ...signUp, errorMessage });
 				}
 			});
 	};
 
 	useEffect(() => {
 		setIsSignUpInfoValid(
-			signUpInfo.username !== "" &&
-				signUpInfo.email !== "" &&
-				signUpInfo.password1 !== "" &&
-				signUpInfo.password1 === signUpInfo.password2
+			signUp.username !== "" &&
+				signUp.email !== "" &&
+				signUp.password1 !== "" &&
+				signUp.password1 === signUp.password2
 		);
-	}, [signUpInfo]);
+	}, [signUp]);
 	return (
 		<Form>
 			<Form.Group>
 				<Form.Label>Full Name</Form.Label>
 				<Form.Control
 					placeholder="Character Name"
-					value={signUpInfo.username}
-					onChange={(e) =>
-						setSignUpInfo({ ...signUpInfo, username: e.target.value })
-					}
+					value={signUp.username}
+					onChange={(e) => setSignUp({ ...signUp, username: e.target.value })}
 					type="text"></Form.Control>
 			</Form.Group>
 			<Form.Group>
 				<Form.Label>Email</Form.Label>
 				<Form.Control
-					value={signUpInfo.email}
+					value={signUp.email}
 					placeholder="Actual email address that you have access to"
-					onChange={(e) =>
-						setSignUpInfo({ ...signUpInfo, email: e.target.value })
-					}
+					onChange={(e) => setSignUp({ ...signUp, email: e.target.value })}
 					type="text"></Form.Control>
 			</Form.Group>
 			<Form.Group>
 				<Form.Label>Password</Form.Label>
 				<Form.Control
-					value={signUpInfo.password1}
-					onChange={(e) =>
-						setSignUpInfo({ ...signUpInfo, password1: e.target.value })
-					}
+					autoComplete="new-password"
+					value={signUp.password1}
+					onChange={(e) => setSignUp({ ...signUp, password1: e.target.value })}
 					type="password"></Form.Control>
 			</Form.Group>
 			<Form.Group>
 				<Form.Label>Confirm Password</Form.Label>
 				<Form.Control
-					value={signUpInfo.password2}
-					onChange={(e) =>
-						setSignUpInfo({ ...signUpInfo, password2: e.target.value })
-					}
+					autoComplete="new-password"
+					value={signUp.password2}
+					onChange={(e) => setSignUp({ ...signUp, password2: e.target.value })}
 					type="password"></Form.Control>
 			</Form.Group>
-			<div style={{ color: "red" }}>{signUpInfo.errorMessage}</div>
+			<div style={{ color: "red" }}>{signUp.errorMessage}</div>
 			<Button
 				disabled={!isSignUpInfoValid}
 				variant="success"
-				onClick={() => signUp()}>
+				onClick={() => handleSignUp()}>
 				Sign Up
 			</Button>
 			Forgot Password?

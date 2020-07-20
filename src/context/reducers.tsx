@@ -1,5 +1,4 @@
 import { BBCodeFormType } from "types/formTypes";
-import Firebase from "components/firebase/firebase";
 import { Types } from "types/contextTypes";
 
 //  https://dev.to/elisealcala/react-context-with-usereducer-and-typescript-4obm
@@ -63,7 +62,10 @@ export const formsReducer = (
 	}
 };
 
-export const authUserReducer = (state: any, action: AuthUserActions): any => {
+export const authUserReducer = (
+	state: firebase.User | null,
+	action: AuthUserActions
+): firebase.User | null => {
 	switch (action.type) {
 		case Types.UpdateAuthUser:
 			return action.payload;

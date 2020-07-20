@@ -1,7 +1,6 @@
 import "styles/custom2.css";
 import "styles/styles.css";
 
-import React, { useContext, useEffect, useState } from "react";
 import { Slide, ToastContainer } from "react-toastify";
 import {
 	faArrowLeft,
@@ -30,14 +29,11 @@ import {
 	faTimes
 } from "@fortawesome/free-solid-svg-icons";
 
-import { AppContext } from "context/context";
 import { AppProvider } from "context/context";
 import { Container } from "react-bootstrap";
-import Firebase from "components/firebase/firebase";
-import FirebaseContext from "context/firebaseContext";
 import NavigationBar from "./components/navbar/navbar";
+import React from "react";
 import SwitchRoutes from "./SwitchRoutes";
-import { Types } from "types/contextTypes";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import pages from "./constants/pages";
 
@@ -71,21 +67,19 @@ library.add(
 
 const App = () => {
 	return (
-		<FirebaseContext.Provider value={new Firebase()}>
-			<AppProvider>
-				<Container
-					id="#app-container"
-					style={{ backgroundColor: "white", minHeight: "100vh" }}>
-					<NavigationBar links={pages} style={{ margin: "0 -15px" }} />
-					<ToastContainer
-						hideProgressBar={true}
-						autoClose={2500}
-						transition={Slide}
-					/>
-					<SwitchRoutes />
-				</Container>
-			</AppProvider>
-		</FirebaseContext.Provider>
+		<AppProvider>
+			<Container
+				id="#app-container"
+				style={{ backgroundColor: "white", minHeight: "100vh" }}>
+				<NavigationBar links={pages} style={{ margin: "0 -15px" }} />
+				<ToastContainer
+					hideProgressBar={true}
+					autoClose={2500}
+					transition={Slide}
+				/>
+				<SwitchRoutes />
+			</Container>
+		</AppProvider>
 	);
 };
 

@@ -5,12 +5,12 @@ import React, { useContext, useEffect } from "react";
 
 import { AppContext } from "context/context";
 import Clock from "react-live-clock";
-import FirebaseContext from "context/firebaseContext";
 import { LinkContainer } from "react-router-bootstrap";
 import { Page } from "constants/pages";
 import SignOutButton from "components/auth/signOutButton";
 import { Types } from "types/contextTypes";
 import logoImage from "images/logo.svg";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 type NavigationBarProps = {
 	links: Page[];
@@ -18,17 +18,13 @@ type NavigationBarProps = {
 };
 const NavigationBar = ({ links, style }: NavigationBarProps) => {
 	const { state, dispatch } = useContext(AppContext);
-	const firebaseContext = useContext(FirebaseContext);
+	const [user] = useAuthState(state.firebase.auth);
+
 	useEffect(() => {
-		firebaseContext?.auth.onAuthStateChanged((authUser) => {
-			if (authUser != null) {
-				console.log("sending authuser to the dispatcher", authUser);
-				dispatch({ type: Types.UpdateAuthUser, payload: authUser });
-			} else {
-				dispatch({ type: Types.DeleteAuthUser, payload: null });
-			}
-		});
-	}, []);
+		user
+			? dispatch({ type: Types.UpdateAuthUser, payload: user })
+			: dispatch({ type: Types.DeleteAuthUser, payload: null });
+	}, [user, dispatch]);
 	return (
 		<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
 			<LinkContainer to={"/"} exact>
