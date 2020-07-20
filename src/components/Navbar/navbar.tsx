@@ -1,12 +1,15 @@
 import "./navbar.css";
 
 import { Nav, Navbar } from "react-bootstrap";
+import React, { useContext, useEffect } from "react";
 
+import { AppContext } from "context/context";
 import Clock from "react-live-clock";
+import FirebaseContext from "context/firebaseContext";
 import { LinkContainer } from "react-router-bootstrap";
 import { Page } from "constants/pages";
-import React from "react";
 import SignOutButton from "components/auth/signOutButton";
+import { Types } from "types/contextTypes";
 import logoImage from "images/logo.svg";
 
 type NavigationBarProps = {
@@ -14,6 +17,18 @@ type NavigationBarProps = {
 	style: React.CSSProperties;
 };
 const NavigationBar = ({ links, style }: NavigationBarProps) => {
+	const { state, dispatch } = useContext(AppContext);
+	const firebaseContext = useContext(FirebaseContext);
+	useEffect(() => {
+		firebaseContext?.auth.onAuthStateChanged((authUser) => {
+			if (authUser != null) {
+				console.log("sending authuser to the dispatcher", authUser);
+				dispatch({ type: Types.UpdateAuthUser, payload: authUser });
+			} else {
+				dispatch({ type: Types.DeleteAuthUser, payload: null });
+			}
+		});
+	}, []);
 	return (
 		<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
 			<LinkContainer to={"/"} exact>

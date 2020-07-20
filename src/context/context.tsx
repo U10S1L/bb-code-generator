@@ -1,14 +1,27 @@
-import { FormsActions, formsReducer } from "./reducers";
-import React, { createContext, useEffect, useReducer } from "react";
+import {
+	AuthUserActions,
+	FormsActions,
+	authUserReducer,
+	formsReducer
+} from "./reducers";
+import React, {
+	createContext,
+	useContext,
+	useEffect,
+	useReducer,
+	useState
+} from "react";
 
 import { BBCodeFormType } from "types/formTypes";
+import FirebaseContext from "context/firebaseContext";
 
 // Defaults
 const forms: BBCodeFormType[] = [];
-
+const authUser = null;
 // Initial State
 type InitialStateType = {
 	forms: BBCodeFormType[];
+	authUser: null | any;
 };
 const initialState = (): InitialStateType => {
 	const stateString = localStorage.getItem("state");
@@ -16,18 +29,23 @@ const initialState = (): InitialStateType => {
 		return JSON.parse(stateString);
 	} else {
 		return {
-			forms
+			forms,
+			authUser
 		};
 	}
 };
 
 const AppContext = createContext<{
 	state: InitialStateType;
-	dispatch: React.Dispatch<FormsActions>;
+	dispatch: React.Dispatch<FormsActions | AuthUserActions>;
 }>({ state: initialState(), dispatch: () => null });
 
-const mainReducer = ({ forms }: InitialStateType, action: FormsActions) => ({
-	forms: formsReducer(forms, action as FormsActions)
+const mainReducer = (
+	{ forms, authUser }: InitialStateType,
+	action: FormsActions | AuthUserActions
+) => ({
+	forms: formsReducer(forms, action as FormsActions),
+	authUser: authUserReducer(authUser, action as AuthUserActions)
 });
 
 const AppProvider: React.FC = ({ children }) => {

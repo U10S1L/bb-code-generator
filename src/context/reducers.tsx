@@ -1,4 +1,5 @@
 import { BBCodeFormType } from "types/formTypes";
+import Firebase from "components/firebase/firebase";
 import { Types } from "types/contextTypes";
 
 //  https://dev.to/elisealcala/react-context-with-usereducer-and-typescript-4obm
@@ -22,9 +23,17 @@ type FormsPayload = {
 	[Types.DeleteAllForms]: null;
 };
 
+type AuthUserPayload = {
+	[Types.UpdateAuthUser]: firebase.User;
+	[Types.DeleteAuthUser]: null;
+};
+
 // Actions
 export type FormsActions = ActionMap<FormsPayload>[keyof ActionMap<
 	FormsPayload
+>];
+export type AuthUserActions = ActionMap<AuthUserPayload>[keyof ActionMap<
+	AuthUserPayload
 >];
 
 export const formsReducer = (
@@ -49,6 +58,17 @@ export const formsReducer = (
 			);
 		case Types.DeleteAllForms:
 			return [];
+		default:
+			return state;
+	}
+};
+
+export const authUserReducer = (state: any, action: AuthUserActions): any => {
+	switch (action.type) {
+		case Types.UpdateAuthUser:
+			return action.payload;
+		case Types.DeleteAuthUser:
+			return null;
 		default:
 			return state;
 	}
