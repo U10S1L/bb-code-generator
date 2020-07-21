@@ -19,7 +19,7 @@ const SignUpForm = () => {
 		password2: string;
 		errorMessage: string;
 	}>(defaultSignUp);
-	const [isSignUpInfoValid, setIsSignUpInfoValid] = useState(false);
+	const [isSignUpValid, setIsSignUpValid] = useState(false);
 
 	const { state } = useContext(AppContext);
 
@@ -57,7 +57,7 @@ const SignUpForm = () => {
 	};
 
 	useEffect(() => {
-		setIsSignUpInfoValid(
+		setIsSignUpValid(
 			signUp.username !== "" &&
 				signUp.email !== "" &&
 				signUp.password1 !== "" &&
@@ -100,7 +100,7 @@ const SignUpForm = () => {
 			</Form.Group>
 			<div style={{ color: "red" }}>{signUp.errorMessage}</div>
 			<Button
-				disabled={!isSignUpInfoValid}
+				disabled={!isSignUpValid}
 				variant="success"
 				onClick={() => handleSignUp()}>
 				Sign Up

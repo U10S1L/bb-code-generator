@@ -1,14 +1,12 @@
-import { LinkContainer } from "react-router-bootstrap";
+import { useHistory, useLocation } from "react-router-dom";
+
 import React from "react";
 import SignInForm from "components/auth/signInForm";
 
 const SignIn = () => {
 	return (
 		<div>
-			No account yet? <SignInForm />
-			<LinkContainer to={"/auth/signup"}>
-				<span>Sign Up!</span>
-			</LinkContainer>
+			<SignInForm />
 		</div>
 	);
 };

@@ -62,8 +62,18 @@ class Firebase {
 				return { errorCode: error.code };
 			});
 	};
-	doSignOut = () => this.auth.signOut();
-	doPasswordReset = (email: string) => this.auth.sendPasswordResetEmail(email);
+	doSignOut = () => {
+		this.auth.signOut();
+	};
+	doPasswordReset = (email: string): Promise<{ errorCode?: string }> =>
+		this.auth
+			.sendPasswordResetEmail(email)
+			.then(() => {
+				return {};
+			})
+			.catch((error) => {
+				return { errorCode: error.code };
+			});
 	doPasswordUpdate = (password: string) =>
 		this.auth.currentUser?.updatePassword(password);
 }

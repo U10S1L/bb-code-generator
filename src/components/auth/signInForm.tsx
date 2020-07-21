@@ -1,8 +1,9 @@
 import { Button, Form } from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
+import { RouteComponentProps, useHistory, useLocation } from "react-router-dom";
 
 import { AppContext } from "context/context";
-import { useHistory } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
 
 const SignInForm = () => {
 	const defaultSignIn = {
@@ -16,6 +17,8 @@ const SignInForm = () => {
 	const { state } = useContext(AppContext);
 
 	let history = useHistory();
+	let location = useLocation<any>();
+	const from = location.state?.from;
 
 	const handleSignIn = () => {
 		state.firebase
@@ -23,7 +26,7 @@ const SignInForm = () => {
 			.then((response) => {
 				if (!response.errorCode) {
 					// Yay signed in success
-					history.push("/forms/list");
+					history.replace("/forms/list");
 				} else {
 					console.log(response.errorCode);
 					var errorMessage = "There was an error signing into your account.";
@@ -48,6 +51,7 @@ const SignInForm = () => {
 			<Form.Group>
 				<Form.Label>Email</Form.Label>
 				<Form.Control
+					autoComplete="username"
 					type="text"
 					value={signIn.email}
 					onChange={(e) => {
@@ -58,18 +62,35 @@ const SignInForm = () => {
 			<Form.Group>
 				<Form.Label>Password</Form.Label>
 				<Form.Control
+					autoComplete="current-password"
 					type="password"
 					value={signIn.password}
 					onChange={(e) => setSignIn({ ...signIn, password: e.target.value })}
 				/>
 			</Form.Group>
-			<Button
-				disabled={!isSignInValid}
-				variant="success"
-				onClick={() => handleSignIn()}>
-				Sign In
-			</Button>
-			Forgot Password?
+			<div style={{ color: "red" }}>{signIn.errorMessage}</div>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "flex-end",
+					textAlign: "right"
+				}}>
+				<LinkContainer to={"/auth/forgotPassword"} style={{ paddingRight: 0 }}>
+					<Button variant="link">Forgot Password?</Button>
+				</LinkContainer>
+				<div>
+					<LinkContainer to={"/auth/signup"} style={{ marginRight: "1rem" }}>
+						<Button variant="secondary">Sign Up</Button>
+					</LinkContainer>
+					<Button
+						disabled={!isSignInValid}
+						variant="success"
+						onClick={() => handleSignIn()}>
+						Sign In
+					</Button>
+				</div>
+			</div>
 		</Form>
 	);
 };

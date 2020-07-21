@@ -1,3 +1,4 @@
+import ForgotPassword from "pages/auth/forgotPassword";
 import FormCreator from "pages/form/creator/formCreator";
 import FormList from "pages/form/list/formList";
 import Home from "pages/home/home";
@@ -10,6 +11,7 @@ export type Page = {
 	name: string;
 	component: React.FC<any>;
 	path: string;
+	protected?: boolean;
 };
 
 const pages: Page[] = [
@@ -17,19 +19,22 @@ const pages: Page[] = [
 		id: "formList",
 		name: "My Forms",
 		component: FormList,
-		path: "/forms/list"
+		path: "/forms/list",
+		protected: true
 	},
 	{
 		id: "formCreator",
 		name: "Add Form",
 		component: FormCreator,
-		path: "/forms/new"
+		path: "/forms/new",
+		protected: true
 	},
 	{
 		id: "settings",
 		name: "Settings",
 		component: Settings,
-		path: "/settings"
+		path: "/settings",
+		protected: true
 	},
 	{
 		id: "signIn",
@@ -42,6 +47,12 @@ const pages: Page[] = [
 		name: "Sign Up",
 		component: SignUp,
 		path: "/auth/signup"
+	},
+	{
+		id: "forgotPassword",
+		name: "Forgot Password",
+		component: ForgotPassword,
+		path: "/auth/forgotpassword"
 	},
 	{
 		id: "home",

@@ -43,7 +43,8 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 						return (
 							link.id !== "home" &&
 							link.id !== "signIn" &&
-							link.id !== "signUp" && (
+							link.id !== "signUp" &&
+							link.id !== "forgotPassword" && (
 								<LinkContainer to={link.path} key={i}>
 									<Nav.Link>{link.name}</Nav.Link>
 								</LinkContainer>
@@ -51,10 +52,13 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 						);
 					})}
 				</Nav>
-				<LinkContainer to={"/auth/signin"}>
-					<Nav.Link>Sign In</Nav.Link>
-				</LinkContainer>
-				<SignOutButton />
+				{!state.authUser ? (
+					<LinkContainer to={"/auth/signin"}>
+						<Nav.Link>Sign In</Nav.Link>
+					</LinkContainer>
+				) : (
+					<SignOutButton />
+				)}
 				<span
 					style={{
 						color: "rgba(255,255,255,.5)",
