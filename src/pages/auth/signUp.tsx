@@ -1,5 +1,3 @@
-import { Button, Form } from "react-bootstrap";
-
 import React from "react";
 import SignUpForm from "components/auth/signUpForm";
 

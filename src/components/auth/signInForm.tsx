@@ -1,9 +1,9 @@
 import { Button, Form } from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
-import { RouteComponentProps, useHistory, useLocation } from "react-router-dom";
 
 import { AppContext } from "context/context";
 import { LinkContainer } from "react-router-bootstrap";
+import { useHistory } from "react-router-dom";
 
 const SignInForm = () => {
 	const defaultSignIn = {
@@ -17,15 +17,12 @@ const SignInForm = () => {
 	const { state } = useContext(AppContext);
 
 	let history = useHistory();
-	let location = useLocation<any>();
-	const from = location.state?.from;
 
 	const handleSignIn = () => {
 		state.firebase
 			.doSignInWithEmailAndPassword(signIn.email, signIn.password)
 			.then((response) => {
 				if (!response.errorCode) {
-					// Yay signed in success
 					history.replace("/forms/list");
 				} else {
 					console.log(response.errorCode);
@@ -34,6 +31,8 @@ const SignInForm = () => {
 						case "auth/invalid-email":
 						case "auth/wrong-password":
 							errorMessage = "Incorrect password or email address.";
+						case "auth/user-not-found":
+							errorMessage = "No account exists with this email address.";
 					}
 					setSignIn({ ...signIn, errorMessage });
 				}

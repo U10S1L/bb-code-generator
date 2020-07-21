@@ -1,4 +1,5 @@
 import "firebase/auth";
+import "firebase/database";
 
 import app, { FirebaseError } from "firebase/app";
 
@@ -24,15 +25,17 @@ const config = process.env.NODE_ENV === "production" ? prodConfig : devConfig;
 
 class Firebase {
 	auth: app.auth.Auth;
+	db: app.database.Database;
 
 	constructor() {
 		if (!app.apps.length) {
 			app.initializeApp(config);
 		}
 		this.auth = app.auth();
+		this.db = app.database();
 	}
 
-	// Auth API
+	/* Auth API */
 	doCreateUserWithEmailAndPassword = (
 		email: string,
 		password: string
@@ -76,6 +79,12 @@ class Firebase {
 			});
 	doPasswordUpdate = (password: string) =>
 		this.auth.currentUser?.updatePassword(password);
+
+	/* User API */
+	// New User
+	createUser = (uid: string) => this.db.ref(`users/${uid}`);
+	// List of Users
+	users = () => this.db.ref(`users`);
 }
 
 export default Firebase;

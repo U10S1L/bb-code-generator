@@ -179,7 +179,7 @@ const FormList = () => {
 		const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
 		localStorage.removeItem(formProgressString);
 		dispatch({ type: Types.DeleteForm, payload: bbCodeForm });
-		history.push("/forms/list");
+		history.replace("/forms/list");
 	};
 	const reorderForms = (sortObject: { oldIndex: number; newIndex: number }) => {
 		dispatch({

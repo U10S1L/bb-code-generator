@@ -20,12 +20,7 @@ const SwitchRoutes = () => {
 						<page.component />
 					</ProtectedRoute>
 				) : (
-					<Route
-						key={i}
-						path={page.path}
-						render={() => <page.component />}
-						exact
-					/>
+					<Route key={i} path={page.path} render={() => <page.component />} />
 				)
 			)}
 		</Switch>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { AppContext } from "context/context";
@@ -6,9 +6,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 const ProtectedRoute = ({ children, ...rest }: any) => {
 	const { state } = useContext(AppContext);
-	const [user] = useAuthState(state.firebase.auth);
+	const [user, loading] = useAuthState(state.firebase.auth);
 
-	return (
+	return !loading ? (
 		<Route
 			{...rest}
 			render={() =>
@@ -23,7 +23,7 @@ const ProtectedRoute = ({ children, ...rest }: any) => {
 				)
 			}
 		/>
-	);
+	) : null;
 };
 
 export default ProtectedRoute;

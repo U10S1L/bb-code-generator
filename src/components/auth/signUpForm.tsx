@@ -27,14 +27,20 @@ const SignUpForm = () => {
 
 	const handleSignUp = () => {
 		state.firebase
+			// Create user in Firebase Auth
 			.doCreateUserWithEmailAndPassword(signUp.email, signUp.password1)
 			.then((response) => {
-				if (response.authUser) {
-					setSignUp(defaultSignUp);
-					history.push("/forms/list");
+				if (response.authUser && response.authUser.user) {
+					// Store user in Firebase DB
+					state.firebase
+						.createUser(response.authUser.user.uid)
+						.set({ username: signUp.username, email: signUp.email })
+						.then(() => {
+							setSignUp(defaultSignUp);
+							history.replace("/forms/list");
+						});
 					// Use the auth user
 				} else if (response.errorCode) {
-					console.log(response.errorCode);
 					var errorMessage = "";
 					switch (response.errorCode) {
 						case "auth/weak-password":

@@ -10,11 +10,14 @@ const SignOutButton = () => {
 
 	const handleSignOut = () => {
 		state.firebase.doSignOut();
-		history.push("/");
+		history.replace("/");
 	};
 
 	return (
-		<Button variant="link" onClick={() => handleSignOut()}>
+		<Button
+			variant="link"
+			style={{ color: "#FFFFFF", opacity: ".5", marginLeft: "auto" }}
+			onClick={() => handleSignOut()}>
 			Sign Out
 		</Button>
 	);

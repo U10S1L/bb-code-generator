@@ -2,11 +2,13 @@ import { Button, Form } from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
 
 import { AppContext } from "context/context";
+import { useHistory } from "react-router-dom";
 
 const ForgotPasswordForm = () => {
 	const defaultForgotPassword = { email: "", errorMessage: "" };
 	const [forgotPassword, setForgotPassword] = useState(defaultForgotPassword);
 	const [isForgotPasswordValid, setIsForgotPasswordValid] = useState(false);
+	let history = useHistory();
 
 	const { state } = useContext(AppContext);
 
@@ -14,6 +16,7 @@ const ForgotPasswordForm = () => {
 		state.firebase.doPasswordReset(forgotPassword.email).then((response) => {
 			if (!response.errorCode) {
 				setForgotPassword(defaultForgotPassword);
+				history.replace("/auth/signin");
 			} else {
 				console.log(response.errorCode);
 				var errorMessage = "";
@@ -29,7 +32,7 @@ const ForgotPasswordForm = () => {
 
 	useEffect(() => {
 		setIsForgotPasswordValid(forgotPassword.email !== "");
-	}, [defaultForgotPassword]);
+	}, [forgotPassword]);
 
 	return (
 		<Form>
