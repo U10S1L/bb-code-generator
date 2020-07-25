@@ -1,7 +1,7 @@
 import { Button, Form } from "react-bootstrap";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { AppContext } from "context/context";
+import Firebase from "components/firebase/firebase";
 import { LinkContainer } from "react-router-bootstrap";
 import { errorMessage } from "constants/errors";
 import { useHistory } from "react-router-dom";
@@ -14,19 +14,16 @@ const SignInForm = () => {
 	};
 	const [signIn, setSignIn] = useState(defaultSignIn);
 	const [isSignInValid, setIsSignInValid] = useState(false);
-
-	const { state } = useContext(AppContext);
-
-	let history = useHistory();
-
+	const history = useHistory();
 	const handleSignIn = () => {
-		state.firebase.signIn(signIn.email, signIn.password).then((errorCode) => {
-			if (!errorCode) {
-				history.replace("/forms/list");
-			} else {
+		Firebase()
+			.signIn(signIn.email, signIn.password)
+			.then(() => {
+				history.push("/forms/list");
+			})
+			.catch((errorCode) => {
 				setSignIn({ ...signIn, errorMessage: errorMessage(errorCode) });
-			}
-		});
+			});
 	};
 
 	useEffect(() => {

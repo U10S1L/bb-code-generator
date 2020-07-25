@@ -84,9 +84,9 @@ export const formatUrl = (url: { link: string; text: string }): string => {
 // Format BBCodeForms with Defaults
 export const getFormWithDefaultVals = (
 	bbCodeForm: BBCodeFormType | undefined
-) => {
+): BBCodeFormType | undefined => {
 	if (!bbCodeForm) {
-		return null;
+		return undefined;
 	} else {
 		return {
 			...bbCodeForm,
@@ -103,4 +103,8 @@ export const getFormWithDefaultVals = (
 			})
 		};
 	}
+};
+
+export const getFormProgressString = (bbCodeForm: BBCodeFormType): string => {
+	return `formProgress_${bbCodeForm.uid}`;
 };

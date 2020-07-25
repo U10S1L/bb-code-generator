@@ -1,22 +1,22 @@
 import { Button, Form } from "react-bootstrap";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { AppContext } from "context/context";
+import Firebase from "components/firebase/firebase";
 import { useHistory } from "react-router-dom";
 
 const ForgotPasswordForm = () => {
 	const defaultForgotPassword = { email: "", errorMessage: "" };
 	const [forgotPassword, setForgotPassword] = useState(defaultForgotPassword);
 	const [isForgotPasswordValid, setIsForgotPasswordValid] = useState(false);
-	let history = useHistory();
-
-	const { state } = useContext(AppContext);
+	const history = useHistory();
 
 	const handleForgotPassword = () => {
-		state.firebase.passwordReset(forgotPassword.email).then(() => {
-			setForgotPassword(defaultForgotPassword);
-			history.replace("/auth/signin");
-		});
+		Firebase()
+			.passwordReset(forgotPassword.email)
+			.then(() => {
+				setForgotPassword(defaultForgotPassword);
+				history.push("/auth/signin");
+			});
 	};
 
 	useEffect(() => {

@@ -2,17 +2,16 @@ import { BBCodeFormType, InputComponentProps } from "types/formTypes";
 import { Button, Col, Row } from "react-bootstrap";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 
-import { AppContext } from "context/context";
+import { AuthContext } from "context/authContext";
 import { ErrorToast } from "components/toast/toast";
+import Firebase from "components/firebase/firebase";
 import FormBBCodeMatch from "components/bbCode/match/formBBCodeMatch";
 import FormBBCodeUpload from "components/bbCode/upload/formBBCodeUpload";
 import FormInputCreator from "components/form/creator/input/formInputCreator";
 import FormSetupCreator from "components/form/creator/setup/formSetupCreator";
 import Help from "components/help/help";
-import { Types } from "types/contextTypes";
 import arrayMove from "array-move";
 import { getFormUid } from "formatters";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router-dom";
 
 var slugify = require("slugify");
@@ -29,8 +28,7 @@ type FormCreatorProps = {
 };
 
 const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
-	const { state, dispatch } = useContext(AppContext);
-	const [user] = useAuthState(state.firebase.auth);
+	const { authUser, stateForms } = useContext(AuthContext);
 	const [formCreationStep, setFormCreationStep] = useState(
 		FormCreationStep.FORM_SETUP
 	);
@@ -137,7 +135,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		}
 	};
 
-	let history = useHistory();
+	const history = useHistory();
 
 	// Form Creation Step
 	const incrementFormCreationStep = (): void => {
@@ -156,16 +154,16 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				setFormCreationStep(FormCreationStep.BBCODE_MATCH);
 				break;
 			case FormCreationStep.BBCODE_MATCH:
-				state.firebase
+				Firebase()
 					.saveForm(
 						{
 							...bbCodeForm,
 							uid: slugify(bbCodeForm.name),
 							createdTimestamp: Date.now(),
 							updatedTimestamp: Date.now(),
-							order: state.forms.length + 1
+							order: stateForms.length + 1
 						},
-						user?.uid
+						authUser?.uid
 					)
 					.then(() => {
 						history.replace(`/forms/list`);
@@ -201,12 +199,12 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	const doesFormNameExist = () => {
 		if (!editMode) {
 			return (
-				state.forms.find((form) => form.uid === getFormUid(bbCodeForm.name)) !=
+				stateForms.find((form) => form.uid === getFormUid(bbCodeForm.name)) !=
 				null
 			);
 		} else {
 			return (
-				state.forms.find(
+				stateForms.find(
 					(form) =>
 						form.uid !== getFormUid(originalBBCodeForm.name) &&
 						form.uid === getFormUid(bbCodeForm.name)

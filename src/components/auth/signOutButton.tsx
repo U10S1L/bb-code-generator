@@ -1,16 +1,10 @@
-import React, { useContext } from "react";
-
-import { AppContext } from "context/context";
 import { Button } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import Firebase from "components/firebase/firebase";
+import React from "react";
 
 const SignOutButton = () => {
-	const { state } = useContext(AppContext);
-	let history = useHistory();
-
 	const handleSignOut = () => {
-		state.firebase.signOut();
-		history.replace("/");
+		Firebase().signOut();
 	};
 
 	return (

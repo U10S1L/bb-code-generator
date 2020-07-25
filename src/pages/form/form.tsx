@@ -9,33 +9,33 @@ import {
 	formatDateTimeWithSeconds,
 	formatUrl
 } from "formatters";
+import { getFormProgressString, getFormWithDefaultVals } from "formatters";
 
-import { AppContext } from "context/context";
+import { AuthContext } from "context/authContext";
 import CopyToClipboard from "react-copy-to-clipboard";
 import FormRenderer from "components/form/renderer/formRenderer";
 import StandardModal from "components/modals/standardModal";
 import { SuccessToast } from "components/toast/toast";
-import { getFormWithDefaultVals } from "formatters";
-import { useParams } from "react-router";
-import { withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const BBCodeForm = () => {
-	const { state } = useContext(AppContext);
 	const params = useParams<{ uid: string }>();
+
+	const { stateForms } = useContext(AuthContext);
+
+	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType | undefined>();
+	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<
+		BBCodeFormType
+	>();
 	const [pageModal, setPageModal] = useState<{
 		message: string;
 		visible: boolean;
 		continueAction: () => void;
 	}>();
-	const [originalBBCodeForm] = useState<BBCodeFormType | null>(() => {
-		return getFormWithDefaultVals(
-			state.forms.find((form) => form.uid === params.uid)
-		);
-	});
-	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType | null>();
-	const [formProgressString] = useState<string | undefined>(
-		originalBBCodeForm ? `formProgress_${originalBBCodeForm.uid}` : undefined
-	);
+
+	const formProgressString = originalBBCodeForm
+		? getFormProgressString(originalBBCodeForm)
+		: null;
 
 	const generateBBCode = (): string => {
 		if (bbCodeForm !== null && bbCodeForm !== undefined) {
@@ -110,13 +110,20 @@ const BBCodeForm = () => {
 		} else {
 			setBBCodeForm(originalBBCodeForm);
 		}
-	}, [params.uid, state.forms, formProgressString]);
+	}, [params.uid, stateForms, formProgressString, originalBBCodeForm]);
 
 	useEffect(() => {
 		// Saving current form progress in local storage
-		formProgressString &&
+		if (formProgressString) {
 			localStorage.setItem(formProgressString, JSON.stringify(bbCodeForm));
+		}
 	}, [bbCodeForm, formProgressString]);
+
+	useEffect(() => {
+		setOriginalBBCodeForm(() =>
+			getFormWithDefaultVals(stateForms.find((form) => form.uid === params.uid))
+		);
+	}, [params.uid, stateForms]);
 
 	return bbCodeForm ? (
 		<Row>
@@ -190,9 +197,7 @@ const BBCodeForm = () => {
 				continueBtnText="Continue"
 			/>
 		</Row>
-	) : (
-		<div>404</div>
-	);
+	) : null;
 };
 
-export default withRouter(BBCodeForm);
+export default BBCodeForm;

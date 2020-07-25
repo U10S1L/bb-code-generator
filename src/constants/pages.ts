@@ -24,7 +24,7 @@ const pages: Page[] = [
 	},
 	{
 		id: "formCreator",
-		name: "Add Form",
+		name: "New Form",
 		component: FormCreator,
 		path: "/forms/new",
 		protected: true

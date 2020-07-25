@@ -1,29 +1,19 @@
-import React, { useContext } from "react";
-import { Redirect, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Route, useHistory } from "react-router-dom";
 
-import { AppContext } from "context/context";
+import Firebase from "components/firebase/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const ProtectedRoute = ({ children, ...rest }: any) => {
-	const { state } = useContext(AppContext);
-	const [user, loading] = useAuthState(state.firebase.auth);
+	const [authUser, authUserLoading] = useAuthState(Firebase().auth);
 
-	return !loading ? (
-		<Route
-			{...rest}
-			render={() =>
-				user ? (
-					children
-				) : (
-					<Redirect
-						to={{
-							pathname: "/auth/signin"
-						}}
-					/>
-				)
-			}
-		/>
-	) : null;
+	const history = useHistory();
+	useEffect(() => {
+		if (!authUserLoading && !authUser) {
+			history.push("/auth/signin");
+		}
+	}, [authUserLoading, authUser, history]);
+	return !authUserLoading ? <Route {...rest} children={children} /> : null;
 };
 
 export default ProtectedRoute;

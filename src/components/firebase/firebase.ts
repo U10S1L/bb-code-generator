@@ -1,9 +1,9 @@
 import "firebase/auth";
-import "firebase/database";
 import "firebase/firestore";
 
-import { BBCodeFormType, InputComponentProps } from "types/formTypes";
-import app, { database, firestore } from "firebase/app";
+import app, { firestore } from "firebase/app";
+
+import { BBCodeFormType } from "types/formTypes";
 
 const config =
 	process.env.NODE_ENV === "production"
@@ -29,12 +29,10 @@ const Firebase = () => {
 		app.initializeApp(config);
 	}
 	const auth = app.auth();
-	const db = app.database();
 	const firestore = app.firestore();
 
 	return {
 		auth,
-		db,
 		firestore,
 		createUser,
 		signIn,
@@ -73,11 +71,8 @@ export const createUser = (
 export const signIn = (email: string, password: string): Promise<any> => {
 	return Firebase()
 		.auth.signInWithEmailAndPassword(email, password)
-		.then(() => {
-			return null;
-		})
 		.catch((error) => {
-			return error.code;
+			throw error.code;
 		});
 };
 export const signOut = () => {
@@ -147,20 +142,23 @@ export const streamUserForms = (
 		.onSnapshot((snapshot) => observer(snapshot));
 };
 
-export const getUserForm = (userFormUID: string): Promise<any> => {
-	const currUser = Firebase().auth.currentUser;
-	return Firebase()
-		.firestore.collection("users")
-		.doc(currUser!.uid)
-		.collection("forms")
-		.doc(userFormUID)
-		.get()
-		.then((doc) => {
-			return deserializeBBCodeForm(doc.data());
-		})
-		.catch((error) => {
-			console.log(error);
-		});
+export const getUserForm = (userUid: string, formUid: string): Promise<any> => {
+	if (!userUid || !formUid) {
+		throw Error("auth/access-denied");
+	} else {
+		return Firebase()
+			.firestore.collection("users")
+			.doc(userUid)
+			.collection("forms")
+			.doc(formUid)
+			.get()
+			.then((doc) => {
+				return deserializeBBCodeForm(doc.data());
+			})
+			.catch((error) => {
+				throw Error(error);
+			});
+	}
 };
 export const deleteUserForm = (userFormUID: string): Promise<any> => {
 	const currUser = Firebase().auth.currentUser;

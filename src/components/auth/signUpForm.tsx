@@ -1,7 +1,7 @@
 import { Button, Form } from "react-bootstrap";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { AppContext } from "context/context";
+import Firebase from "components/firebase/firebase";
 import { errorMessage } from "constants/errors";
 import { useHistory } from "react-router-dom";
 
@@ -22,12 +22,10 @@ const SignUpForm = () => {
 	}>(defaultSignUp);
 	const [isSignUpValid, setIsSignUpValid] = useState(false);
 
-	const { state } = useContext(AppContext);
-
-	let history = useHistory();
+	const history = useHistory();
 
 	const handleSignUp = () => {
-		state.firebase
+		Firebase()
 			// Create user in Firebase Auth
 			.createUser(signUp.username, signUp.email, signUp.password1)
 			.then((errorCode) => {

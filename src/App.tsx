@@ -20,6 +20,8 @@ import {
 	faEye,
 	faFont,
 	faLink,
+	faLock,
+	faLockOpen,
 	faMinus,
 	faPlus,
 	faQuestionCircle,
@@ -29,7 +31,7 @@ import {
 	faTimes
 } from "@fortawesome/free-solid-svg-icons";
 
-import { AppProvider } from "context/context";
+import { AuthProvider } from "context/authContext";
 import { Container } from "react-bootstrap";
 import NavigationBar from "./components/navbar/navbar";
 import React from "react";
@@ -62,12 +64,14 @@ library.add(
 	faCheckSquare,
 	faLink,
 	faCircle,
-	faExclamationCircle
+	faExclamationCircle,
+	faLock,
+	faLockOpen
 );
 
 const App = () => {
 	return (
-		<AppProvider>
+		<AuthProvider>
 			<Container
 				id="#app-container"
 				style={{ backgroundColor: "white", minHeight: "100vh" }}>
@@ -79,7 +83,7 @@ const App = () => {
 				/>
 				<SwitchRoutes />
 			</Container>
-		</AppProvider>
+		</AuthProvider>
 	);
 };
 
