@@ -193,15 +193,21 @@ const FormList = () => {
 		setForms(reorderedForms);
 	};
 
-	useEffect(() => {
+	const toggleEditFormList = () => {
 		if (!showEditButtons) {
+			setShowEditButtons(true);
+		} else {
 			if (JSON.stringify(stateForms) !== JSON.stringify(forms)) {
-				console.log("Db call ");
-				Firebase().batchUpdateForms(forms, authUser?.uid);
+				Firebase()
+					.batchUpdateForms(forms, authUser?.uid)
+					.then(() => {
+						setShowEditButtons(false);
+					});
+			} else {
+				setShowEditButtons(false);
 			}
 		}
-	}, [showEditButtons, authUser, forms, stateForms]);
-
+	};
 	useEffect(() => {
 		setForms(stateForms);
 	}, [stateForms]);
@@ -214,9 +220,7 @@ const FormList = () => {
 					style={{ display: "flex", justifyContent: "space-between" }}>
 					<div style={{ display: "flex" }}>
 						<h3>My Forms</h3>
-						<Button
-							variant="link"
-							onClick={() => setShowEditButtons(!showEditButtons)}>
+						<Button variant="link" onClick={() => toggleEditFormList()}>
 							<FontAwesomeIcon icon={!showEditButtons ? "lock" : "lock-open"} />
 						</Button>
 					</div>
