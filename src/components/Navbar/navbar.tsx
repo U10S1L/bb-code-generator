@@ -16,55 +16,53 @@ type NavigationBarProps = {
 	style: React.CSSProperties;
 };
 const NavigationBar = ({ links, style }: NavigationBarProps) => {
-	const [user, loading] = useAuthState(Firebase().auth);
+	const [user] = useAuthState(Firebase().auth);
 	return (
 		<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
-			{!loading && (
-				<>
-					<LinkContainer to={"/"} exact>
-						<Navbar.Brand>
-							<img
-								alt="logo"
-								style={{ width: "9rem" }}
-								src={logoImage}
-								className="img-fluid"></img>
-						</Navbar.Brand>
-					</LinkContainer>
-					<Navbar.Toggle aria-controls="basic-navbar-nav" />
-					<Navbar.Collapse id="basic-navbar-nav">
-						<Nav style={{ width: "100%" }}>
-							{links.map((link, i) => {
-								return (
-									(!link.protected || user !== null) &&
-									link.id !== "home" &&
-									link.id !== "signIn" &&
-									link.id !== "signUp" &&
-									link.id !== "forgotPassword" && (
-										<NavLink
-											key={i}
-											to={link.path}
-											className="nav-link"
-											activeClassName="active">
-											{link.name}
-										</NavLink>
-									)
-								);
-							})}
-
-							{!user ? (
+			<LinkContainer to={"/"} exact>
+				<Navbar.Brand>
+					<h3>
+						<span role="img" aria-label="middlefinger">
+							🖕
+						</span>{" "}
+						BBCode
+					</h3>
+				</Navbar.Brand>
+			</LinkContainer>
+			<Navbar.Toggle aria-controls="basic-navbar-nav" />
+			<Navbar.Collapse id="basic-navbar-nav">
+				<Nav style={{ width: "100%" }}>
+					{links.map((link, i) => {
+						return (
+							(!link.protected || user !== null) &&
+							link.id !== "home" &&
+							link.id !== "signIn" &&
+							link.id !== "signUp" &&
+							link.id !== "forgotPassword" && (
 								<NavLink
-									to={"/auth/signin"}
-									className="nav-link ml-auto"
+									key={i}
+									to={link.path}
+									className="nav-link"
 									activeClassName="active">
-									Sign In
+									{link.name}
 								</NavLink>
-							) : (
-								<SignOutButton />
-							)}
-						</Nav>
-					</Navbar.Collapse>
-				</>
-			)}
+							)
+						);
+					})}
+
+					{!user ? (
+						<NavLink
+							to={"/auth/signin"}
+							className="nav-link ml-auto"
+							activeClassName="active">
+							Sign In
+						</NavLink>
+					) : (
+						<SignOutButton />
+					)}
+				</Nav>
+			</Navbar.Collapse>
+			)
 		</Navbar>
 	);
 };

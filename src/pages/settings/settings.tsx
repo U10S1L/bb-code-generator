@@ -1,9 +1,8 @@
 import "./settings.css";
 
 import { Button, Col, Row } from "react-bootstrap";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
-import { AuthContext } from "context/authContext";
 import StandardModal from "components/modals/standardModal";
 
 const Settings = () => {
@@ -23,13 +22,10 @@ const Settings = () => {
 			</Col>
 			<Col xs={12}>
 				<Row>
-					<Col xs={4}>
-						<h4 className="header">Download a Backup</h4>
+					<Col xs={6}>
+						<h4 className="header">Manage Account</h4>
 					</Col>
-					<Col xs={4}>
-						<h4 className="header">Upload From Backup</h4>
-					</Col>
-					<Col xs={4}>
+					<Col xs={6}>
 						<h4 className="header">Danger Zone</h4>
 						<Button
 							variant="danger"

@@ -81,11 +81,8 @@ export const signOut = () => {
 export const passwordReset = (email: string): Promise<any> =>
 	Firebase()
 		.auth.sendPasswordResetEmail(email)
-		.then(() => {
-			return null;
-		})
 		.catch((error) => {
-			return error.code;
+			throw Error(error.code);
 		});
 export const passwordUpdate = (password: string) =>
 	Firebase().auth.currentUser?.updatePassword(password);
