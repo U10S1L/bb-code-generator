@@ -11,10 +11,11 @@ import FormSetupCreator from "components/form/creator/setup/formSetupCreator";
 import Help from "components/help/help";
 import { Types } from "types/contextTypes";
 import arrayMove from "array-move";
+import { getFormUid } from "formatters";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router-dom";
 
 var slugify = require("slugify");
-
 export enum FormCreationStep {
 	FORM_SETUP = "Setup",
 	BBCODE_UPLOAD = "Raw BBCode",
@@ -29,12 +30,13 @@ type FormCreatorProps = {
 
 const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	const { state, dispatch } = useContext(AppContext);
+	const [user] = useAuthState(state.firebase.auth);
 	const [formCreationStep, setFormCreationStep] = useState(
 		FormCreationStep.FORM_SETUP
 	);
 
 	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType>({
-		uniqueId: "",
+		uid: "",
 		slug: "",
 		name: "",
 		inputComponents: [],
@@ -45,7 +47,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	});
 
 	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<BBCodeFormType>({
-		uniqueId: "",
+		uid: "",
 		slug: "",
 		name: "",
 		inputComponents: [],
@@ -154,20 +156,24 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				setFormCreationStep(FormCreationStep.BBCODE_MATCH);
 				break;
 			case FormCreationStep.BBCODE_MATCH:
-				dispatch({
-					type: Types.AddForm,
-					payload: {
-						...bbCodeForm,
-						uniqueId: `{<${bbCodeForm.name}>_${
-							Math.floor(Math.random() * (9999 - 0)) + 0
-						}}`,
-						slug: slugify(bbCodeForm.name),
-						createdTimestamp: Date.now(),
-						updatedTimestamp: Date.now()
-					}
-				});
-				history.replace(`/forms/list`);
-				localStorage.removeItem("newBBCodeForm");
+				state.firebase
+					.saveForm(
+						{
+							...bbCodeForm,
+							uid: slugify(bbCodeForm.name),
+							createdTimestamp: Date.now(),
+							updatedTimestamp: Date.now(),
+							order: state.forms.length + 1
+						},
+						user?.uid
+					)
+					.then(() => {
+						history.replace(`/forms/list`);
+						localStorage.removeItem("newBBCodeForm");
+					})
+					.catch((error) => {
+						console.log(error);
+					});
 				break;
 		}
 	};
@@ -194,13 +200,16 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	};
 	const doesFormNameExist = () => {
 		if (!editMode) {
-			return state.forms.find((form) => form.name === bbCodeForm.name) != null;
+			return (
+				state.forms.find((form) => form.uid === getFormUid(bbCodeForm.name)) !=
+				null
+			);
 		} else {
 			return (
 				state.forms.find(
 					(form) =>
-						form.name !== originalBBCodeForm.name &&
-						form.name === bbCodeForm.name
+						form.uid !== getFormUid(originalBBCodeForm.name) &&
+						form.uid === getFormUid(bbCodeForm.name)
 				) != null
 			);
 		}

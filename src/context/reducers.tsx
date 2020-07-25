@@ -43,18 +43,22 @@ export const formsReducer = (
 		case Types.UpdateForms:
 			return action.payload;
 		case Types.AddForm:
-			return state.concat(action.payload);
+		// firebase.saveForm(action.payload).then(() => {
+		// 	firebase.getUserForms().then((bbCodeForms) => {
+		// 		return bbCodeForms;
+		// 	});
+		// });
 
 		case Types.UpdateForm:
-			return state.map((origBBCodeForm) => {
-				return origBBCodeForm.uniqueId === action.payload.uniqueId
-					? action.payload
-					: origBBCodeForm;
-			});
+		// return state.map((origBBCodeForm) => {
+		// 	return origBBCodeForm.uniqueId === action.payload.uniqueId
+		// 		? action.payload
+		// 		: origBBCodeForm;
+		// });
 		case Types.DeleteForm:
-			return state.filter(
-				(bbCodeForm) => bbCodeForm.uniqueId !== action.payload.uniqueId
-			);
+		// return state.filter(
+		// 	(bbCodeForm) => bbCodeForm.uniqueId !== action.payload.uniqueId
+		// );
 		case Types.DeleteAllForms:
 			return [];
 		default:

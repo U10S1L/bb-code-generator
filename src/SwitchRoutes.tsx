@@ -12,7 +12,7 @@ const SwitchRoutes = () => {
 	return (
 		<Switch>
 			{state.forms.map((bbCodeForm, i) => (
-				<ProtectedRoute key={i} path="/form/:slug" component={Form} exact />
+				<ProtectedRoute key={i} path="/form/:uid" component={Form} exact />
 			))}
 			{pages.map((page, i) =>
 				page.protected ? (

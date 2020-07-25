@@ -1,13 +1,14 @@
 import "./formList.css";
 
 import { Button, ButtonGroup, Card, Col, Row } from "react-bootstrap";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	SortableContainer,
 	SortableElement,
 	SortableHandle,
 	arrayMove
 } from "react-sortable-hoc";
+import { deepEqual, deepStrictEqual } from "assert";
 
 import { AppContext } from "context/context";
 import { BBCodeFormType } from "types/formTypes";
@@ -16,6 +17,7 @@ import FormCreator from "pages/form/creator/formCreator";
 import { LinkContainer } from "react-router-bootstrap";
 import StandardModal from "components/modals/standardModal";
 import { Types } from "types/contextTypes";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router-dom";
 
 const DragHandle = SortableHandle(() => (
@@ -64,7 +66,7 @@ const SortableFormElement = SortableElement(
 						</ButtonGroup>
 					</Card.Body>
 				</Card>
-				<LinkContainer to={`/form/${form.slug}`} exact>
+				<LinkContainer to={`/form/${form.uid}`} exact>
 					<Button className="form-element-go-button" variant="info">
 						<FontAwesomeIcon icon="arrow-right"></FontAwesomeIcon>
 					</Button>
@@ -115,88 +117,82 @@ const SortableFormContainer = SortableContainer(
 );
 
 const FormList = () => {
-	const { state, dispatch } = useContext(AppContext);
-	let history = useHistory();
+	const { state } = useContext(AppContext);
+	const [user] = useAuthState(state.firebase.auth);
 	const [pageModal, setPageModal] = useState<{
 		message: string;
 		visible: boolean;
 		continueAction: () => void;
 	}>();
 	const [editMode, setEditMode] = useState(false);
-	const [isChangingOrder, setIsChangingOrder] = useState(false);
 
-	const getOriginalBBCodeForm = (bbCodeForm: BBCodeFormType) => {
-		let originalBBCodeForm = state.forms.find(
-			(form) => form.uniqueId === bbCodeForm.uniqueId
-		);
-		if (originalBBCodeForm != null) {
-			originalBBCodeForm = {
-				...originalBBCodeForm,
-				inputComponents: originalBBCodeForm.inputComponents.map(
-					(inputComponent) => {
-						return {
-							...inputComponent,
-							inputs: inputComponent.inputs.map((input) => {
-								return {
-									...input,
-									val: inputComponent.defaultVal
-								};
-							})
-						};
-					}
-				)
-			};
-			return originalBBCodeForm;
-		}
-		return {
-			uniqueId: "",
-			slug: "",
-			name: "",
-			inputComponents: [],
-			rawBBCode: "",
-			matchedBBCode: "",
-			createdTimestamp: Date.now(),
-			updatedTimestamp: Date.now()
-		};
-	};
+	const [isChangingOrder, setIsChangingOrder] = useState(false);
+	const [forms, setForms] = useState<BBCodeFormType[]>(state.forms);
 
 	const editBBCodeForm = (bbCodeForm: BBCodeFormType) => {
-		const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
+		const formProgressString = `formProgress_${bbCodeForm.uid}`;
 		localStorage.removeItem(formProgressString);
 		localStorage.setItem(
 			"editBBCodeForm",
-			JSON.stringify(getOriginalBBCodeForm(bbCodeForm))
+			JSON.stringify(state.forms.find((form) => form.uid === bbCodeForm.uid))
 		);
 		setEditMode(true);
 	};
 	const saveEdits = (bbCodeForm: BBCodeFormType) => {
 		localStorage.removeItem("editBBCodeForm");
-		dispatch({ type: Types.UpdateForm, payload: bbCodeForm });
-		setEditMode(false);
+		state.firebase.saveForm(bbCodeForm, user?.uid).then(() => {
+			setEditMode(false);
+		});
 	};
 
 	const deleteBBCodeForm = (bbCodeForm: BBCodeFormType) => {
-		const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
+		const formProgressString = `formProgress_${bbCodeForm.uid}`;
 		localStorage.removeItem(formProgressString);
-		dispatch({ type: Types.DeleteForm, payload: bbCodeForm });
-		history.replace("/forms/list");
+		state.firebase.deleteUserForm(bbCodeForm.uid);
 	};
-	const reorderForms = (sortObject: { oldIndex: number; newIndex: number }) => {
-		dispatch({
-			type: Types.UpdateForms,
-			payload: arrayMove(state.forms, sortObject.oldIndex, sortObject.newIndex)
+
+	const onDragEnd = (sortObject: { oldIndex: number; newIndex: number }) => {
+		var reorderedForms = arrayMove(
+			forms,
+			sortObject.oldIndex,
+			sortObject.newIndex
+		);
+		reorderedForms = reorderedForms.map((form, i) => {
+			return {
+				...form,
+				order: i + 1
+			};
 		});
+		setForms(reorderedForms);
 	};
+	const toggleChangeOrder = () => {
+		if (!isChangingOrder) {
+			setIsChangingOrder(true);
+		} else {
+			// Makes call to database if necessary to update to a new order.
+			if (state.forms == forms) {
+				setIsChangingOrder(false);
+			} else {
+				state.firebase.batchUpdateForms(forms, user?.uid).then(() => {
+					setIsChangingOrder(false);
+				});
+			}
+		}
+	};
+
+	useEffect(() => {
+		setForms(state.forms);
+	}, [state.forms]);
 
 	return !editMode ? (
 		<Row>
 			<Col xs={12}>
 				<div className="header">
 					<h3>My Forms</h3>
-					{state.forms.length > 1 && (
+					{forms.length > 1 && (
 						<Button
 							variant={isChangingOrder ? "success" : "secondary"}
-							onClick={() => setIsChangingOrder(!isChangingOrder)}>
+							onClick={() => toggleChangeOrder()}>
 							{isChangingOrder ? "Save Order" : "Change Order"}
 						</Button>
 					)}
@@ -208,8 +204,8 @@ const FormList = () => {
 			<Col xs={12} style={{ marginTop: "1rem" }}>
 				<SortableFormContainer
 					useDragHandle
-					onSortEnd={reorderForms}
-					forms={state.forms}
+					onSortEnd={onDragEnd}
+					forms={forms}
 					showDragHandles={isChangingOrder}
 					editBBCodeForm={editBBCodeForm}
 					deleteBBCodeForm={deleteBBCodeForm}

@@ -9,7 +9,7 @@ const SignOutButton = () => {
 	let history = useHistory();
 
 	const handleSignOut = () => {
-		state.firebase.doSignOut();
+		state.firebase.signOut();
 		history.replace("/");
 	};
 

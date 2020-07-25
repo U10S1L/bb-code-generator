@@ -2,6 +2,7 @@ import { Button, Form } from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
 
 import { AppContext } from "context/context";
+import { errorMessage } from "constants/errors";
 import { useHistory } from "react-router-dom";
 
 const SignUpForm = () => {
@@ -28,36 +29,13 @@ const SignUpForm = () => {
 	const handleSignUp = () => {
 		state.firebase
 			// Create user in Firebase Auth
-			.doCreateUserWithEmailAndPassword(signUp.email, signUp.password1)
-			.then((response) => {
-				if (response.authUser && response.authUser.user) {
-					// Store user in Firebase DB
-					state.firebase
-						.createUser(response.authUser.user.uid)
-						.set({ username: signUp.username, email: signUp.email })
-						.then(() => {
-							setSignUp(defaultSignUp);
-							history.replace("/forms/list");
-						});
-					// Use the auth user
-				} else if (response.errorCode) {
-					var errorMessage = "";
-					switch (response.errorCode) {
-						case "auth/weak-password":
-							errorMessage = "Password must be greater than 6 characters.";
-							break;
-						case "auth/invalid-email":
-							errorMessage = "Invalid email address.";
-							break;
-						case "auth/email-already-in-use":
-							errorMessage =
-								"An account already exists with the email address " +
-								signUp.email;
-							break;
-						default:
-							errorMessage = "There was an issue creating your account.";
-					}
-					setSignUp({ ...signUp, errorMessage });
+			.createUser(signUp.username, signUp.email, signUp.password1)
+			.then((errorCode) => {
+				if (!errorCode) {
+					setSignUp(defaultSignUp);
+					history.replace("/forms/list");
+				} else {
+					setSignUp({ ...signUp, errorMessage: errorMessage(errorCode) });
 				}
 			});
 	};

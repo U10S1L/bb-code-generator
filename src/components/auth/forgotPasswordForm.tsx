@@ -13,20 +13,9 @@ const ForgotPasswordForm = () => {
 	const { state } = useContext(AppContext);
 
 	const handleForgotPassword = () => {
-		state.firebase.doPasswordReset(forgotPassword.email).then((response) => {
-			if (!response.errorCode) {
-				setForgotPassword(defaultForgotPassword);
-				history.replace("/auth/signin");
-			} else {
-				console.log(response.errorCode);
-				var errorMessage = "";
-				switch (response.errorCode) {
-					case "auth/invalid-email":
-						errorMessage = "No account exists with that email address.";
-						break;
-				}
-				setForgotPassword({ ...forgotPassword, errorMessage });
-			}
+		state.firebase.passwordReset(forgotPassword.email).then(() => {
+			setForgotPassword(defaultForgotPassword);
+			history.replace("/auth/signin");
 		});
 	};
 

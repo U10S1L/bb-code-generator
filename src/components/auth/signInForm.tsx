@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { AppContext } from "context/context";
 import { LinkContainer } from "react-router-bootstrap";
+import { errorMessage } from "constants/errors";
 import { useHistory } from "react-router-dom";
 
 const SignInForm = () => {
@@ -19,24 +20,13 @@ const SignInForm = () => {
 	let history = useHistory();
 
 	const handleSignIn = () => {
-		state.firebase
-			.doSignInWithEmailAndPassword(signIn.email, signIn.password)
-			.then((response) => {
-				if (!response.errorCode) {
-					history.replace("/forms/list");
-				} else {
-					console.log(response.errorCode);
-					var errorMessage = "There was an error signing into your account.";
-					switch (response.errorCode) {
-						case "auth/invalid-email":
-						case "auth/wrong-password":
-							errorMessage = "Incorrect password or email address.";
-						case "auth/user-not-found":
-							errorMessage = "No account exists with this email address.";
-					}
-					setSignIn({ ...signIn, errorMessage });
-				}
-			});
+		state.firebase.signIn(signIn.email, signIn.password).then((errorCode) => {
+			if (!errorCode) {
+				history.replace("/forms/list");
+			} else {
+				setSignIn({ ...signIn, errorMessage: errorMessage(errorCode) });
+			}
+		});
 	};
 
 	useEffect(() => {

@@ -41,8 +41,9 @@ const Home = () => {
 						padding: "2.5rem"
 					}}>
 					<h3 style={{ textAlign: "center" }}>
-						Create (and use) BBCode generator forms.
-						<br /> That generate BBCode. For <b> all</b> your paperwork.
+						Create forms that generate BBCode.
+						<br />
+						For <b>all</b> your paperwork.
 					</h3>
 				</Jumbotron>
 			</Row>
