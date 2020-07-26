@@ -15,7 +15,7 @@ const SignOutButton = ({ onSignOut }: SignOutButtonProps) => {
 	};
 
 	return (
-		<Button variant="info" onClick={() => handleSignOut()}>
+		<Button variant="secondary" onClick={() => handleSignOut()}>
 			Sign Out
 		</Button>
 	);

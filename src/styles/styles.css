@@ -88,4 +88,7 @@ h6 {
 	cursor: pointer;
 }
 
-/* Lists */
+.btn.disabled,
+.btn:disabled {
+	opacity: 0.4;
+}

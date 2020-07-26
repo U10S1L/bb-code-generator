@@ -7,7 +7,7 @@ export const errorMessage = (errorCode: string) => {
 		case "auth/email-already-in-use":
 			return "An account already exists with that email address.";
 		case "auth/wrong-password":
-			return "Incorrect password or email address.";
+			return "Incorrect password.";
 		case "auth/user-not-found":
 			return "No account exists with that email address.";
 		default:

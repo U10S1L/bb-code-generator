@@ -3,14 +3,18 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "context/authContext";
 import Firebase from "components/firebase/firebase";
+import SignOutButton from "./signOutButton";
 import { SuccessToast } from "components/toast/toast";
 import { errorMessage } from "constants/errors";
 
-const UpdateUserForm = () => {
+type AccountFormProps = {
+	onSignOut: () => void;
+	onUpdateAccount: () => void;
+};
+const AccountForm = ({ onSignOut, onUpdateAccount }: AccountFormProps) => {
 	const { authUser } = useContext(AuthContext);
 	const defaultUpdateUser = {
-		name: authUser?.displayName,
-		email: authUser?.email,
+		email: "",
 		currPassword: "",
 		newPassword1: "",
 		newPassword2: "",
@@ -22,23 +26,24 @@ const UpdateUserForm = () => {
 	const handleUpdateUser = () => {
 		Firebase()
 			.signIn(authUser?.email, updateUser.currPassword)
-			.then(() => {
+			.then(() =>
 				Firebase().updateUser(
 					updateUser.newPassword1 !== ""
 						? updateUser.newPassword1
 						: updateUser.currPassword,
-					updateUser.email,
-					updateUser.name
-				);
-			})
+					updateUser.email
+				)
+			)
 			.then(() => {
 				setUpdateUser(defaultUpdateUser);
-				SuccessToast("Account updated successfully.");
+				SuccessToast("Account updated successfully. Signing you out...");
 				setTimeout(() => Firebase().signOut(), 2500);
+				onUpdateAccount();
 			})
 			.catch((errorCode) => {
+				console.log(errorCode);
 				setUpdateUser({
-					...defaultUpdateUser,
+					...updateUser,
 					errorMessage: errorMessage(errorCode)
 				});
 			});
@@ -46,32 +51,31 @@ const UpdateUserForm = () => {
 
 	useEffect(() => {
 		setIsUpdateUserValid(
-			updateUser.name !== "" &&
-				updateUser.email !== "" &&
-				updateUser.currPassword !== "" &&
-				updateUser.newPassword1 !== "" &&
-				updateUser.newPassword2 !== "" &&
-				updateUser.newPassword1 === updateUser.newPassword2
+			(updateUser.currPassword !== "" && updateUser.email !== "") ||
+				(updateUser.newPassword1 !== "" &&
+					updateUser.newPassword1 === updateUser.newPassword2)
 		);
 	}, [updateUser]);
+
 	return (
-		<Form>
+		<Form autoComplete="off">
 			<Form.Group>
-				<Form.Label>Current Password</Form.Label>
+				<Form.Label>Update Email</Form.Label>
 				<Form.Control
-					type="password"
-					value={updateUser.currPassword}
+					type="email"
+					placeholder={authUser?.email || ""}
+					value={updateUser.email}
 					onChange={(e) => {
-						setUpdateUser({
-							...updateUser,
-							currPassword: e.target.value
-						});
+						setUpdateUser({ ...updateUser, email: e.target.value });
 					}}></Form.Control>
 			</Form.Group>
+			<hr />
 			<Form.Group>
-				<Form.Label>New Password</Form.Label>
+				<Form.Label>Update Password</Form.Label>
 				<Form.Control
 					type="password"
+					placeholder="********"
+					autoComplete="new-password"
 					value={updateUser.newPassword1}
 					onChange={(e) => {
 						setUpdateUser({ ...updateUser, newPassword1: e.target.value });
@@ -79,23 +83,43 @@ const UpdateUserForm = () => {
 			</Form.Group>
 
 			<Form.Group>
-				<Form.Label>Confirm New Password</Form.Label>
+				<Form.Label>Confirm Password</Form.Label>
 				<Form.Control
 					type="password"
+					autoComplete="new-password"
+					placeholder="********"
 					value={updateUser.newPassword2}
 					onChange={(e) => {
 						setUpdateUser({ ...updateUser, newPassword2: e.target.value });
 					}}></Form.Control>
 			</Form.Group>
+			<br />
+			<hr />
+			<Form.Group>
+				<Form.Label>Current Password *</Form.Label>
+				<Form.Control
+					type="password"
+					value={updateUser.currPassword}
+					autoComplete="off"
+					onChange={(e) => {
+						setUpdateUser({
+							...updateUser,
+							currPassword: e.target.value
+						});
+					}}></Form.Control>
+			</Form.Group>
 			<div style={{ color: "red" }}>{updateUser.errorMessage}</div>
-			<Button
-				disabled={!isUpdateUserValid}
-				variant="info"
-				onClick={() => handleUpdateUser()}>
-				Update Account
-			</Button>
+			<div style={{ display: "flex", justifyContent: "space-between" }}>
+				<SignOutButton onSignOut={onSignOut} />
+				<Button
+					disabled={!isUpdateUserValid}
+					variant="info"
+					onClick={() => handleUpdateUser()}>
+					Update Account
+				</Button>
+			</div>
 		</Form>
 	);
 };
 
-export default UpdateUserForm;
+export default AccountForm;
