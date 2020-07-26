@@ -1,5 +1,6 @@
-import React, { useRef, useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
+import React, { useEffect, useRef } from "react";
+
 import TextAreaAutosize from "react-textarea-autosize";
 
 type FormBBCodeUploadProps = {

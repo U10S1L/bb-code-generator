@@ -1,5 +1,7 @@
+import { Button, Modal } from "react-bootstrap";
+
 import React from "react";
-import { Modal, Button } from "react-bootstrap";
+
 type StandardModalProps = {
 	visible: boolean;
 	handleClose: () => void;

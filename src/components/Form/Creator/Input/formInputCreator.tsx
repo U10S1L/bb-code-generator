@@ -1,35 +1,37 @@
 import "./formInputCreator.css";
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps, InputTypeProps } from "../../../../types/form";
+
 import {
-	Row,
+	BBCodeVisualizerButton,
+	QuestionMarkTooltip
+} from "components/help/tooltip/tooltips";
+import {
+	Button,
 	Col,
 	Form,
+	FormControl,
 	InputGroup,
-	Button,
 	Modal,
-	FormControl
+	Row
 } from "react-bootstrap";
-import FormPreviewer from "../../Previewer/formPreviewer";
-import { BBCodeFormType } from "../../../../context";
-import InputType from "../../../InputComponents/inputType";
+import { InputComponentProps, InputTypeProps } from "types/formTypes";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-	QuestionMarkTooltip,
-	BBCodeVisualizerButton
-} from "../../../Help/Tooltip/tooltips";
-import {
-	faTextWidth,
-	faTextHeight,
-	faCalendarTimes,
 	faCalendarAlt,
-	faClock,
+	faCalendarTimes,
 	faCaretSquareDown,
 	faCheckSquare,
+	faCircle,
+	faClock,
 	faLink,
-	faCircle
+	faTextHeight,
+	faTextWidth
 } from "@fortawesome/free-solid-svg-icons";
-import InputComponent from "../../../InputComponents/inputComponent";
+
+import { BBCodeFormType } from "types/formTypes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FormPreviewer from "components/form/previewer/formPreviewer";
+import InputComponent from "components/inputComponents/inputComponent";
+import InputType from "components/inputComponents/inputType";
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
@@ -264,7 +266,7 @@ const FormInputCreator = ({
 			</Col>
 			<Col xs={12} md={10}>
 				<div className="header">
-					<h4 style={{ fontWeight: "bold" }}>Form Preview</h4>
+					<h4 style={{ fontWeight: "bold" }}>Preview</h4>
 				</div>
 
 				<FormPreviewer

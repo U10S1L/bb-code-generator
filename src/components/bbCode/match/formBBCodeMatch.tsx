@@ -1,11 +1,13 @@
+import { Button, Card, Col, Row } from "react-bootstrap";
 import React, { useRef } from "react";
-import { Row, Col, Card, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps } from "../../../../../types/form";
-import { SuccessToast } from "../../../../Toast/toast";
+
 import CopyToClipboard from "react-copy-to-clipboard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { InputComponentProps } from "types/formTypes";
+import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
+import { SuccessToast } from "components/toast/toast";
 import TextAreaAutosize from "react-textarea-autosize";
-import { QuestionMarkTooltip } from "../../../../Help/Tooltip/tooltips";
+
 type FormBBCodeMatchProps = {
 	selectedInputComponents: InputComponentProps[];
 	matchedBBCode: string;
@@ -66,52 +68,48 @@ const FormBBCodeMatch = ({
 													: null}
 											</span>
 										</Card.Title>
-										<Card.Text>
-											{!matched ? (
-												<CopyToClipboard
-													text={inputComponent.uniqueId}
-													onCopy={() =>
-														SuccessToast(
-															`Copied 🆔 for field '${inputComponent.label}' to clipboard. Paste it in the BBCode.`
+										{!matched ? (
+											<CopyToClipboard
+												text={inputComponent.uniqueId}
+												onCopy={() =>
+													SuccessToast(
+														`Copied 🆔 for field '${inputComponent.label}' to clipboard. Paste it in the BBCode.`
+													)
+												}>
+												<Button variant="light">
+													<span role="img" aria-label="id">
+														🆔
+													</span>
+												</Button>
+											</CopyToClipboard>
+										) : (
+											<div>
+												<Button
+													variant="light"
+													onClick={() =>
+														goToUniqueIDInMatchedBBCode(inputComponent.uniqueId)
+													}>
+													<FontAwesomeIcon icon="search" />
+												</Button>
+												<Button
+													variant="light"
+													onClick={() =>
+														deleteUniqueIDInMatchedBBCode(
+															inputComponent.uniqueId
 														)
 													}>
-													<Button variant="light">
-														<span role="img" aria-label="id">
-															🆔
-														</span>
-													</Button>
-												</CopyToClipboard>
-											) : (
-												<div>
-													<Button
-														variant="light"
-														onClick={() =>
-															goToUniqueIDInMatchedBBCode(
-																inputComponent.uniqueId
-															)
-														}>
-														<FontAwesomeIcon icon="search" />
-													</Button>
-													<Button
-														variant="light"
-														onClick={() =>
-															deleteUniqueIDInMatchedBBCode(
-																inputComponent.uniqueId
-															)
-														}>
-														<FontAwesomeIcon icon="times"></FontAwesomeIcon>
-													</Button>
-												</div>
-											)}
-											<div
-												style={{ display: "flex", justifyContent: "flex-end" }}>
-												{!matched ? (
-													<span style={{ color: "red" }}>Unmatched</span>
-												) : (
-													<span style={{ color: "green" }}>Matched</span>
-												)}
+													<FontAwesomeIcon icon="times"></FontAwesomeIcon>
+												</Button>
 											</div>
-										</Card.Text>
+										)}
+										<div
+											style={{ display: "flex", justifyContent: "flex-end" }}>
+											{!matched ? (
+												<span style={{ color: "red" }}>Unmatched</span>
+											) : (
+												<span style={{ color: "green" }}>Matched</span>
+											)}
+										</div>
 									</Card.Body>
 								</Card>
 							);

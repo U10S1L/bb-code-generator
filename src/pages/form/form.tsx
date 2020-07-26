@@ -1,192 +1,139 @@
 import "./form.css";
-import React, { useContext, useState, useEffect, useCallback } from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import FormRenderer from "../../components/Form/Renderer/formRenderer";
-import { AppContext, BBCodeFormType } from "../../context";
-import { Row, Col, Button } from "react-bootstrap";
-import { SuccessToast } from "../../components/Toast/toast";
-import CopyToClipboard from "react-copy-to-clipboard";
+
+import { BBCodeFormType, InputComponentProps } from "types/formTypes";
+import { Button, Col, Row } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
 import {
-	formatDateTimeWithSeconds,
-	formatDateTime,
 	formatDate,
+	formatDateTime,
+	formatDateTimeWithSeconds,
 	formatUrl
-} from "../../formatters";
-import { InputComponentProps } from "../../types/form";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import StandardModal from "../../components/Modals/standardModal";
+} from "formatters";
+import { getFormProgressString, getFormWithDefaultVals } from "formatters";
 
-type FormParams = {
-	slug: string;
-};
-type FormProps = RouteComponentProps<FormParams>;
-const BBCodeForm: React.FC<FormProps> = ({ match }) => {
-	const { state } = useContext(AppContext);
+import { AuthContext } from "context/authContext";
+import CopyToClipboard from "react-copy-to-clipboard";
+import FormRenderer from "components/form/renderer/formRenderer";
+import StandardModal from "components/modals/standardModal";
+import { SuccessToast } from "components/toast/toast";
+import { useParams } from "react-router-dom";
 
+const BBCodeForm = () => {
+	const params = useParams<{ uid: string }>();
+
+	const { stateForms } = useContext(AuthContext);
+
+	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType | undefined>();
+	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<
+		BBCodeFormType
+	>();
 	const [pageModal, setPageModal] = useState<{
 		message: string;
 		visible: boolean;
 		continueAction: () => void;
 	}>();
-	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType>(
-		state.forms.find((form) => form.slug === match.params.slug) || {
-			uniqueId: "",
-			slug: "",
-			name: "",
-			inputComponents: [],
-			rawBBCode: "",
-			matchedBBCode: "",
-			createdTimestamp: Date.now(),
-			updatedTimestamp: Date.now()
-		}
-	);
-	const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
 
-	const getOriginalBBCodeForm = useCallback(() => {
-		let originalBBCodeForm = state.forms.find(
-			(form) => form.uniqueId === bbCodeForm.uniqueId
-		);
-		if (originalBBCodeForm != null) {
-			originalBBCodeForm = {
-				...originalBBCodeForm,
-				inputComponents: originalBBCodeForm.inputComponents.map(
-					(inputComponent) => {
-						return {
-							...inputComponent,
-							inputs: inputComponent.inputs.map((input) => {
-								return {
-									...input,
-									val: inputComponent.defaultVal
-								};
-							})
-						};
-					}
-				)
-			};
-			return originalBBCodeForm;
-		}
-		return {
-			uniqueId: "",
-			slug: "",
-			name: "",
-			inputComponents: [],
-			rawBBCode: "",
-			matchedBBCode: "",
-			createdTimestamp: Date.now(),
-			updatedTimestamp: Date.now()
-		};
-	}, [bbCodeForm.uniqueId, state.forms]);
+	const formProgressString = originalBBCodeForm
+		? getFormProgressString(originalBBCodeForm)
+		: null;
 
 	const generateBBCode = (): string => {
-		var inputComponents: InputComponentProps[] = JSON.parse(
-			JSON.stringify(bbCodeForm.inputComponents)
-		);
+		if (bbCodeForm !== null && bbCodeForm !== undefined) {
+			var inputComponents: InputComponentProps[] = JSON.parse(
+				JSON.stringify(bbCodeForm.inputComponents)
+			);
+			const { matchedBBCode } = bbCodeForm;
+			var generatedBBCode: string = matchedBBCode.concat();
 
-		const { matchedBBCode } = bbCodeForm;
-		var generatedBBCode: string = matchedBBCode.concat();
-
-		// Format Vals if Necessary
-		inputComponents.forEach((inputComponent) => {
-			inputComponent.inputs.forEach((input) => {
-				if (inputComponent.type === "dateTime") {
-					input.val = formatDateTime(new Date(input.val));
-				} else if (inputComponent.type === "checkbox") {
-					input.val = input.val === "true" ? "[cbc]" : "[cb]";
-				} else if (inputComponent.type === "date") {
-					input.val = formatDate(new Date(input.val));
-				} else if (inputComponent.type === "url") {
-					input.val = formatUrl(JSON.parse(input.val));
-				} else if (inputComponent.type === "listItem") {
-					input.val = `[*] ${input.val}`;
-				}
-			});
-		});
-
-		inputComponents.forEach((inputComponent) => {
-			var inputComponentVal = ``;
-			if (inputComponent.multi) {
+			// Formatting for special Input Types
+			inputComponents.forEach((inputComponent) => {
 				inputComponent.inputs.forEach((input) => {
-					inputComponentVal +=
-						inputComponent.inputs.indexOf(input) === 0 ||
-						inputComponent.inputs.indexOf(input) ===
-							inputComponent.inputs.length
-							? `\n${input.val}\n`
-							: `${input.val}\n`;
+					if (inputComponent.type === "dateTime") {
+						input.val = formatDateTime(new Date(input.val));
+					} else if (inputComponent.type === "checkbox") {
+						input.val = input.val === "true" ? "[cbc]" : "[cb]";
+					} else if (inputComponent.type === "date") {
+						input.val = formatDate(new Date(input.val));
+					} else if (inputComponent.type === "url") {
+						input.val = formatUrl(JSON.parse(input.val));
+					} else if (inputComponent.type === "listItem") {
+						input.val = `[*] ${input.val}`;
+					}
 				});
-			} else {
-				inputComponentVal =
-					inputComponent.inputs[0].val !== undefined
-						? inputComponent.inputs[0].val
-						: "";
-			}
-
-			// Creates a regex pattern to find the unique Id. Takes care to escape all special regex characters
-			var regexpForUniqueId = new RegExp(
-				inputComponent.uniqueId.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"),
-				"g"
-			);
-
-			generatedBBCode = generatedBBCode.replace(
-				regexpForUniqueId,
-				inputComponentVal
-			);
-		});
-		return generatedBBCode;
+			});
+			// Matching up Fields and replacing their IDs with the inputted vals
+			inputComponents.forEach((inputComponent) => {
+				var inputComponentVal = ``;
+				if (inputComponent.multi) {
+					inputComponent.inputs.forEach((input) => {
+						inputComponentVal +=
+							inputComponent.inputs.indexOf(input) === 0 ||
+							inputComponent.inputs.indexOf(input) ===
+								inputComponent.inputs.length
+								? `\n${input.val}\n`
+								: `${input.val}\n`;
+					});
+				} else {
+					inputComponentVal =
+						inputComponent.inputs[0].val !== undefined
+							? inputComponent.inputs[0].val
+							: "";
+				}
+				// Creates a regex pattern to find the unique Id. Takes care to escape all special regex characters
+				var regexpForUniqueId = new RegExp(
+					inputComponent.uniqueId.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"),
+					"g"
+				);
+				generatedBBCode = generatedBBCode.replace(
+					regexpForUniqueId,
+					inputComponentVal
+				);
+			});
+			return generatedBBCode;
+		} else {
+			return "";
+		}
 	};
 
-	const exportBBCodeForm = () => {
-		// Sanitize the BBCode Form before exporting
-		var sanitizedBBCodeForm = state.forms.find(
-			(form) => form.uniqueId === bbCodeForm.uniqueId
-		);
-		if (sanitizedBBCodeForm != null) {
-			sanitizedBBCodeForm = {
-				...sanitizedBBCodeForm,
-				uniqueId: "",
-				slug: ""
-			};
-		}
-
-		var dataStr =
-			"data:text/json;charset=utf-8," +
-			encodeURIComponent(JSON.stringify(sanitizedBBCodeForm));
-		var downloadAnchorNode = document.createElement("a");
-		downloadAnchorNode.setAttribute("href", dataStr);
-		downloadAnchorNode.setAttribute(
-			"download",
-			`${bbCodeForm.uniqueId}FormExport.json`
-		);
-		document.body.appendChild(downloadAnchorNode); // required for firefox
-		downloadAnchorNode.click();
-		downloadAnchorNode.remove();
+	const clearProg = () => {
+		formProgressString && localStorage.removeItem(formProgressString);
+		setBBCodeForm(originalBBCodeForm);
 	};
 
 	useEffect(() => {
 		// Initial loading of the BBCodeForm
-		const formProgress = localStorage.getItem(formProgressString);
-		if (formProgress == null) {
-			setBBCodeForm(getOriginalBBCodeForm());
-		} else {
+		const formProgress = formProgressString
+			? localStorage.getItem(formProgressString)
+			: null;
+		if (formProgress) {
 			setBBCodeForm(JSON.parse(formProgress));
+		} else {
+			setBBCodeForm(originalBBCodeForm);
 		}
-	}, [
-		match.params.slug,
-		state.forms,
-		formProgressString,
-		getOriginalBBCodeForm
-	]);
+	}, [params.uid, stateForms, formProgressString, originalBBCodeForm]);
 
 	useEffect(() => {
 		// Saving current form progress in local storage
-		localStorage.setItem(formProgressString, JSON.stringify(bbCodeForm));
+		if (formProgressString) {
+			localStorage.setItem(formProgressString, JSON.stringify(bbCodeForm));
+		}
 	}, [bbCodeForm, formProgressString]);
 
-	return (
+	useEffect(() => {
+		setOriginalBBCodeForm(() =>
+			getFormWithDefaultVals(stateForms.find((form) => form.uid === params.uid))
+		);
+	}, [params.uid, stateForms]);
+
+	return bbCodeForm ? (
 		<Row>
 			<Col xs={12}>
 				<div
 					className="header"
-					style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+					style={{
+						justifyContent: "space-between",
+						alignItems: "flex-start"
+					}}>
 					<div>
 						<h3>{bbCodeForm.name}</h3>
 						{bbCodeForm.progressTimestamp && (
@@ -201,13 +148,13 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 					</div>
 
 					<Button
-						variant="warning"
+						variant="secondary"
 						onClick={() =>
 							setPageModal({
 								visible: true,
-								continueAction: () => setBBCodeForm(getOriginalBBCodeForm),
+								continueAction: clearProg,
 								message:
-									"This will erase any values in the form fields. Do you want to continue?"
+									"You are about to erase all the the values in the form fields."
 							})
 						}>
 						Clear
@@ -226,10 +173,6 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 				/>
 			</Col>
 			<Col xs={12} style={{ display: "flex", alignItems: "center" }}>
-				<Button variant="primary" onClick={() => exportBBCodeForm()}>
-					<FontAwesomeIcon icon="download" /> Export{" "}
-				</Button>
-
 				<CopyToClipboard
 					text={generateBBCode()}
 					onCopy={() => SuccessToast("BBCode Copied To Clipboard")}>
@@ -254,7 +197,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 				continueBtnText="Continue"
 			/>
 		</Row>
-	);
+	) : null;
 };
 
-export default withRouter(BBCodeForm);
+export default BBCodeForm;

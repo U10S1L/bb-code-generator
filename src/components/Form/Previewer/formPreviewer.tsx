@@ -1,16 +1,18 @@
 import "./formPreviewer.css";
-import React, { useState, useEffect } from "react";
-import { BBCodeFormType } from "../../../context";
-import InputComponent from "../../InputComponents/inputComponent";
-import { Form, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputComponentProps, InputTypeProps } from "../../../types/form";
-import { Row, Col } from "react-bootstrap";
+
+import { Button, Form } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
+import { InputComponentProps, InputTypeProps } from "types/formTypes";
+import React, { useEffect, useState } from "react";
 import {
 	SortableContainer,
 	SortableElement,
 	SortableHandle
 } from "react-sortable-hoc";
+
+import { BBCodeFormType } from "types/formTypes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import InputComponent from "components/inputComponents/inputComponent";
 
 type SelectedInputComponentProps = {
 	inputComponent: InputComponentProps;

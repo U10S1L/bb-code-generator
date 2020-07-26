@@ -1,13 +1,13 @@
-import Home from "../pages/home/home";
-import FormCreator from "../pages/form/creator/formCreator";
-import Settings from "../pages/settings/settings";
-import FormList from "../pages/form/list/formList";
+import FormCreator from "pages/form/creator/formCreator";
+import FormList from "pages/form/list/formList";
+import Home from "pages/home/home";
 
 export type Page = {
 	id: string;
 	name: string;
 	component: React.FC<any>;
 	path: string;
+	protected?: boolean;
 };
 
 const pages: Page[] = [
@@ -15,19 +15,15 @@ const pages: Page[] = [
 		id: "formList",
 		name: "My Forms",
 		component: FormList,
-		path: "/forms/list"
+		path: "/forms/list",
+		protected: true
 	},
 	{
 		id: "formCreator",
-		name: "Add Form",
+		name: "New Form",
 		component: FormCreator,
-		path: "/forms/new"
-	},
-	{
-		id: "settings",
-		name: "Settings",
-		component: Settings,
-		path: "/settings"
+		path: "/forms/new",
+		protected: true
 	},
 	{
 		id: "home",

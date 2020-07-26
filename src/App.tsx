@@ -1,43 +1,50 @@
-import "./custom2.css";
-import "./styles.css";
+import "styles/custom2.css";
+import "styles/styles.css";
 
-// import "./bootstrap-flatly.css";
-import React from "react";
-import NavigationBar from "./components/Navbar/navbar";
-import { ToastContainer, Slide } from "react-toastify";
-import { Container } from "react-bootstrap";
-import { AppProvider } from "./context";
-// Site Pages
-import pages from "./constants/pages";
-// FontAwesome
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { Slide, ToastContainer } from "react-toastify";
 import {
-	faTimes,
-	faQuestionCircle,
-	faClipboard,
-	faEdit,
-	faCheck,
-	faEye,
 	faArrowLeft,
 	faArrowRight,
 	faBars,
-	faPlus,
-	faMinus,
-	faSearch,
-	faDownload,
-	faFont,
-	faTextWidth,
-	faTextHeight,
-	faCalendarTimes,
 	faCalendarAlt,
-	faClock,
+	faCalendarTimes,
 	faCaretSquareDown,
+	faCheck,
 	faCheckSquare,
-	faLink,
 	faCircle,
-	faExclamationCircle
+	faClipboard,
+	faClock,
+	faDownload,
+	faEdit,
+	faExclamationCircle,
+	faEye,
+	faFont,
+	faLink,
+	faLock,
+	faLockOpen,
+	faMinus,
+	faPlus,
+	faQuestionCircle,
+	faSearch,
+	faTextHeight,
+	faTextWidth,
+	faTimes,
+	faUser
 } from "@fortawesome/free-solid-svg-icons";
+
+import { AuthProvider } from "context/authContext";
+import { Container } from "react-bootstrap";
+import NavigationBar from "./components/navbar/navbar";
+import React from "react";
 import SwitchRoutes from "./SwitchRoutes";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import pages from "./constants/pages";
+
+// import "./bootstrap-flatly.css";
+
+// FontAwesome
+
+// Site Pages
 
 // FontAwesome Library Setup
 library.add(
@@ -64,12 +71,15 @@ library.add(
 	faCheckSquare,
 	faLink,
 	faCircle,
-	faExclamationCircle
+	faExclamationCircle,
+	faLock,
+	faLockOpen,
+	faUser
 );
 
 const App = () => {
 	return (
-		<AppProvider>
+		<AuthProvider>
 			<Container
 				id="#app-container"
 				style={{ backgroundColor: "white", minHeight: "100vh" }}>
@@ -81,7 +91,7 @@ const App = () => {
 				/>
 				<SwitchRoutes />
 			</Container>
-		</AppProvider>
+		</AuthProvider>
 	);
 };
 

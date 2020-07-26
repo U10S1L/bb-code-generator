@@ -1,3 +1,11 @@
+import { BBCodeFormType } from "types/formTypes";
+
+var slugify = require("slugify");
+
+export const getFormUid = (formName: string) => {
+	return slugify(formName, { lowercase: true });
+};
+
 const getMonthString = (monthNumber: number) => {
 	switch (monthNumber) {
 		case 0:
@@ -71,4 +79,32 @@ export const formatDate = (date: Date): string => {
 // Format Url
 export const formatUrl = (url: { link: string; text: string }): string => {
 	return `[url=${url.link}]${url.text}[/url]`;
+};
+
+// Format BBCodeForms with Defaults
+export const getFormWithDefaultVals = (
+	bbCodeForm: BBCodeFormType | undefined
+): BBCodeFormType | undefined => {
+	if (!bbCodeForm) {
+		return undefined;
+	} else {
+		return {
+			...bbCodeForm,
+			inputComponents: bbCodeForm.inputComponents.map((inputComponent) => {
+				return {
+					...inputComponent,
+					inputs: inputComponent.inputs.map((input) => {
+						return {
+							...input,
+							val: inputComponent.defaultVal
+						};
+					})
+				};
+			})
+		};
+	}
+};
+
+export const getFormProgressString = (bbCodeForm: BBCodeFormType): string => {
+	return `formProgress_${bbCodeForm.uid}`;
 };

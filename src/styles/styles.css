@@ -4,6 +4,11 @@
 	scrollbar-color: #6c757d #343a40;
 }
 
+html {
+	/* Fix for jumpy scrollbar */
+	margin-left: calc(100vw - 100%);
+}
+
 /* Chrome/Edge/Safari */
 *::-webkit-scrollbar {
 	width: 10px;
@@ -83,4 +88,7 @@ h6 {
 	cursor: pointer;
 }
 
-/* Lists */
+.btn.disabled,
+.btn:disabled {
+	opacity: 0.4;
+}
