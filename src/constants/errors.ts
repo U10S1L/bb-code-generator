@@ -1,5 +1,4 @@
 export const errorMessage = (errorCode: string) => {
-	console.log(errorCode);
 	switch (errorCode) {
 		case "auth/weak-password":
 			return "Password must be at least 6 characters long.";
