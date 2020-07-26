@@ -1,0 +1,9 @@
+.preview-input-component {
+	display: flex;
+	align-items: flex-end;
+	margin-bottom: 1rem;
+}
+
+.form-renderer.preview .form-group {
+	margin-bottom: 0;
+}
