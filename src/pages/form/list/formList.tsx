@@ -1,7 +1,7 @@
 import "./formList.css";
 
 import { Button, ButtonGroup, Card, Col, Row } from "react-bootstrap";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
 	SortableContainer,
 	SortableElement,
@@ -9,14 +9,15 @@ import {
 	arrayMove
 } from "react-sortable-hoc";
 
-import { AppContext } from "context/context";
+import { AuthContext } from "context/authContext";
 import { BBCodeFormType } from "types/formTypes";
+import CopyToClipboard from "react-copy-to-clipboard";
+import Firebase from "components/firebase/firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormCreator from "pages/form/creator/formCreator";
 import { LinkContainer } from "react-router-bootstrap";
 import StandardModal from "components/modals/standardModal";
-import { Types } from "types/contextTypes";
-import { useHistory } from "react-router-dom";
+import { SuccessToast } from "components/toast/toast";
 
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
@@ -26,13 +27,13 @@ const DragHandle = SortableHandle(() => (
 
 type SortableFormElementProps = {
 	form: BBCodeFormType;
-	showDragHandle: boolean;
+	showEditButtons: boolean;
 	editForm: () => void;
 	deleteForm: () => void;
 };
 type SortableFormsContainerProps = {
 	forms: BBCodeFormType[];
-	showDragHandles: boolean;
+	showEditButtons: boolean;
 	editBBCodeForm: (form: BBCodeFormType) => void;
 	deleteBBCodeForm: (form: BBCodeFormType) => void;
 	setPageModal: (pageModal: {
@@ -46,25 +47,43 @@ const SortableFormElement = SortableElement(
 		form,
 		editForm,
 		deleteForm,
-		showDragHandle
+		showEditButtons
 	}: SortableFormElementProps) => {
+		const { authUser } = useContext(AuthContext);
 		return (
 			<div className="form-element">
-				{showDragHandle && <DragHandle />}
+				{showEditButtons && <DragHandle />}
 				<Card bg="light" color="white" style={{ borderRadius: 0 }}>
 					<Card.Body>
-						<Card.Title>{form.name}</Card.Title>
-						<ButtonGroup>
-							<Button variant="warning" size="sm" onClick={() => editForm()}>
-								Edit
-							</Button>
-							<Button variant="danger" size="sm" onClick={() => deleteForm()}>
-								Delete
-							</Button>
-						</ButtonGroup>
+						<Card.Title>
+							{form.name}
+							<CopyToClipboard
+								text={
+									process.env.NODE_ENV === "development"
+										? `localhost:3000/form/shareable/${authUser?.uid}/${form.uid}`
+										: `fuckbbcode.netlify.app/form/shareable/${authUser?.uid}/${form.uid}`
+								}
+								onCopy={() =>
+									SuccessToast(`Shareable link copied to clipboard`)
+								}>
+								<Button variant="link" size="sm" onClick={() => null}>
+									<FontAwesomeIcon icon="link"></FontAwesomeIcon>
+								</Button>
+							</CopyToClipboard>
+						</Card.Title>
+						{showEditButtons && (
+							<ButtonGroup>
+								<Button variant="warning" size="sm" onClick={() => editForm()}>
+									Edit
+								</Button>
+								<Button variant="danger" size="sm" onClick={() => deleteForm()}>
+									Delete
+								</Button>
+							</ButtonGroup>
+						)}
 					</Card.Body>
 				</Card>
-				<LinkContainer to={`/form/${form.slug}`} exact>
+				<LinkContainer to={`/form/${form.uid}`} exact>
 					<Button className="form-element-go-button" variant="info">
 						<FontAwesomeIcon icon="arrow-right"></FontAwesomeIcon>
 					</Button>
@@ -80,7 +99,7 @@ const SortableFormContainer = SortableContainer(
 		setPageModal,
 		editBBCodeForm,
 		deleteBBCodeForm,
-		showDragHandles
+		showEditButtons
 	}: SortableFormsContainerProps) => {
 		return (
 			<ul style={{ padding: 0 }}>
@@ -88,7 +107,7 @@ const SortableFormContainer = SortableContainer(
 					forms.map((form, index) => (
 						<SortableFormElement
 							form={form}
-							showDragHandle={showDragHandles}
+							showEditButtons={showEditButtons}
 							key={index}
 							index={index}
 							editForm={() => {
@@ -115,104 +134,107 @@ const SortableFormContainer = SortableContainer(
 );
 
 const FormList = () => {
-	const { state, dispatch } = useContext(AppContext);
-	let history = useHistory();
 	const [pageModal, setPageModal] = useState<{
 		message: string;
 		visible: boolean;
 		continueAction: () => void;
 	}>();
-	const [editMode, setEditMode] = useState(false);
-	const [isChangingOrder, setIsChangingOrder] = useState(false);
+	const { authUser, stateForms } = useContext(AuthContext);
 
-	const getOriginalBBCodeForm = (bbCodeForm: BBCodeFormType) => {
-		let originalBBCodeForm = state.forms.find(
-			(form) => form.uniqueId === bbCodeForm.uniqueId
-		);
-		if (originalBBCodeForm != null) {
-			originalBBCodeForm = {
-				...originalBBCodeForm,
-				inputComponents: originalBBCodeForm.inputComponents.map(
-					(inputComponent) => {
-						return {
-							...inputComponent,
-							inputs: inputComponent.inputs.map((input) => {
-								return {
-									...input,
-									val: inputComponent.defaultVal
-								};
-							})
-						};
-					}
-				)
-			};
-			return originalBBCodeForm;
-		}
-		return {
-			uniqueId: "",
-			slug: "",
-			name: "",
-			inputComponents: [],
-			rawBBCode: "",
-			matchedBBCode: "",
-			createdTimestamp: Date.now(),
-			updatedTimestamp: Date.now()
-		};
-	};
+	const [editMode, setEditMode] = useState(false);
+	const [showEditButtons, setShowEditButtons] = useState(false);
+	const [forms, setForms] = useState<BBCodeFormType[]>(stateForms);
 
 	const editBBCodeForm = (bbCodeForm: BBCodeFormType) => {
-		const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
+		const formProgressString = `formProgress_${bbCodeForm.uid}`;
 		localStorage.removeItem(formProgressString);
 		localStorage.setItem(
 			"editBBCodeForm",
-			JSON.stringify(getOriginalBBCodeForm(bbCodeForm))
+			JSON.stringify(stateForms.find((form) => form.uid === bbCodeForm.uid))
 		);
 		setEditMode(true);
 	};
 	const saveEdits = (bbCodeForm: BBCodeFormType) => {
 		localStorage.removeItem("editBBCodeForm");
-		dispatch({ type: Types.UpdateForm, payload: bbCodeForm });
-		setEditMode(false);
+
+		if (
+			JSON.stringify(bbCodeForm) !==
+			JSON.stringify(stateForms.find((form) => form.uid === bbCodeForm.uid))
+		) {
+			console.log("sending to the db");
+			Firebase()
+				.saveForm(bbCodeForm, authUser?.uid)
+				.then(() => {
+					setEditMode(false);
+				});
+		} else {
+			setEditMode(false);
+		}
 	};
 
 	const deleteBBCodeForm = (bbCodeForm: BBCodeFormType) => {
-		const formProgressString = `formProgress_${bbCodeForm.uniqueId}`;
+		const formProgressString = `formProgress_${bbCodeForm.uid}`;
 		localStorage.removeItem(formProgressString);
-		dispatch({ type: Types.DeleteForm, payload: bbCodeForm });
-		history.push("/forms/list");
+		Firebase().deleteUserForm(bbCodeForm.uid);
 	};
-	const reorderForms = (sortObject: { oldIndex: number; newIndex: number }) => {
-		dispatch({
-			type: Types.UpdateForms,
-			payload: arrayMove(state.forms, sortObject.oldIndex, sortObject.newIndex)
+
+	const onDragEnd = (sortObject: { oldIndex: number; newIndex: number }) => {
+		var reorderedForms = arrayMove(
+			forms,
+			sortObject.oldIndex,
+			sortObject.newIndex
+		);
+		reorderedForms = reorderedForms.map((form, i) => {
+			return {
+				...form,
+				order: i + 1
+			};
 		});
+		setForms(reorderedForms);
 	};
+
+	const toggleEditFormList = () => {
+		if (!showEditButtons) {
+			setShowEditButtons(true);
+		} else {
+			if (JSON.stringify(stateForms) !== JSON.stringify(forms)) {
+				Firebase()
+					.batchUpdateForms(forms, authUser?.uid)
+					.then(() => {
+						setShowEditButtons(false);
+					});
+			} else {
+				setShowEditButtons(false);
+			}
+		}
+	};
+	useEffect(() => {
+		setForms(stateForms);
+	}, [stateForms]);
 
 	return !editMode ? (
 		<Row>
 			<Col xs={12}>
-				<div className="header">
-					<h3>My Forms</h3>
-					{state.forms.length > 1 && (
-						<Button
-							variant={isChangingOrder ? "success" : "secondary"}
-							onClick={() => setIsChangingOrder(!isChangingOrder)}>
-							{isChangingOrder ? "Save Order" : "Change Order"}
+				<div
+					className="header"
+					style={{ display: "flex", justifyContent: "space-between" }}>
+					<div style={{ display: "flex" }}>
+						<h3>My Forms</h3>
+						<Button variant="link" onClick={() => toggleEditFormList()}>
+							<FontAwesomeIcon icon={!showEditButtons ? "lock" : "lock-open"} />
 						</Button>
-					)}
-					<Button
-						variant="secondary"
-						onClick={() => history.push("/forms/new")}>
-						Add Form
-					</Button>
+					</div>
+					<LinkContainer to={"/forms/new"}>
+						<Button variant="success">New Form</Button>
+					</LinkContainer>
 				</div>
 			</Col>
 			<Col xs={12} style={{ marginTop: "1rem" }}>
 				<SortableFormContainer
 					useDragHandle
-					onSortEnd={reorderForms}
-					forms={state.forms}
-					showDragHandles={isChangingOrder}
+					onSortEnd={onDragEnd}
+					forms={forms}
+					showEditButtons={showEditButtons}
 					editBBCodeForm={editBBCodeForm}
 					deleteBBCodeForm={deleteBBCodeForm}
 					setPageModal={setPageModal}

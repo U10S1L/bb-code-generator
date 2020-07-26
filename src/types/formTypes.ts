@@ -1,7 +1,7 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 export type BBCodeFormType = {
-	uniqueId: string;
+	uid: string;
 	slug: string;
 	name: string;
 	inputComponents: InputComponentProps[];
@@ -10,6 +10,7 @@ export type BBCodeFormType = {
 	createdTimestamp: number;
 	updatedTimestamp: number;
 	progressTimestamp?: number;
+	order?: number;
 };
 
 type inputTypes =

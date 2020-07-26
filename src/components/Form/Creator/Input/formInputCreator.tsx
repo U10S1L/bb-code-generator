@@ -266,7 +266,7 @@ const FormInputCreator = ({
 			</Col>
 			<Col xs={12} md={10}>
 				<div className="header">
-					<h4 style={{ fontWeight: "bold" }}>Form Preview</h4>
+					<h4 style={{ fontWeight: "bold" }}>Preview</h4>
 				</div>
 
 				<FormPreviewer

@@ -1,11 +1,7 @@
 import { Col, Form, FormGroup, InputGroup, Row } from "react-bootstrap";
-import { DropEvent, FileRejection } from "react-dropzone";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { BBCodeFormType } from "types/formTypes";
-import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
-import StandardModal from "components/modals/standardModal";
-import Uploader from "components/uploader/uploader";
 
 type FormNameCreatorProps = {
 	val: string;
@@ -18,42 +14,7 @@ const FormNameCreator = ({
 	setVal,
 	loadBBCodeForm
 }: FormNameCreatorProps) => {
-	const [uploaderModalVisible, setUploaderModalVisible] = useState(false);
-	const [uploadedBBCodeForm, setUploadedBBCodeForm] = useState<{
-		acceptedFiles: File[];
-	}>();
 	const formNameRef = useRef<HTMLInputElement>(null!);
-
-	const handleCloseUploaderWarningModal = () => {
-		setUploaderModalVisible(false);
-		setUploadedBBCodeForm(undefined);
-	};
-
-	const onDrop = <T extends File>(
-		acceptedFiles: T[],
-		fileRejections: FileRejection[],
-		event: DropEvent
-	): void => {
-		setUploadedBBCodeForm({ acceptedFiles });
-		setUploaderModalVisible(true);
-	};
-
-	const loadBBCodeFormFromFile = (): void => {
-		uploadedBBCodeForm &&
-			uploadedBBCodeForm.acceptedFiles.forEach((file) => {
-				const reader = new FileReader();
-				reader.onload = () => {
-					const binaryStr = reader.result;
-					if (binaryStr != null) {
-						const bbCodeFormJson = JSON.parse(binaryStr.toString());
-						// Send the form via prop function back to formCreator where it'll be loaded in as the newBBCodeForm and in state
-						loadBBCodeForm(bbCodeFormJson);
-					}
-				};
-				reader.readAsText(file);
-			});
-		handleCloseUploaderWarningModal();
-	};
 
 	useEffect(() => {
 		if (formNameRef.current != null) {
@@ -63,7 +24,7 @@ const FormNameCreator = ({
 
 	return (
 		<Row>
-			<Col xs={12} lg={8}>
+			<Col xs={12}>
 				<h4 className="header">New Form</h4>
 				<InputGroup>
 					<FormGroup style={{ width: "100%" }}>
@@ -80,25 +41,6 @@ const FormNameCreator = ({
 					</FormGroup>
 				</InputGroup>
 			</Col>
-			<Col xs={12} lg={4}>
-				<h4 className="header">
-					Start From File{" "}
-					<QuestionMarkTooltip
-						text="If you downloaded an exported form, drop it here to start the setup process from those presets."
-						id="startFromFile"
-					/>
-				</h4>
-				<Uploader onDrop={onDrop} styles={{ height: "10rem" }} />
-			</Col>
-			<StandardModal
-				visible={uploaderModalVisible}
-				handleClose={() => handleCloseUploaderWarningModal()}
-				handleContinue={() => loadBBCodeFormFromFile()}
-				title="WARNING"
-				message="This action will overwrite any form creation progress you might have. Are you sure you want to continue?"
-				closeBtnText="Cancel"
-				continueBtnText="Yes, overwrite any existing progress."
-			/>
 		</Row>
 	);
 };

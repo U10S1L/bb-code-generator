@@ -68,52 +68,48 @@ const FormBBCodeMatch = ({
 													: null}
 											</span>
 										</Card.Title>
-										<Card.Text>
-											{!matched ? (
-												<CopyToClipboard
-													text={inputComponent.uniqueId}
-													onCopy={() =>
-														SuccessToast(
-															`Copied 🆔 for field '${inputComponent.label}' to clipboard. Paste it in the BBCode.`
+										{!matched ? (
+											<CopyToClipboard
+												text={inputComponent.uniqueId}
+												onCopy={() =>
+													SuccessToast(
+														`Copied 🆔 for field '${inputComponent.label}' to clipboard. Paste it in the BBCode.`
+													)
+												}>
+												<Button variant="light">
+													<span role="img" aria-label="id">
+														🆔
+													</span>
+												</Button>
+											</CopyToClipboard>
+										) : (
+											<div>
+												<Button
+													variant="light"
+													onClick={() =>
+														goToUniqueIDInMatchedBBCode(inputComponent.uniqueId)
+													}>
+													<FontAwesomeIcon icon="search" />
+												</Button>
+												<Button
+													variant="light"
+													onClick={() =>
+														deleteUniqueIDInMatchedBBCode(
+															inputComponent.uniqueId
 														)
 													}>
-													<Button variant="light">
-														<span role="img" aria-label="id">
-															🆔
-														</span>
-													</Button>
-												</CopyToClipboard>
-											) : (
-												<div>
-													<Button
-														variant="light"
-														onClick={() =>
-															goToUniqueIDInMatchedBBCode(
-																inputComponent.uniqueId
-															)
-														}>
-														<FontAwesomeIcon icon="search" />
-													</Button>
-													<Button
-														variant="light"
-														onClick={() =>
-															deleteUniqueIDInMatchedBBCode(
-																inputComponent.uniqueId
-															)
-														}>
-														<FontAwesomeIcon icon="times"></FontAwesomeIcon>
-													</Button>
-												</div>
-											)}
-											<div
-												style={{ display: "flex", justifyContent: "flex-end" }}>
-												{!matched ? (
-													<span style={{ color: "red" }}>Unmatched</span>
-												) : (
-													<span style={{ color: "green" }}>Matched</span>
-												)}
+													<FontAwesomeIcon icon="times"></FontAwesomeIcon>
+												</Button>
 											</div>
-										</Card.Text>
+										)}
+										<div
+											style={{ display: "flex", justifyContent: "flex-end" }}>
+											{!matched ? (
+												<span style={{ color: "red" }}>Unmatched</span>
+											) : (
+												<span style={{ color: "green" }}>Matched</span>
+											)}
+										</div>
 									</Card.Body>
 								</Card>
 							);
