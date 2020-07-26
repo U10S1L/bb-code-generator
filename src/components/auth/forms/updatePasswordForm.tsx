@@ -6,56 +6,64 @@ import Firebase from "components/firebase/firebase";
 import { SuccessToast } from "components/toast/toast";
 import { errorMessage } from "constants/errors";
 
-const UpdatePasswordForm = () => {
-	const defaultUpdatePassword = {
+const UpdateUserForm = () => {
+	const { authUser } = useContext(AuthContext);
+	const defaultUpdateUser = {
+		name: authUser?.displayName,
+		email: authUser?.email,
 		currPassword: "",
-		password1: "",
-		password2: "",
+		newPassword1: "",
+		newPassword2: "",
 		errorMessage: ""
 	};
-	const { authUser } = useContext(AuthContext);
-	const [updatePassword, setUpdatePassword] = useState(defaultUpdatePassword);
-	const [isUpdatePasswordValid, setIsUpdatePasswordValid] = useState(false);
+	const [updateUser, setUpdateUser] = useState(defaultUpdateUser);
+	const [isUpdateUserValid, setIsUpdateUserValid] = useState(false);
 
-	const handleUpdatePassword = () => {
+	const handleUpdateUser = () => {
 		Firebase()
-			.signIn(authUser?.email, updatePassword.currPassword)
+			.signIn(authUser?.email, updateUser.currPassword)
 			.then(() => {
-				Firebase().passwordUpdate(updatePassword.password1);
+				Firebase().updateUser(
+					updateUser.newPassword1 !== ""
+						? updateUser.newPassword1
+						: updateUser.currPassword,
+					updateUser.email,
+					updateUser.name
+				);
 			})
 			.then(() => {
-				setUpdatePassword(defaultUpdatePassword);
-				SuccessToast(
-					"Password changed successfully. Redirecting to sign in..."
-				);
+				setUpdateUser(defaultUpdateUser);
+				SuccessToast("Account updated successfully.");
 				setTimeout(() => Firebase().signOut(), 2500);
 			})
 			.catch((errorCode) => {
-				setUpdatePassword({
-					...defaultUpdatePassword,
+				setUpdateUser({
+					...defaultUpdateUser,
 					errorMessage: errorMessage(errorCode)
 				});
 			});
 	};
 
 	useEffect(() => {
-		setIsUpdatePasswordValid(
-			updatePassword.currPassword !== "" &&
-				updatePassword.password1 !== "" &&
-				updatePassword.password2 !== "" &&
-				updatePassword.password1 === updatePassword.password2
+		setIsUpdateUserValid(
+			updateUser.name !== "" &&
+				updateUser.email !== "" &&
+				updateUser.currPassword !== "" &&
+				updateUser.newPassword1 !== "" &&
+				updateUser.newPassword2 !== "" &&
+				updateUser.newPassword1 === updateUser.newPassword2
 		);
-	}, [updatePassword]);
+	}, [updateUser]);
 	return (
 		<Form>
 			<Form.Group>
 				<Form.Label>Current Password</Form.Label>
 				<Form.Control
 					type="password"
-					value={updatePassword.currPassword}
+					value={updateUser.currPassword}
 					onChange={(e) => {
-						setUpdatePassword({
-							...updatePassword,
+						setUpdateUser({
+							...updateUser,
 							currPassword: e.target.value
 						});
 					}}></Form.Control>
@@ -64,9 +72,9 @@ const UpdatePasswordForm = () => {
 				<Form.Label>New Password</Form.Label>
 				<Form.Control
 					type="password"
-					value={updatePassword.password1}
+					value={updateUser.newPassword1}
 					onChange={(e) => {
-						setUpdatePassword({ ...updatePassword, password1: e.target.value });
+						setUpdateUser({ ...updateUser, newPassword1: e.target.value });
 					}}></Form.Control>
 			</Form.Group>
 
@@ -74,20 +82,20 @@ const UpdatePasswordForm = () => {
 				<Form.Label>Confirm New Password</Form.Label>
 				<Form.Control
 					type="password"
-					value={updatePassword.password2}
+					value={updateUser.newPassword2}
 					onChange={(e) => {
-						setUpdatePassword({ ...updatePassword, password2: e.target.value });
+						setUpdateUser({ ...updateUser, newPassword2: e.target.value });
 					}}></Form.Control>
 			</Form.Group>
-			<div style={{ color: "red" }}>{updatePassword.errorMessage}</div>
+			<div style={{ color: "red" }}>{updateUser.errorMessage}</div>
 			<Button
-				disabled={!isUpdatePasswordValid}
-				variant="primary"
-				onClick={() => handleUpdatePassword()}>
-				Update Password
+				disabled={!isUpdateUserValid}
+				variant="info"
+				onClick={() => handleUpdateUser()}>
+				Update Account
 			</Button>
 		</Form>
 	);
 };
 
-export default UpdatePasswordForm;
+export default UpdateUserForm;

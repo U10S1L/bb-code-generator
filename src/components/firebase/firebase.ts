@@ -38,7 +38,7 @@ const Firebase = () => {
 		signIn,
 		signOut,
 		passwordReset,
-		passwordUpdate,
+		updateUser,
 		saveForm,
 		streamUserForms,
 		getUserForm,
@@ -58,15 +58,17 @@ export const createUser = (
 		Firebase()
 			.auth.createUserWithEmailAndPassword(email, password)
 			.then((authUser) => {
-				Firebase()
-					.firestore.collection("users")
-					.doc(authUser.user!.uid)
-					.set({
-						username,
-						email
-					})
-					.then(() => resolve())
-					.catch((error) => reject(error.code));
+				authUser.user?.updateProfile({ displayName: username }).then(() => {
+					Firebase()
+						.firestore.collection("users")
+						.doc(authUser.user!.uid)
+						.set({
+							username,
+							email
+						})
+						.then(() => resolve())
+						.catch((error) => reject(error.code));
+				});
 			})
 			.catch((error) => {
 				reject(error.code);
@@ -110,14 +112,28 @@ export const passwordReset = (email: string): Promise<any> => {
 			});
 	});
 };
-export const passwordUpdate = (password: string): Promise<any> => {
+export const updateUser = (
+	password: string,
+	email?: string | null,
+	name?: string | null
+): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		if (Firebase().auth.currentUser == null) {
 			reject("auth/access-denied");
+		} else if (!email || !password || !name) {
+			reject("general/missing-arguments");
 		} else {
 			Firebase()
 				.auth.currentUser!.updatePassword(password)
-				.then(() => resolve())
+				.then(() => {
+					Firebase().auth.currentUser!.updateEmail(email);
+				})
+				.then(() => {
+					Firebase().auth.currentUser!.updateProfile({ displayName: name });
+				})
+				.then(() => {
+					resolve();
+				})
 				.catch((error) => {
 					reject(error.code);
 				});
