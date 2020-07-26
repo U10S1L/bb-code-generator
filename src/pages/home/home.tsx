@@ -22,7 +22,7 @@ const Home = () => {
 						BEFORE
 					</div>
 				</Col>
-				<Col xs={8} className="comparison-image-wrapper">
+				<Col xs={7} className="comparison-image-wrapper">
 					<img
 						src="https://i.imgur.com/TnWUslD.png"
 						alt="before-shitty-bbcode"
@@ -40,15 +40,16 @@ const Home = () => {
 						margin: "1rem 0",
 						padding: "2.5rem"
 					}}>
-					<h3 style={{ textAlign: "center" }}>
-						Create (and use) BBCode generator forms.
-						<br /> That generate BBCode. For <b> all</b> your paperwork.
-					</h3>
+					<h2 style={{ textAlign: "center" }}>
+						Create forms that generate BBCode.
+						<br />
+						For <b>all</b> your paperwork.
+					</h2>
 				</Jumbotron>
 			</Row>
 			<Row className="d-none d-lg-flex comparison-image-text-wrapper">
 				<Col></Col>
-				<Col xs={8} className="comparison-image-wrapper">
+				<Col xs={7} className="comparison-image-wrapper">
 					<img
 						src="https://i.imgur.com/oJ3OXF4.png"
 						alt="after-nice-bbcodeform"

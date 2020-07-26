@@ -7,8 +7,8 @@ import AuthModal from "components/auth/authModal";
 import Firebase from "components/firebase/firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LinkContainer } from "react-router-bootstrap";
+import { NavLink } from "react-router-dom";
 import { Page } from "constants/pages";
-import SignOutButton from "components/auth/forms/signOutButton";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 type NavigationBarProps = {

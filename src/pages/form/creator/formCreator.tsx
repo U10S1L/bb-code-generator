@@ -2,19 +2,19 @@ import { BBCodeFormType, InputComponentProps } from "types/formTypes";
 import { Button, Col, Row } from "react-bootstrap";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 
-import { AppContext } from "context/context";
+import { AuthContext } from "context/authContext";
 import { ErrorToast } from "components/toast/toast";
+import Firebase from "components/firebase/firebase";
 import FormBBCodeMatch from "components/bbCode/match/formBBCodeMatch";
 import FormBBCodeUpload from "components/bbCode/upload/formBBCodeUpload";
 import FormInputCreator from "components/form/creator/input/formInputCreator";
 import FormSetupCreator from "components/form/creator/setup/formSetupCreator";
 import Help from "components/help/help";
-import { Types } from "types/contextTypes";
 import arrayMove from "array-move";
+import { getFormUid } from "formatters";
 import { useHistory } from "react-router-dom";
 
 var slugify = require("slugify");
-
 export enum FormCreationStep {
 	FORM_SETUP = "Setup",
 	BBCODE_UPLOAD = "Raw BBCode",
@@ -28,13 +28,13 @@ type FormCreatorProps = {
 };
 
 const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
-	const { state, dispatch } = useContext(AppContext);
+	const { authUser, stateForms } = useContext(AuthContext);
 	const [formCreationStep, setFormCreationStep] = useState(
 		FormCreationStep.FORM_SETUP
 	);
 
 	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType>({
-		uniqueId: "",
+		uid: "",
 		slug: "",
 		name: "",
 		inputComponents: [],
@@ -45,7 +45,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	});
 
 	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<BBCodeFormType>({
-		uniqueId: "",
+		uid: "",
 		slug: "",
 		name: "",
 		inputComponents: [],
@@ -135,7 +135,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		}
 	};
 
-	let history = useHistory();
+	const history = useHistory();
 
 	// Form Creation Step
 	const incrementFormCreationStep = (): void => {
@@ -154,20 +154,24 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				setFormCreationStep(FormCreationStep.BBCODE_MATCH);
 				break;
 			case FormCreationStep.BBCODE_MATCH:
-				dispatch({
-					type: Types.AddForm,
-					payload: {
-						...bbCodeForm,
-						uniqueId: `{<${bbCodeForm.name}>_${
-							Math.floor(Math.random() * (9999 - 0)) + 0
-						}}`,
-						slug: slugify(bbCodeForm.name),
-						createdTimestamp: Date.now(),
-						updatedTimestamp: Date.now()
-					}
-				});
-				history.push(`/forms/list`);
-				localStorage.removeItem("newBBCodeForm");
+				Firebase()
+					.saveForm(
+						{
+							...bbCodeForm,
+							uid: slugify(bbCodeForm.name),
+							createdTimestamp: Date.now(),
+							updatedTimestamp: Date.now(),
+							order: stateForms.length + 1
+						},
+						authUser?.uid
+					)
+					.then(() => {
+						history.replace(`/forms/list`);
+						localStorage.removeItem("newBBCodeForm");
+					})
+					.catch((error) => {
+						console.log(error);
+					});
 				break;
 		}
 	};
@@ -194,13 +198,16 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	};
 	const doesFormNameExist = () => {
 		if (!editMode) {
-			return state.forms.find((form) => form.name === bbCodeForm.name) != null;
+			return (
+				stateForms.find((form) => form.uid === getFormUid(bbCodeForm.name)) !=
+				null
+			);
 		} else {
 			return (
-				state.forms.find(
+				stateForms.find(
 					(form) =>
-						form.name !== originalBBCodeForm.name &&
-						form.name === bbCodeForm.name
+						form.uid !== getFormUid(originalBBCodeForm.name) &&
+						form.uid === getFormUid(bbCodeForm.name)
 				) != null
 			);
 		}
@@ -316,47 +323,28 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 			<Row>
 				<Col xs={12}>
 					<div className="header" style={{ border: 0 }}>
-						{formCreationStep !== FormCreationStep.FORM_SETUP && (
-							<Button
-								variant="secondary"
-								onClick={() => decrementFormCreationStep()}>
-								Back
-							</Button>
-						)}
 						<h3 style={{ margin: "auto" }}>{formCreationStep}</h3>
 
-						{(formCreationStep !== FormCreationStep.BBCODE_MATCH ||
-							!editMode) && (
-							<Button
-								variant="info"
-								onClick={() => incrementFormCreationStep()}
-								disabled={
-									(formCreationStep === FormCreationStep.FORM_SETUP &&
-										bbCodeForm.name === "") ||
-									(formCreationStep === FormCreationStep.FIELD_CREATION &&
-										(bbCodeForm.inputComponents == null ||
-											bbCodeForm.inputComponents.length === 0)) ||
-									(formCreationStep === FormCreationStep.BBCODE_UPLOAD &&
-										bbCodeForm.rawBBCode === "")
-								}>
-								{(formCreationStep === FormCreationStep.FORM_SETUP ||
-									formCreationStep === FormCreationStep.FIELD_CREATION ||
-									formCreationStep === FormCreationStep.BBCODE_UPLOAD) &&
-									"Next"}
-								{formCreationStep === FormCreationStep.BBCODE_MATCH && "Save"}
-							</Button>
+						{editMode && (
+							<Row>
+								<Col
+									xs={12}
+									style={{ display: "flex", justifyContent: "flex-end" }}>
+									<Button
+										variant="success"
+										onClick={() => saveEditedBBCodeForm()}>
+										Save Edits
+									</Button>
+									<Button
+										style={{ float: "right", marginLeft: "1.5rem" }}
+										variant="danger"
+										onClick={() => cancelEditBBCodeForm()}>
+										Cancel Edits
+									</Button>
+								</Col>
+							</Row>
 						)}
 					</div>
-					{/* <ProgressBar
-						now={
-							((formCreationStepEnums.indexOf(formCreationStep) + 1) /
-								formCreationStepEnums.length) *
-							100
-						}
-						label={`${formCreationStepEnums.indexOf(formCreationStep) + 1} / 4`}
-						variant="info"
-						style={{ marginTop: ".5rem" }}
-					/> */}
 				</Col>
 			</Row>
 			{formCreationStep === FormCreationStep.FORM_SETUP && (
@@ -391,24 +379,40 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 					setMatchedBBCode={updateMatchedBBCode}
 				/>
 			)}
-			{editMode && (
-				<Row style={{ marginTop: "3rem", paddingBottom: ".5rem" }}>
-					<Col xs={12}>
+			<Row style={{ marginTop: "2rem" }}>
+				<Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+					{formCreationStep !== FormCreationStep.FORM_SETUP && (
 						<Button
-							style={{ float: "right" }}
-							variant="success"
-							onClick={() => saveEditedBBCodeForm()}>
-							Save Edits
+							variant="secondary"
+							onClick={() => decrementFormCreationStep()}>
+							Back
 						</Button>
+					)}
+
+					{(formCreationStep !== FormCreationStep.BBCODE_MATCH ||
+						!editMode) && (
 						<Button
-							style={{ float: "right" }}
-							variant="danger"
-							onClick={() => cancelEditBBCodeForm()}>
-							Cancel Edits
+							variant="info"
+							style={{ marginLeft: "1.5rem" }}
+							onClick={() => incrementFormCreationStep()}
+							disabled={
+								(formCreationStep === FormCreationStep.FORM_SETUP &&
+									bbCodeForm.name === "") ||
+								(formCreationStep === FormCreationStep.FIELD_CREATION &&
+									(bbCodeForm.inputComponents == null ||
+										bbCodeForm.inputComponents.length === 0)) ||
+								(formCreationStep === FormCreationStep.BBCODE_UPLOAD &&
+									bbCodeForm.rawBBCode === "")
+							}>
+							{(formCreationStep === FormCreationStep.FORM_SETUP ||
+								formCreationStep === FormCreationStep.FIELD_CREATION ||
+								formCreationStep === FormCreationStep.BBCODE_UPLOAD) &&
+								"Next"}
+							{formCreationStep === FormCreationStep.BBCODE_MATCH && "Save"}
 						</Button>
-					</Col>
-				</Row>
-			)}
+					)}
+				</Col>
+			</Row>
 			<Help title={getHelpTitle()} text={getHelpText()}></Help>
 		</Fragment>
 	);

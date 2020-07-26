@@ -20,6 +20,8 @@ import {
 	faEye,
 	faFont,
 	faLink,
+	faLock,
+	faLockOpen,
 	faMinus,
 	faPlus,
 	faQuestionCircle,
@@ -30,7 +32,7 @@ import {
 	faUser
 } from "@fortawesome/free-solid-svg-icons";
 
-import { AppProvider } from "context/context";
+import { AuthProvider } from "context/authContext";
 import { Container } from "react-bootstrap";
 import NavigationBar from "./components/navbar/navbar";
 import React from "react";
@@ -40,11 +42,9 @@ import pages from "./constants/pages";
 
 // import "./bootstrap-flatly.css";
 
-
 // FontAwesome
 
 // Site Pages
-
 
 // FontAwesome Library Setup
 library.add(
@@ -79,7 +79,7 @@ library.add(
 
 const App = () => {
 	return (
-		<AppProvider>
+		<AuthProvider>
 			<Container
 				id="#app-container"
 				style={{ backgroundColor: "white", minHeight: "100vh" }}>
@@ -91,7 +91,7 @@ const App = () => {
 				/>
 				<SwitchRoutes />
 			</Container>
-		</AppProvider>
+		</AuthProvider>
 	);
 };
 

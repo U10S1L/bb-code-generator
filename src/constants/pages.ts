@@ -8,6 +8,7 @@ export type Page = {
 	name: string;
 	component: React.FC<any>;
 	path: string;
+	protected?: boolean;
 };
 
 const pages: Page[] = [
@@ -15,13 +16,15 @@ const pages: Page[] = [
 		id: "formList",
 		name: "My Forms",
 		component: FormList,
-		path: "/forms/list"
+		path: "/forms/list",
+		protected: true
 	},
 	{
 		id: "formCreator",
-		name: "Add Form",
+		name: "New Form",
 		component: FormCreator,
-		path: "/forms/new"
+		path: "/forms/new",
+		protected: true
 	},
 	{
 		id: "settings",
@@ -30,7 +33,6 @@ const pages: Page[] = [
 		path: "/settings",
 		protected: true
 	},
-
 	{
 		id: "home",
 		name: "Home",

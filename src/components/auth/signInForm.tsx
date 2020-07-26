@@ -2,18 +2,11 @@ import { Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 
 import Firebase from "components/firebase/firebase";
+import { LinkContainer } from "react-router-bootstrap";
 import { errorMessage } from "constants/errors";
+import { useHistory } from "react-router-dom";
 
-type SignInFormProps = {
-	onClickSignUp: () => void;
-	onClickForgotPassword: () => void;
-	onSignIn: () => void;
-};
-const SignInForm = ({
-	onClickSignUp,
-	onClickForgotPassword,
-	onSignIn
-}: SignInFormProps) => {
+const SignInForm = () => {
 	const defaultSignIn = {
 		email: "",
 		password: "",
@@ -21,11 +14,12 @@ const SignInForm = ({
 	};
 	const [signIn, setSignIn] = useState(defaultSignIn);
 	const [isSignInValid, setIsSignInValid] = useState(false);
+	const history = useHistory();
 	const handleSignIn = () => {
 		Firebase()
 			.signIn(signIn.email, signIn.password)
 			.then(() => {
-				onSignIn();
+				history.push("/forms/list");
 			})
 			.catch((errorCode) => {
 				setSignIn({ ...signIn, errorMessage: errorMessage(errorCode) });
@@ -33,7 +27,9 @@ const SignInForm = ({
 	};
 
 	useEffect(() => {
-		setIsSignInValid(signIn.email !== "" && signIn.password !== "");
+		setIsSignInValid(
+			defaultSignIn.email !== null && defaultSignIn.password !== null
+		);
 	}, [signIn, defaultSignIn.email, defaultSignIn.password]);
 
 	return (
@@ -66,22 +62,16 @@ const SignInForm = ({
 					alignItems: "flex-end",
 					textAlign: "right"
 				}}>
-				<Button
-					variant="link"
-					style={{ paddingRight: 0 }}
-					onClick={() => onClickForgotPassword()}>
-					Forgot Password?
-				</Button>
+				<LinkContainer to={"/auth/forgotPassword"} style={{ paddingRight: 0 }}>
+					<Button variant="link">Forgot Password?</Button>
+				</LinkContainer>
 				<div>
-					<Button
-						style={{ marginRight: "1rem" }}
-						variant="secondary"
-						onClick={() => onClickSignUp()}>
-						Sign Up
-					</Button>
+					<LinkContainer to={"/auth/signup"} style={{ marginRight: "1rem" }}>
+						<Button variant="secondary">Sign Up</Button>
+					</LinkContainer>
 					<Button
 						disabled={!isSignInValid}
-						variant="info"
+						variant="success"
 						onClick={() => handleSignIn()}>
 						Sign In
 					</Button>

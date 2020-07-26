@@ -6,7 +6,6 @@ import ForgotPasswordForm from "./forms/forgotPasswordForm";
 import SignInForm from "components/auth/forms/signInForm";
 import SignOutButton from "components/auth/forms/signOutButton";
 import SignUpForm from "components/auth/forms/signUpForm";
-import { format } from "path";
 
 type AuthModalProps = {
 	visible: boolean;
@@ -21,12 +20,10 @@ enum Form {
 	ForgotPassword = "Forgot Password"
 }
 const AuthModal = ({ visible, onClose, user }: AuthModalProps) => {
-	const [modalState, setModalState] = useState<{ form: Form }>({
-		form: Form.SignIn
-	});
+	const [modalState, setModalState] = useState<Form>(Form.SignIn);
 
 	useEffect(() => {
-		setModalState({ ...modalState, form: !user ? Form.SignIn : Form.SignOut });
+		setModalState(!user ? Form.SignIn : Form.SignOut);
 	}, [user, visible]);
 
 	return (
@@ -44,14 +41,12 @@ const AuthModal = ({ visible, onClose, user }: AuthModalProps) => {
 					flexDirection: "row",
 					alignItems: "center"
 				}}>
-				{modalState.form !== Form.SignIn && modalState.form !== Form.SignOut && (
-					<Button
-						variant="link"
-						onClick={() => setModalState({ ...modalState, form: Form.SignIn })}>
+				{modalState !== Form.SignIn && modalState !== Form.SignOut && (
+					<Button variant="link" onClick={() => setModalState(Form.SignIn)}>
 						<FontAwesomeIcon icon="arrow-left"></FontAwesomeIcon>
 					</Button>
 				)}
-				<h4 style={{ textAlign: "center" }}>{modalState.form}</h4>
+				<h4 style={{ textAlign: "center" }}>{modalState}</h4>
 				<Button
 					variant="link"
 					onClick={() => {
@@ -61,22 +56,18 @@ const AuthModal = ({ visible, onClose, user }: AuthModalProps) => {
 				</Button>
 			</Modal.Header>
 			<Modal.Body>
-				{modalState.form === Form.SignIn && (
+				{modalState === Form.SignIn && (
 					<SignInForm
-						onClickSignUp={() =>
-							setModalState({ ...modalState, form: Form.SignUp })
-						}
-						onClickForgotPassword={() =>
-							setModalState({ ...modalState, form: Form.ForgotPassword })
-						}
+						onClickSignUp={() => setModalState(Form.SignUp)}
+						onClickForgotPassword={() => setModalState(Form.ForgotPassword)}
 						onSignIn={() => {
 							onClose();
 						}}
 					/>
 				)}
-				{modalState.form === Form.SignUp && <SignUpForm />}
-				{modalState.form === Form.ForgotPassword && <ForgotPasswordForm />}
-				{modalState.form === Form.SignOut && (
+				{modalState === Form.SignUp && <SignUpForm />}
+				{modalState === Form.ForgotPassword && <ForgotPasswordForm />}
+				{modalState === Form.SignOut && (
 					<SignOutButton onSignOut={() => onClose()} />
 				)}
 			</Modal.Body>

@@ -2,26 +2,20 @@ import { Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 
 import Firebase from "components/firebase/firebase";
-import { SuccessToast } from "components/toast/toast";
-import { errorMessage } from "constants/errors";
+import { useHistory } from "react-router-dom";
 
 const ForgotPasswordForm = () => {
 	const defaultForgotPassword = { email: "", errorMessage: "" };
 	const [forgotPassword, setForgotPassword] = useState(defaultForgotPassword);
 	const [isForgotPasswordValid, setIsForgotPasswordValid] = useState(false);
+	const history = useHistory();
 
 	const handleForgotPassword = () => {
 		Firebase()
 			.passwordReset(forgotPassword.email)
 			.then(() => {
 				setForgotPassword(defaultForgotPassword);
-				SuccessToast("Password reset link sent to email address.");
-			})
-			.catch((errorCode) => {
-				setForgotPassword({
-					...forgotPassword,
-					errorMessage: errorMessage(errorCode)
-				});
+				history.push("/auth/signin");
 			});
 	};
 
@@ -43,7 +37,7 @@ const ForgotPasswordForm = () => {
 			<div style={{ color: "red" }}>{forgotPassword.errorMessage}</div>
 			<Button
 				disabled={!isForgotPasswordValid}
-				variant="info"
+				variant="primary"
 				onClick={() => handleForgotPassword()}>
 				Reset My Password
 			</Button>
