@@ -8,7 +8,6 @@ import { NavLink } from "react-router-dom";
 import { Page } from "constants/pages";
 import React from "react";
 import SignOutButton from "components/auth/signOutButton";
-import logoImage from "images/logo.svg";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 type NavigationBarProps = {
@@ -62,7 +61,6 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 					)}
 				</Nav>
 			</Navbar.Collapse>
-			)
 		</Navbar>
 	);
 };
