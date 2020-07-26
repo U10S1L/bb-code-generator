@@ -34,7 +34,7 @@ import {
 
 import { AuthProvider } from "context/authContext";
 import { Container } from "react-bootstrap";
-import NavigationBar from "./components/navbar/navbar";
+import NavigationBar from "components/navigationBar/navigationBar";
 import React from "react";
 import SwitchRoutes from "./SwitchRoutes";
 import { library } from "@fortawesome/fontawesome-svg-core";
