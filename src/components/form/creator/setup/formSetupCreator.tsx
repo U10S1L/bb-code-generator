@@ -25,7 +25,7 @@ const FormNameCreator = ({
 	return (
 		<Row>
 			<Col xs={12}>
-				<h4 className="header">New Form</h4>
+				<h4 className="header">Form Name</h4>
 				<InputGroup>
 					<FormGroup style={{ width: "100%" }}>
 						<Form.Control
@@ -36,7 +36,6 @@ const FormNameCreator = ({
 								setVal(e.target.value);
 							}}
 							ref={formNameRef}
-							placeholder="Name"
 						/>
 					</FormGroup>
 				</InputGroup>

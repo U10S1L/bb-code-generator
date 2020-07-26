@@ -2,7 +2,6 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 export type BBCodeFormType = {
 	uid: string;
-	slug: string;
 	name: string;
 	inputComponents: InputComponentProps[];
 	rawBBCode: string;

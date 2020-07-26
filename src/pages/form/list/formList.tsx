@@ -18,6 +18,7 @@ import FormCreator from "pages/form/creator/formCreator";
 import { LinkContainer } from "react-router-bootstrap";
 import StandardModal from "components/modals/standardModal";
 import { SuccessToast } from "components/toast/toast";
+import { getFormUid } from "formatters";
 
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
@@ -114,16 +115,14 @@ const SortableFormContainer = SortableContainer(
 								setPageModal({
 									visible: true,
 									continueAction: () => editBBCodeForm(form),
-									message:
-										"Editing the form will erase any values that you've typed in the form fields, which cannot be undone. Do you wish to continue?"
+									message: `Editing '${form.name}' will clear out any current values in the form fields. This cannot be undone.`
 								});
 							}}
 							deleteForm={() => {
 								setPageModal({
 									visible: true,
 									continueAction: () => deleteBBCodeForm(form),
-									message:
-										"This will delete the form. You might want to consider exporting it first... do you wish to continue?"
+									message: `Are you sure you want to permanently delete '${form.name}' from your forms?.`
 								});
 							}}
 						/>
@@ -156,26 +155,35 @@ const FormList = () => {
 	};
 	const saveEdits = (bbCodeForm: BBCodeFormType) => {
 		localStorage.removeItem("editBBCodeForm");
-
 		if (
 			JSON.stringify(bbCodeForm) !==
 			JSON.stringify(stateForms.find((form) => form.uid === bbCodeForm.uid))
 		) {
-			console.log("sending to the db");
 			Firebase()
-				.saveForm(bbCodeForm, authUser?.uid)
+				.saveForm(
+					bbCodeForm.uid,
+					{ ...bbCodeForm, uid: getFormUid(bbCodeForm.name) },
+					authUser?.uid
+				)
 				.then(() => {
 					setEditMode(false);
+					setShowEditButtons(false);
 				});
 		} else {
 			setEditMode(false);
+			setShowEditButtons(false);
 		}
 	};
 
 	const deleteBBCodeForm = (bbCodeForm: BBCodeFormType) => {
 		const formProgressString = `formProgress_${bbCodeForm.uid}`;
 		localStorage.removeItem(formProgressString);
-		Firebase().deleteUserForm(bbCodeForm.uid);
+		Firebase()
+			.deleteUserForm(bbCodeForm.uid)
+			.then(() => {
+				setShowEditButtons(false);
+				SuccessToast(`Form '${bbCodeForm.name}' deleted.`);
+			});
 	};
 
 	const onDragEnd = (sortObject: { oldIndex: number; newIndex: number }) => {
@@ -220,9 +228,6 @@ const FormList = () => {
 					style={{ display: "flex", justifyContent: "space-between" }}>
 					<div style={{ display: "flex" }}>
 						<h3>My Forms</h3>
-						<Button variant="link" onClick={() => toggleEditFormList()}>
-							<FontAwesomeIcon icon={!showEditButtons ? "lock" : "lock-open"} />
-						</Button>
 					</div>
 					<LinkContainer to={"/forms/new"}>
 						<Button variant="info">New Form</Button>
@@ -230,6 +235,15 @@ const FormList = () => {
 				</div>
 			</Col>
 			<Col xs={12} style={{ marginTop: "1rem" }}>
+				<div style={{ display: "flex" }}>
+					<Button
+						variant="link"
+						onClick={() => toggleEditFormList()}
+						style={{ marginBottom: "1rem", marginRight: "1rem", padding: 0 }}>
+						<FontAwesomeIcon icon={!showEditButtons ? "lock" : "lock-open"} />
+					</Button>
+					{showEditButtons && <div>Relock to save changes.</div>}
+				</div>
 				<SortableFormContainer
 					useDragHandle
 					onSortEnd={onDragEnd}
