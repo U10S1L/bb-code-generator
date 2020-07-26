@@ -54,77 +54,117 @@ export const createUser = (
 	email: string,
 	password: string
 ): Promise<any> => {
-	return Firebase()
-		.auth.createUserWithEmailAndPassword(email, password)
-		.then((authUser) => {
-			Firebase().firestore.collection("users").doc(authUser.user!.uid).set({
-				username,
-				email
+	return new Promise((resolve, reject) => {
+		Firebase()
+			.auth.createUserWithEmailAndPassword(email, password)
+			.then((authUser) => {
+				Firebase()
+					.firestore.collection("users")
+					.doc(authUser.user!.uid)
+					.set({
+						username,
+						email
+					})
+					.then(() => resolve());
+			})
+			.catch((error) => {
+				reject(error.code);
 			});
-		})
-		.catch((error) => {
-			return error.code;
-		});
+	});
 };
 
 /* Auth API */
 export const signIn = (email: string, password: string): Promise<any> => {
-	return Firebase()
-		.auth.signInWithEmailAndPassword(email, password)
-		.catch((error) => {
-			throw error.code;
-		});
+	return new Promise((resolve, reject) => {
+		Firebase()
+			.auth.signInWithEmailAndPassword(email, password)
+			.then(() => resolve())
+			.catch((error) => {
+				reject(error.code);
+			});
+	});
 };
-export const signOut = () => {
-	Firebase().auth.signOut();
+export const signOut = (): Promise<any> => {
+	return new Promise((resolve, reject) => {
+		Firebase()
+			.auth.signOut()
+			.then(() => resolve())
+			.catch((error) => reject(error.code));
+	});
 };
-export const passwordReset = (email: string): Promise<any> =>
-	Firebase()
-		.auth.sendPasswordResetEmail(email)
-		.catch((error) => {
-			throw Error(error.code);
-		});
-export const passwordUpdate = (password: string) =>
-	Firebase().auth.currentUser?.updatePassword(password);
-
+export const passwordReset = (email: string): Promise<any> => {
+	return new Promise((resolve, reject) => {
+		Firebase()
+			.auth.sendPasswordResetEmail(email)
+			.then(() => resolve())
+			.catch((error) => {
+				reject(error.code);
+			});
+	});
+};
+export const passwordUpdate = (password: string): Promise<any> => {
+	return new Promise((resolve, reject) => {
+		if (Firebase().auth.currentUser == null) {
+			reject("auth/access-denied");
+		} else {
+			Firebase()
+				.auth.currentUser!.updatePassword(password)
+				.then(() => resolve())
+				.catch((error) => {
+					reject(error.code);
+				});
+		}
+	});
+};
 export const saveForm = (
 	bbCodeForm: BBCodeFormType,
 	userUid?: string
 ): Promise<any> => {
-	if (userUid) {
-		const serializedBBCodeForm = serializeBBCodeForm(bbCodeForm);
-		return Firebase()
-			.firestore.collection("users")
-			.doc(userUid)
-			.collection("forms")
-			.doc(bbCodeForm.uid)
-			.set(serializedBBCodeForm, { merge: true });
-	} else {
-		throw Error("auth/authentication-failed");
-	}
+	return new Promise((resolve, reject) => {
+		if (!userUid) {
+			reject("auth/access-denied");
+		} else {
+			const serializedBBCodeForm = serializeBBCodeForm(bbCodeForm);
+			Firebase()
+				.firestore.collection("users")
+				.doc(userUid)
+				.collection("forms")
+				.doc(bbCodeForm.uid)
+				.set(serializedBBCodeForm, { merge: true })
+				.then(() => resolve())
+				.catch((error) => {
+					reject(error.code);
+				});
+		}
+	});
 };
 
 export const batchUpdateForms = (
 	bbCodeForms: BBCodeFormType[],
 	userUid?: string
 ): Promise<any> => {
-	if (!userUid) {
-		throw Error("auth/authentication-failed");
-	} else {
-		const batch = Firebase().firestore.batch();
-		bbCodeForms.forEach((form) => {
-			batch.set(
-				Firebase()
-					.firestore.collection("users")
-					.doc(userUid)
-					.collection("forms")
-					.doc(form.uid),
-				serializeBBCodeForm(form),
-				{ merge: true }
-			);
-		});
-		return batch.commit();
-	}
+	return new Promise((resolve, reject) => {
+		if (!userUid) {
+			reject("auth/access-denied");
+		} else {
+			const batch = Firebase().firestore.batch();
+			bbCodeForms.forEach((form) => {
+				batch.set(
+					Firebase()
+						.firestore.collection("users")
+						.doc(userUid)
+						.collection("forms")
+						.doc(form.uid),
+					serializeBBCodeForm(form),
+					{ merge: true }
+				);
+			});
+			return batch
+				.commit()
+				.then(() => resolve())
+				.catch((error) => reject(error.code));
+		}
+	});
 };
 
 export const streamUserForms = (
@@ -140,34 +180,39 @@ export const streamUserForms = (
 };
 
 export const getUserForm = (userUid: string, formUid: string): Promise<any> => {
-	if (!userUid || !formUid) {
-		throw Error("auth/access-denied");
-	} else {
-		return Firebase()
-			.firestore.collection("users")
-			.doc(userUid)
-			.collection("forms")
-			.doc(formUid)
-			.get()
-			.then((doc) => {
-				return deserializeBBCodeForm(doc.data());
-			})
-			.catch((error) => {
-				throw Error(error);
-			});
-	}
+	return new Promise((resolve, reject) => {
+		if (!userUid || !formUid) {
+			reject("auth/access-denied");
+		} else {
+			Firebase()
+				.firestore.collection("users")
+				.doc(userUid)
+				.collection("forms")
+				.doc(formUid)
+				.get()
+				.then((doc) => {
+					resolve(deserializeBBCodeForm(doc.data()));
+				})
+				.catch((error) => {
+					reject(error.code);
+				});
+		}
+	});
 };
 export const deleteUserForm = (userFormUID: string): Promise<any> => {
 	const currUser = Firebase().auth.currentUser;
-	return Firebase()
-		.firestore.collection("users")
-		.doc(currUser!.uid)
-		.collection("forms")
-		.doc(userFormUID)
-		.delete()
-		.catch((error) => {
-			console.log(error);
-		});
+	return new Promise((resolve, reject) => {
+		Firebase()
+			.firestore.collection("users")
+			.doc(currUser!.uid)
+			.collection("forms")
+			.doc(userFormUID)
+			.delete()
+			.then(() => resolve())
+			.catch((error) => {
+				reject(error.code);
+			});
+	});
 };
 
 const serializeBBCodeForm = (bbCodeForm: BBCodeFormType) => {
