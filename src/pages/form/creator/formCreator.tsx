@@ -14,7 +14,6 @@ import arrayMove from "array-move";
 import { getFormUid } from "formatters";
 import { useHistory } from "react-router-dom";
 
-var slugify = require("slugify");
 export enum FormCreationStep {
 	FORM_SETUP = "Setup",
 	BBCODE_UPLOAD = "Raw BBCode",
@@ -35,7 +34,6 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 
 	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType>({
 		uid: "",
-		slug: "",
 		name: "",
 		inputComponents: [],
 		rawBBCode: "",
@@ -46,7 +44,6 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 
 	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<BBCodeFormType>({
 		uid: "",
-		slug: "",
 		name: "",
 		inputComponents: [],
 		rawBBCode: "",
@@ -66,6 +63,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		}
 	};
 
+	// TODO: fix this ass 'help' UX
 	const getHelpText = () => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
@@ -156,9 +154,10 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 			case FormCreationStep.BBCODE_MATCH:
 				Firebase()
 					.saveForm(
+						null,
 						{
 							...bbCodeForm,
-							uid: slugify(bbCodeForm.name),
+							uid: getFormUid(bbCodeForm.name),
 							createdTimestamp: Date.now(),
 							updatedTimestamp: Date.now(),
 							order: stateForms.length + 1

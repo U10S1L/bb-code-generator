@@ -18,6 +18,7 @@ import FormCreator from "pages/form/creator/formCreator";
 import { LinkContainer } from "react-router-bootstrap";
 import StandardModal from "components/modals/standardModal";
 import { SuccessToast } from "components/toast/toast";
+import { getFormUid } from "formatters";
 
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
@@ -163,7 +164,11 @@ const FormList = () => {
 		) {
 			console.log("sending to the db");
 			Firebase()
-				.saveForm(bbCodeForm, authUser?.uid)
+				.saveForm(
+					bbCodeForm.uid,
+					{ ...bbCodeForm, uid: getFormUid(bbCodeForm.name) },
+					authUser?.uid
+				)
 				.then(() => {
 					setEditMode(false);
 				});
