@@ -4,6 +4,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import React, { useState } from "react";
 
 import StandardModal from "components/modals/standardModal";
+import UpdatePasswordForm from "components/auth/updatePasswordForm";
 
 const Settings = () => {
 	const [clearDataWarningVisible, setClearDataWarningVisible] = useState(false);
@@ -24,6 +25,7 @@ const Settings = () => {
 				<Row>
 					<Col xs={6}>
 						<h4 className="header">Manage Account</h4>
+						<UpdatePasswordForm />
 					</Col>
 					<Col xs={6}>
 						<h4 className="header">Danger Zone</h4>
