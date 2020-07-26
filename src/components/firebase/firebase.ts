@@ -74,14 +74,21 @@ export const createUser = (
 };
 
 /* Auth API */
-export const signIn = (email: string, password: string): Promise<any> => {
+export const signIn = (
+	email?: string | null,
+	password?: string | null
+): Promise<any> => {
 	return new Promise((resolve, reject) => {
-		Firebase()
-			.auth.signInWithEmailAndPassword(email, password)
-			.then(() => resolve())
-			.catch((error) => {
-				reject(error.code);
-			});
+		if (!email || !password) {
+			reject("general/missing-arguments");
+		} else {
+			Firebase()
+				.auth.signInWithEmailAndPassword(email, password)
+				.then(() => resolve())
+				.catch((error) => {
+					reject(error.code);
+				});
+		}
 	});
 };
 export const signOut = (): Promise<any> => {
