@@ -2,7 +2,7 @@ import "./form.css";
 
 import { BBCodeFormType, InputComponentProps } from "types/formTypes";
 import { Button, Col, Row } from "react-bootstrap";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
 	formatDate,
 	formatDateTime,
@@ -20,22 +20,16 @@ import { useParams } from "react-router-dom";
 
 const BBCodeForm = () => {
 	const params = useParams<{ uid: string }>();
-
 	const { stateForms } = useContext(AuthContext);
-
 	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType | undefined>();
-	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<
-		BBCodeFormType
-	>();
 	const [pageModal, setPageModal] = useState<{
 		message: string;
 		visible: boolean;
 		continueAction: () => void;
 	}>();
-
-	const formProgressString = originalBBCodeForm
-		? getFormProgressString(originalBBCodeForm)
-		: null;
+	const [formProgressString, setFormProgressString] = useState<
+		string | undefined
+	>();
 
 	const generateBBCode = (): string => {
 		if (bbCodeForm !== null && bbCodeForm !== undefined) {
@@ -95,22 +89,30 @@ const BBCodeForm = () => {
 		}
 	};
 
+	const getOriginalBBCodeForm = useCallback(() => {
+		return getFormWithDefaultVals(
+			stateForms.find((form) => form.uid === params.uid)
+		);
+	}, [params.uid, stateForms]);
+
 	const clearProg = () => {
-		formProgressString && localStorage.removeItem(formProgressString);
-		setBBCodeForm(originalBBCodeForm);
+		if (formProgressString) {
+			localStorage.removeItem(formProgressString);
+		}
+		setBBCodeForm(getOriginalBBCodeForm());
 	};
 
 	useEffect(() => {
 		// Initial loading of the BBCodeForm
-		const formProgress = formProgressString
-			? localStorage.getItem(formProgressString)
-			: null;
-		if (formProgress) {
-			setBBCodeForm(JSON.parse(formProgress));
+		if (formProgressString) {
+			const formProgress = localStorage.getItem(formProgressString);
+			if (formProgress) {
+				setBBCodeForm(JSON.parse(formProgress));
+			}
 		} else {
-			setBBCodeForm(originalBBCodeForm);
+			setBBCodeForm(getOriginalBBCodeForm());
 		}
-	}, [params.uid, stateForms, formProgressString, originalBBCodeForm]);
+	}, [params.uid, formProgressString, stateForms, getOriginalBBCodeForm]);
 
 	useEffect(() => {
 		// Saving current form progress in local storage
@@ -120,10 +122,10 @@ const BBCodeForm = () => {
 	}, [bbCodeForm, formProgressString]);
 
 	useEffect(() => {
-		setOriginalBBCodeForm(() =>
-			getFormWithDefaultVals(stateForms.find((form) => form.uid === params.uid))
-		);
-	}, [params.uid, stateForms]);
+		if (bbCodeForm) {
+			setFormProgressString(getFormProgressString(bbCodeForm));
+		}
+	}, [params.uid, stateForms, bbCodeForm]);
 
 	return bbCodeForm ? (
 		<Row>

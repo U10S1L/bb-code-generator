@@ -50,11 +50,7 @@ const Firebase = () => {
 
 // All API methods shall return a Promise. Errors return a translatable code.
 
-export const createUser = (
-	username: string,
-	email: string,
-	password: string
-): Promise<any> => {
+export const createUser = (email: string, password: string): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		Firebase()
 			.auth.createUserWithEmailAndPassword(email, password)
@@ -154,6 +150,7 @@ const updatePassword = (password: string) => {
 };
 
 export const saveForm = (
+	currentFormUid: string | null,
 	bbCodeForm: BBCodeFormType,
 	userUid?: string
 ): Promise<any> => {
@@ -162,16 +159,45 @@ export const saveForm = (
 			reject("auth/access-denied");
 		} else {
 			const serializedBBCodeForm = serializeBBCodeForm(bbCodeForm);
-			Firebase()
+			const collRef = Firebase()
 				.firestore.collection("users")
 				.doc(userUid)
-				.collection("forms")
-				.doc(bbCodeForm.uid)
-				.set(serializedBBCodeForm, { merge: true })
-				.then(() => resolve())
-				.catch((error) => {
-					reject(error.code);
-				});
+				.collection("forms");
+
+			if (currentFormUid === null) {
+				/* New User Form */
+				collRef
+					.doc(bbCodeForm.uid)
+					.set(serializedBBCodeForm, { merge: true })
+					.then(() => resolve())
+					.catch((error) => {
+						reject(error.code);
+					});
+			} else {
+				/* Updates to existing User Form */
+				if (bbCodeForm.uid === currentFormUid) {
+					// No changes to form name/UID.
+					collRef
+						.doc(currentFormUid)
+						.set(serializedBBCodeForm, { merge: true })
+						.then(() => resolve())
+						.catch((error) => reject(error.code));
+				} else {
+					// Changes to form name/UID. Requires deletion & recreation of Document.
+					collRef
+						.doc(currentFormUid)
+						.delete()
+						.then(() => {
+							collRef
+								.doc(bbCodeForm.uid)
+								.set(serializedBBCodeForm)
+								.then(() => resolve())
+								.catch((error) => {
+									reject(error.code);
+								});
+						});
+				}
+			}
 		}
 	});
 };

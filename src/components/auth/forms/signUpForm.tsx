@@ -11,14 +11,12 @@ type SignUpFormProps = {
 };
 const SignUpForm = ({ onSignUp }: SignUpFormProps) => {
 	const defaultSignUp = {
-		username: "",
 		email: "",
 		password1: "",
 		password2: "",
 		errorMessage: ""
 	};
 	const [signUp, setSignUp] = useState<{
-		username: string;
 		email: string;
 		password1: string;
 		password2: string;
@@ -31,7 +29,7 @@ const SignUpForm = ({ onSignUp }: SignUpFormProps) => {
 	const handleSignUp = () => {
 		Firebase()
 			// Create user in Firebase Auth
-			.createUser(signUp.username, signUp.email, signUp.password1)
+			.createUser(signUp.email, signUp.password1)
 			.then(() => {
 				setSignUp(defaultSignUp);
 				history.replace("/forms/list");
@@ -44,8 +42,7 @@ const SignUpForm = ({ onSignUp }: SignUpFormProps) => {
 
 	useEffect(() => {
 		setIsSignUpValid(
-			signUp.username !== "" &&
-				signUp.email !== "" &&
+			signUp.email !== "" &&
 				signUp.password1 !== "" &&
 				signUp.password1 === signUp.password2
 		);

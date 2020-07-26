@@ -161,7 +161,6 @@ const BBCodeVisualizer = ({ bbCode }: BBCodeVisualierProps) => {
 						bbCodeElem.bbOpen
 					);
 					for (const openBBTag of openBBTags) {
-						console.log(openBBTag);
 						newlyConvertedBBCode = newlyConvertedBBCode.replace(
 							openBBTag[0],
 							`<div style="margin-left: ${openBBTag[3]}px; margin-right: ${openBBTag[4]}px;  border-width: ${openBBTag[5]}px; border-color: ${openBBTag[6]}; background-color: ${openBBTag[7]}; ">`
