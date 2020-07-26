@@ -203,7 +203,7 @@ const BBCodeForm: React.FC<FormProps> = ({ match }) => {
 					</div>
 
 					<Button
-						variant="warning"
+						variant="secondary"
 						onClick={() =>
 							setPageModal({
 								visible: true,

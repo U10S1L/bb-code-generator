@@ -142,7 +142,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
 				if (doesFormNameExist()) {
-					ErrorToast(`Form name must not already exist.`);
+					ErrorToast(`You already have a form named "${bbCodeForm.name}".`);
 				} else {
 					setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
 				}

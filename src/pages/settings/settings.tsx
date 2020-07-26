@@ -6,8 +6,7 @@ import React, { useContext, useState } from "react";
 
 import { AppContext } from "context/context";
 import StandardModal from "components/modals/standardModal";
-import { Types } from "types/contextTypes";
-import Uploader from "components/uploader/uploader";
+import UpdatePasswordForm from "components/auth/forms/updatePasswordForm";
 
 const Settings = () => {
 	const { state, dispatch } = useContext(AppContext);

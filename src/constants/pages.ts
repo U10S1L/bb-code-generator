@@ -27,8 +27,10 @@ const pages: Page[] = [
 		id: "settings",
 		name: "Settings",
 		component: Settings,
-		path: "/settings"
+		path: "/settings",
+		protected: true
 	},
+
 	{
 		id: "home",
 		name: "Home",

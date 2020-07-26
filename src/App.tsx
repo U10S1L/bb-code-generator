@@ -26,19 +26,25 @@ import {
 	faSearch,
 	faTextHeight,
 	faTextWidth,
-	faTimes
+	faTimes,
+	faUser
 } from "@fortawesome/free-solid-svg-icons";
 
 import { AppProvider } from "context/context";
 import { Container } from "react-bootstrap";
 import NavigationBar from "./components/navbar/navbar";
-// import "./bootstrap-flatly.css";
 import React from "react";
 import SwitchRoutes from "./SwitchRoutes";
-// FontAwesome
 import { library } from "@fortawesome/fontawesome-svg-core";
-// Site Pages
 import pages from "./constants/pages";
+
+// import "./bootstrap-flatly.css";
+
+
+// FontAwesome
+
+// Site Pages
+
 
 // FontAwesome Library Setup
 library.add(
@@ -65,7 +71,10 @@ library.add(
 	faCheckSquare,
 	faLink,
 	faCircle,
-	faExclamationCircle
+	faExclamationCircle,
+	faLock,
+	faLockOpen,
+	faUser
 );
 
 const App = () => {

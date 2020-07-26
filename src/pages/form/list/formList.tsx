@@ -199,12 +199,10 @@ const FormList = () => {
 							onClick={() => setIsChangingOrder(!isChangingOrder)}>
 							{isChangingOrder ? "Save Order" : "Change Order"}
 						</Button>
-					)}
-					<Button
-						variant="secondary"
-						onClick={() => history.push("/forms/new")}>
-						Add Form
-					</Button>
+					</div>
+					<LinkContainer to={"/forms/new"}>
+						<Button variant="info">New Form</Button>
+					</LinkContainer>
 				</div>
 			</Col>
 			<Col xs={12} style={{ marginTop: "1rem" }}>
