@@ -5,7 +5,10 @@ import Firebase from "components/firebase/firebase";
 import { errorMessage } from "constants/errors";
 import { useHistory } from "react-router-dom";
 
-const SignUpForm = () => {
+type SignUpFormProps = {
+	onSignUp: () => void;
+};
+const SignUpForm = ({ onSignUp }: SignUpFormProps) => {
 	const defaultSignUp = {
 		username: "",
 		email: "",
@@ -28,13 +31,13 @@ const SignUpForm = () => {
 		Firebase()
 			// Create user in Firebase Auth
 			.createUser(signUp.username, signUp.email, signUp.password1)
-			.then((errorCode) => {
-				if (!errorCode) {
-					setSignUp(defaultSignUp);
-					history.replace("/forms/list");
-				} else {
-					setSignUp({ ...signUp, errorMessage: errorMessage(errorCode) });
-				}
+			.then(() => {
+				setSignUp(defaultSignUp);
+				history.replace("/forms/list");
+				onSignUp();
+			})
+			.catch((errorCode) => {
+				setSignUp({ ...signUp, errorMessage: errorMessage(errorCode) });
 			});
 	};
 
@@ -81,13 +84,15 @@ const SignUpForm = () => {
 					type="password"></Form.Control>
 			</Form.Group>
 			<div style={{ color: "red" }}>{signUp.errorMessage}</div>
-			<Button
-				disabled={!isSignUpValid}
-				variant="info"
-				onClick={() => handleSignUp()}>
-				Sign Up
-			</Button>
-			Forgot Password?
+			<div style={{ display: "flex", justifyContent: "flex-end" }}>
+				<Button
+					style={{ marginLeft: "auto" }}
+					disabled={!isSignUpValid}
+					variant="info"
+					onClick={() => handleSignUp()}>
+					Sign Up
+				</Button>
+			</div>
 		</Form>
 	);
 };

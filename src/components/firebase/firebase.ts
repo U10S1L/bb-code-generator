@@ -65,7 +65,8 @@ export const createUser = (
 						username,
 						email
 					})
-					.then(() => resolve());
+					.then(() => resolve())
+					.catch((error) => reject(error.code));
 			})
 			.catch((error) => {
 				reject(error.code);

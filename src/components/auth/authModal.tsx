@@ -65,7 +65,9 @@ const AuthModal = ({ visible, onClose, user }: AuthModalProps) => {
 						}}
 					/>
 				)}
-				{modalState === Form.SignUp && <SignUpForm />}
+				{modalState === Form.SignUp && (
+					<SignUpForm onSignUp={() => onClose()} />
+				)}
 				{modalState === Form.ForgotPassword && <ForgotPasswordForm />}
 				{modalState === Form.SignOut && (
 					<SignOutButton onSignOut={() => onClose()} />
