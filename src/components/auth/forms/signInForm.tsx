@@ -57,35 +57,33 @@ const SignInForm = ({
 					value={signIn.password}
 					onChange={(e) => setSignIn({ ...signIn, password: e.target.value })}
 				/>
+
+				<Button
+					size="sm"
+					variant="link"
+					style={{ paddingLeft: 0 }}
+					onClick={() => onClickForgotPassword()}>
+					Forgot Password?
+				</Button>
 			</Form.Group>
 			<div style={{ color: "red" }}>{signIn.errorMessage}</div>
 			<div
 				style={{
 					display: "flex",
-					flexDirection: "column",
-					alignItems: "flex-end",
-					textAlign: "right"
+					justifyContent: "flex-end"
 				}}>
 				<Button
-					variant="link"
-					style={{ paddingRight: 0 }}
-					onClick={() => onClickForgotPassword()}>
-					Forgot Password?
+					variant="secondary"
+					style={{ marginRight: "1rem" }}
+					onClick={() => onClickSignUp()}>
+					Sign Up
 				</Button>
-				<div>
-					<Button
-						style={{ marginRight: "1rem" }}
-						variant="secondary"
-						onClick={() => onClickSignUp()}>
-						Sign Up
-					</Button>
-					<Button
-						disabled={!isSignInValid}
-						variant="info"
-						onClick={() => handleSignIn()}>
-						Sign In
-					</Button>
-				</div>
+				<Button
+					disabled={!isSignInValid}
+					variant="info"
+					onClick={() => handleSignIn()}>
+					Sign In
+				</Button>
 			</div>
 		</Form>
 	);
