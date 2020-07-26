@@ -50,11 +50,7 @@ const Firebase = () => {
 
 // All API methods shall return a Promise. Errors return a translatable code.
 
-export const createUser = (
-	username: string,
-	email: string,
-	password: string
-): Promise<any> => {
+export const createUser = (email: string, password: string): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		Firebase()
 			.auth.createUserWithEmailAndPassword(email, password)
