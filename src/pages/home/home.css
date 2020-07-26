@@ -1,0 +1,9 @@
+.comparison-image-text-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.comparison-image-wrapper {
+	display: flex;
+	justify-content: center;
+}
