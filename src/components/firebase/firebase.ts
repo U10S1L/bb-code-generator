@@ -60,7 +60,6 @@ export const createUser = (
 			.auth.createUserWithEmailAndPassword(email, password)
 			.then((authUser) => {
 				Firebase().firestore.collection("users").doc(authUser.user!.uid).set({
-					username,
 					email
 				});
 			})

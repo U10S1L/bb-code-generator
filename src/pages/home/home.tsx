@@ -43,7 +43,7 @@ const Home = () => {
 					<h2 style={{ textAlign: "center" }}>
 						Create forms that generate BBCode.
 						<br />
-						For <b>all</b> your paperwork.
+						For <b>all</b> of your paperwork.
 					</h2>
 				</Jumbotron>
 			</Row>
