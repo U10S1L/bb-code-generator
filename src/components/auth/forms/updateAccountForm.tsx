@@ -41,7 +41,6 @@ const AccountForm = ({ onSignOut, onUpdateAccount }: AccountFormProps) => {
 				onUpdateAccount();
 			})
 			.catch((errorCode) => {
-				console.log(errorCode);
 				setUpdateUser({
 					...updateUser,
 					errorMessage: errorMessage(errorCode)

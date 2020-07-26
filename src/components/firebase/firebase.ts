@@ -177,7 +177,6 @@ export const saveForm = (
 				/* Updates to existing User Form */
 				if (bbCodeForm.uid === currentFormUid) {
 					// No changes to form name/UID.
-					console.log("normal update to same document");
 					collRef
 						.doc(currentFormUid)
 						.set(serializedBBCodeForm, { merge: true })
@@ -185,7 +184,6 @@ export const saveForm = (
 						.catch((error) => reject(error.code));
 				} else {
 					// Changes to form name/UID. Requires deletion & recreation of Document.
-					console.log("deleting and recreating");
 					collRef
 						.doc(currentFormUid)
 						.delete()

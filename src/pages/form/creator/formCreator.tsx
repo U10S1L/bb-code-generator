@@ -168,9 +168,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 						history.replace(`/forms/list`);
 						localStorage.removeItem("newBBCodeForm");
 					})
-					.catch((error) => {
-						console.log(error);
-					});
+					.catch((error) => {});
 				break;
 		}
 	};
@@ -338,7 +336,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 										style={{ float: "right", marginLeft: "1.5rem" }}
 										variant="danger"
 										onClick={() => cancelEditBBCodeForm()}>
-										Cancel Edits
+										Discard Edits
 									</Button>
 								</Col>
 							</Row>
