@@ -58,7 +58,6 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 								)
 							);
 						})}
-
 						<Button
 							style={{ marginLeft: "auto" }}
 							variant={user ? "success" : "secondary"}

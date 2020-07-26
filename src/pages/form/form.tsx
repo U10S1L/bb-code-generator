@@ -154,7 +154,7 @@ const BBCodeForm = () => {
 								visible: true,
 								continueAction: clearProg,
 								message:
-									"This will erase any values in the form fields. Do you want to continue?"
+									"You are about to erase all the the values in the form fields."
 							})
 						}>
 						Clear

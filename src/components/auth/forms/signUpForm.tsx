@@ -2,6 +2,7 @@ import { Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 
 import Firebase from "components/firebase/firebase";
+import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
 import { errorMessage } from "constants/errors";
 import { useHistory } from "react-router-dom";
 
@@ -52,20 +53,19 @@ const SignUpForm = ({ onSignUp }: SignUpFormProps) => {
 	return (
 		<Form>
 			<Form.Group>
-				<Form.Label>Full Name</Form.Label>
-				<Form.Control
-					placeholder="Character Name"
-					value={signUp.username}
-					onChange={(e) => setSignUp({ ...signUp, username: e.target.value })}
-					type="text"></Form.Control>
-			</Form.Group>
-			<Form.Group>
-				<Form.Label>Email</Form.Label>
+				<Form.Label>
+					<div style={{ display: "flex", alignItems: "center" }}>
+						Email
+						<QuestionMarkTooltip
+							id="emailTolltip"
+							text="You must have access to this email address for password resets/account management."
+						/>
+					</div>
+				</Form.Label>
 				<Form.Control
 					value={signUp.email}
-					placeholder="Actual email address that you have access to"
 					onChange={(e) => setSignUp({ ...signUp, email: e.target.value })}
-					type="text"></Form.Control>
+					type="email"></Form.Control>
 			</Form.Group>
 			<Form.Group>
 				<Form.Label>Password</Form.Label>

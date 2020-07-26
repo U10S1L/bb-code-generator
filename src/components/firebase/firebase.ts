@@ -38,7 +38,7 @@ const Firebase = () => {
 		signIn,
 		signOut,
 		passwordReset,
-		passwordUpdate,
+		updateUser,
 		saveForm,
 		streamUserForms,
 		getUserForm,
@@ -48,7 +48,8 @@ const Firebase = () => {
 	};
 };
 
-/* User API */
+// All API methods shall return a Promise. Errors return a translatable code.
+
 export const createUser = (
 	username: string,
 	email: string,
@@ -58,23 +59,17 @@ export const createUser = (
 		Firebase()
 			.auth.createUserWithEmailAndPassword(email, password)
 			.then((authUser) => {
-				Firebase()
-					.firestore.collection("users")
-					.doc(authUser.user!.uid)
-					.set({
-						username,
-						email
-					})
-					.then(() => resolve())
-					.catch((error) => reject(error.code));
+				Firebase().firestore.collection("users").doc(authUser.user!.uid).set({
+					email
+				});
 			})
+			.then(() => resolve())
 			.catch((error) => {
 				reject(error.code);
 			});
 	});
 };
 
-/* Auth API */
 export const signIn = (
 	email?: string | null,
 	password?: string | null
@@ -92,6 +87,7 @@ export const signIn = (
 		}
 	});
 };
+
 export const signOut = (): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		Firebase()
@@ -110,20 +106,53 @@ export const passwordReset = (email: string): Promise<any> => {
 			});
 	});
 };
-export const passwordUpdate = (password: string): Promise<any> => {
+export const updateUser = (
+	password: string,
+	email?: string | null
+): Promise<any> => {
 	return new Promise((resolve, reject) => {
-		if (Firebase().auth.currentUser == null) {
+		if (email) {
+			updateEmail(email).then(() => {
+				if (password) {
+					updatePassword(password)
+						.then(() => resolve())
+						.catch((error) => reject(error.code));
+				}
+			});
+		} else if (password) {
+			updatePassword(password)
+				.then(() => resolve())
+				.catch((error) => reject(error.code));
+		}
+	});
+};
+
+const updateEmail = (email: string) => {
+	return new Promise((resolve, reject) => {
+		if (!Firebase().auth.currentUser) {
+			reject("auth/access-denied");
+		} else {
+			Firebase()
+				.auth.currentUser!.updateEmail(email)
+				.then(() => resolve())
+				.catch((error) => reject(error));
+		}
+	});
+};
+
+const updatePassword = (password: string) => {
+	return new Promise((resolve, reject) => {
+		if (!Firebase().auth.currentUser) {
 			reject("auth/access-denied");
 		} else {
 			Firebase()
 				.auth.currentUser!.updatePassword(password)
 				.then(() => resolve())
-				.catch((error) => {
-					reject(error.code);
-				});
+				.catch((error) => reject(error));
 		}
 	});
 };
+
 export const saveForm = (
 	bbCodeForm: BBCodeFormType,
 	userUid?: string

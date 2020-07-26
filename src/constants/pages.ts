@@ -1,7 +1,6 @@
 import FormCreator from "pages/form/creator/formCreator";
 import FormList from "pages/form/list/formList";
 import Home from "pages/home/home";
-import Settings from "pages/settings/settings";
 
 export type Page = {
 	id: string;
@@ -24,13 +23,6 @@ const pages: Page[] = [
 		name: "New Form",
 		component: FormCreator,
 		path: "/forms/new",
-		protected: true
-	},
-	{
-		id: "settings",
-		name: "Settings",
-		component: Settings,
-		path: "/settings",
 		protected: true
 	},
 	{
