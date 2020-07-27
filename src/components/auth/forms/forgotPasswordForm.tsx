@@ -2,7 +2,7 @@ import { Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 
 import Firebase from "components/firebase/firebase";
-import { SuccessToast } from "components/toast/toast";
+import { InfoToast } from "components/toast/toast";
 import { errorMessage } from "constants/errors";
 
 const ForgotPasswordForm = () => {
@@ -15,7 +15,7 @@ const ForgotPasswordForm = () => {
 			.passwordReset(forgotPassword.email)
 			.then(() => {
 				setForgotPassword(defaultForgotPassword);
-				SuccessToast("Password reset link sent to email address.");
+				InfoToast("Password reset link sent to email address.");
 			})
 			.catch((errorCode) => {
 				setForgotPassword({

@@ -18,13 +18,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 	useEffect(() => {
 		if (authUser) {
-			Firebase().streamUserForms((snapshot) => {
-				const bbCodeForms: BBCodeFormType[] = [];
-				snapshot.docs.forEach((doc) => {
-					bbCodeForms.push(Firebase().deserializeBBCodeForm(doc.data()));
+			return Firebase()
+				.firestore.collection("users")
+				.doc(authUser.uid)
+				.collection("forms")
+				.orderBy("order")
+				.onSnapshot((snapshot) => {
+					const bbCodeForms: BBCodeFormType[] = [];
+					snapshot.docs.forEach((doc) => {
+						bbCodeForms.push(Firebase().deserializeBBCodeForm(doc.data()));
+					});
+					setStateForms(bbCodeForms);
 				});
-				setStateForms(bbCodeForms);
-			}, authUser.uid);
 		} else {
 			setStateForms([]);
 		}

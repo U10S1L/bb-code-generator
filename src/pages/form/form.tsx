@@ -14,8 +14,8 @@ import { getFormProgressString, getFormWithDefaultVals } from "formatters";
 import { AuthContext } from "context/authContext";
 import CopyToClipboard from "react-copy-to-clipboard";
 import FormRenderer from "components/form/renderer/formRenderer";
+import { InfoToast } from "components/toast/toast";
 import StandardModal from "components/modals/standardModal";
-import { SuccessToast } from "components/toast/toast";
 import { useParams } from "react-router-dom";
 
 const BBCodeForm = () => {
@@ -177,7 +177,7 @@ const BBCodeForm = () => {
 			<Col xs={12} style={{ display: "flex", alignItems: "center" }}>
 				<CopyToClipboard
 					text={generateBBCode()}
-					onCopy={() => SuccessToast("BBCode Copied To Clipboard")}>
+					onCopy={() => InfoToast("BBCode Copied To Clipboard")}>
 					<Button variant="info" style={{ marginLeft: "auto" }}>
 						Generate BBCode
 					</Button>
