@@ -3,9 +3,9 @@ import React, { useRef } from "react";
 
 import CopyToClipboard from "react-copy-to-clipboard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { InfoToast } from "components/toast/toast";
 import { InputComponentProps } from "types/formTypes";
 import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
-import { SuccessToast } from "components/toast/toast";
 import TextAreaAutosize from "react-textarea-autosize";
 
 type FormBBCodeMatchProps = {
@@ -72,7 +72,7 @@ const FormBBCodeMatch = ({
 											<CopyToClipboard
 												text={inputComponent.uniqueId}
 												onCopy={() =>
-													SuccessToast(
+													InfoToast(
 														`Copied 🆔 for field '${inputComponent.label}' to clipboard. Paste it in the BBCode.`
 													)
 												}>

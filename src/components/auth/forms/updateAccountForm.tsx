@@ -3,8 +3,8 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "context/authContext";
 import Firebase from "components/firebase/firebase";
+import { InfoToast } from "components/toast/toast";
 import SignOutButton from "./signOutButton";
-import { SuccessToast } from "components/toast/toast";
 import { errorMessage } from "constants/errors";
 
 type AccountFormProps = {
@@ -36,7 +36,7 @@ const AccountForm = ({ onSignOut, onUpdateAccount }: AccountFormProps) => {
 			)
 			.then(() => {
 				setUpdateUser(defaultUpdateUser);
-				SuccessToast("Account updated successfully. Signing you out...");
+				InfoToast("Account updated successfully. Redirecting...");
 				setTimeout(() => Firebase().signOut(), 2500);
 				onUpdateAccount();
 			})
