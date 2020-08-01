@@ -3,12 +3,7 @@ import "./form.css";
 import { BBCodeFormType, InputComponentProps } from "types/formTypes";
 import { Button, Col, Row } from "react-bootstrap";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import {
-	formatDate,
-	formatDateTime,
-	formatDateTimeWithSeconds,
-	formatUrl
-} from "formatters";
+import { formatDateTimeWithSeconds, formatUrl } from "formatters";
 import { getFormProgressString, getFormWithDefaultVals } from "formatters";
 
 import { AuthContext } from "context/authContext";
@@ -42,12 +37,8 @@ const BBCodeForm = () => {
 			// Formatting for special Input Types
 			inputComponents.forEach((inputComponent) => {
 				inputComponent.inputs.forEach((input) => {
-					if (inputComponent.type === "dateTime") {
-						input.val = formatDateTime(new Date(input.val));
-					} else if (inputComponent.type === "checkbox") {
+					if (inputComponent.type === "checkbox") {
 						input.val = input.val === "true" ? "[cbc]" : "[cb]";
-					} else if (inputComponent.type === "date") {
-						input.val = formatDate(new Date(input.val));
 					} else if (inputComponent.type === "url") {
 						input.val = formatUrl(JSON.parse(input.val));
 					} else if (inputComponent.type === "listItem") {

@@ -10,7 +10,7 @@ export const DateTime = ({
 }: InputTypeProps) => {
 	return (
 		<Form.Control
-			type="datetime-local"
+			type="text"
 			value={val}
 			onChange={(e) => {
 				setVal && setVal(e.target.value);

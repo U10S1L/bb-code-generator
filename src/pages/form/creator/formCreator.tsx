@@ -68,65 +68,16 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
 				return `
-				<img src="https://i.imgur.com/9tkj0Yh.gif" class="w-100"/>
 				`;
 			case FormCreationStep.FIELD_CREATION:
 				return `
-				A BBCode form has <b>fields</b>. Each <b>field</b> contains two parts: a <b>label</b>, and an <b>value</b>.
-				<br>
-				<img src="https://i.imgur.com/PNgBpKY.png" class="img-fluid"/>
-				<br><br><br>
-				<b>1: Select the most appropriate Input Type for the field you're adding.</b> 
-				<br>
-				<small>
-				- <b>Text Line</b>: Names, ranks, badge numbers, locations, etc.
-				<br>
-				- <b>Text Box</b>: Narratives, statements, etc.
-				<br>
-				- <b>Date & Time</b>: Any field requring a date & time together. Will format as DD/MMM/YYYY HH:MM
-				<br>
-				- <b>Date</b>: Will format as DD/MMM/YYYY.
-				<br>
-				- <b>Time</b>: Just a time, man.
-				<br>
-				- <b>Dropdown</b>: Good for when you know the options for a field. Example: "Evidence type", which is always MELEE, NARCOTICS, WEAPONS, or OTHER.
-				<br>
-				- <b>Checkbox</b>: Will render a [cb] (if it's unchecked) or [cbc] (if it's checked) when generating the BBCode.
-				</small>
-				<br>
-				<br>
-				<b>2: Fill in the details for the new field.</b>
-				<br>
-				<small>
-				- <b>Label</b>: required, will tell you which field you're filling in.
-				<br>
-				- <b>Description</b>: optional. Appears under the field's label (good for reminders, etc).
-				<br>
-				- <b>Default Value</b>: optional. Auto populates the field's value.
-				<br>
-				- <b>Multi</b>: Allow you to add more than one value for this field. Each value generates on a new line. (Remember to put [*] in the default value (if you have one) if the Multi field is between [list][/list] tags!).
-				</small>
-				<br>
-				<br>
-				<b>Repeat steps 1 & 2 for all of the fields on the form.</b>
-				<br>
-				<img src="https://i.imgur.com/L4Ajbae.gif" class="w-100"/>
-				<br>
-				Hint: Look at the "Form Preview to catch a sneak peak of the finished product!" 
 				`;
 
 			case FormCreationStep.BBCODE_UPLOAD:
 				return `
-				<img src="https://i.imgur.com/eGzbtMX.gif" class="w-100"/>
 				`;
 			case FormCreationStep.BBCODE_MATCH:
 				return `
-				<b>1: Copy and paste the 🆔s for each field into the BB Code where you would ordinarily type the value.</b>
-				<br>
-				<small>- The 🆔 may look like jibberish, but don't worry - that's intentional.</small>
-				<br>
-				<br>
-				<img src="https://i.imgur.com/TYIQk0E.gif" class="w-100"/>
 				`;
 			default:
 				return ``;

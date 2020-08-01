@@ -1,7 +1,6 @@
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { InputComponentProps, InputTypeProps } from "types/formTypes";
 
-import Clock from "react-live-clock";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputType from "components/inputComponents/inputType";
 import React from "react";
@@ -49,17 +48,6 @@ const InputComponent: React.FC<InputComponentProps> = ({
 			<Form.Label>
 				{orderNum ? `${orderNum}. ${label}` : `${label}`}
 				<div className="small text-muted">{description}</div>
-				{type === "date" ||
-					type === "time" ||
-					(type === "dateTime" && (
-						<div className="small text-muted">
-							Dates/times should be entered in GMT (
-							<span style={{ textTransform: "uppercase" }}>
-								<Clock timezone={"GMT"} format={"DD/MMM/YYYY HH:mm"} />{" "}
-							</span>
-							<span className="text-muted">)</span>
-						</div>
-					))}
 			</Form.Label>
 			{inputs.map((inputType, i) => {
 				const canAddInput = multi;
