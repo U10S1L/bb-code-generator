@@ -184,7 +184,7 @@ const FormList = () => {
 			.deleteUserForm(bbCodeForm.uid)
 			.then(() => {
 				setShowEditButtons(false);
-				InfoToast(`Form '${bbCodeForm.name}' deleted.`);
+				InfoToast(`'${bbCodeForm.name}' deleted.`);
 			});
 	};
 
@@ -237,26 +237,28 @@ const FormList = () => {
 				</div>
 			</Col>
 			<Col xs={12} style={{ marginTop: "1rem" }}>
-				<div
-					style={{
-						display: "flex",
-						alignItems: "center",
-						marginBottom: "1rem"
-					}}>
-					<Button
-						variant="link"
-						size="sm"
-						onClick={() => toggleEditFormList()}
-						style={{ marginRight: "1rem", padding: "0" }}>
-						<FontAwesomeIcon
-							color={!showEditButtons ? "grey" : "#46a989"}
-							icon={!showEditButtons ? "lock" : "lock-open"}
-						/>
-					</Button>
-					<div className="small text-muted">
-						{!showEditButtons ? "Unlock to edit." : "Relock to save."}
+				{forms.length > 0 && (
+					<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							marginBottom: "1rem"
+						}}>
+						<Button
+							variant="link"
+							size="sm"
+							onClick={() => toggleEditFormList()}
+							style={{ marginRight: "1rem", padding: "0" }}>
+							<FontAwesomeIcon
+								color={!showEditButtons ? "grey" : "#46a989"}
+								icon={!showEditButtons ? "lock" : "lock-open"}
+							/>
+						</Button>
+						<div className="small text-muted">
+							{!showEditButtons ? "Unlock to edit." : "Relock to save."}
+						</div>
 					</div>
-				</div>
+				)}
 				<SortableFormContainer
 					useDragHandle
 					onSortEnd={onDragEnd}
