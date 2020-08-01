@@ -35,20 +35,6 @@ const getMonthString = (monthNumber: number) => {
 	}
 };
 
-// Formats DateTime object to DD/MMM/YYYY 00:00
-export const formatDateTime = (dateTime: Date): string => {
-	if (!isNaN(dateTime.getDate())) {
-		return `${dateTime.getDate().toString()}/${getMonthString(
-			dateTime.getMonth()
-		)}/${dateTime.getFullYear()} ${dateTime
-			.getHours()
-			.toString()
-			.padStart(2, "0")}:${dateTime.getMinutes().toString().padStart(2, "0")}`;
-	} else {
-		return "";
-	}
-};
-
 export const formatDateTimeWithSeconds = (dateTime: Date): string => {
 	if (!isNaN(dateTime.getDate())) {
 		return `${dateTime.getDate().toString()}/${getMonthString(
@@ -64,18 +50,6 @@ export const formatDateTimeWithSeconds = (dateTime: Date): string => {
 		return "";
 	}
 };
-
-// Formats Date object to DD/MMM/YYYY
-export const formatDate = (date: Date): string => {
-	if (!isNaN(date.getUTCDate())) {
-		return ` ${date.getUTCDate().toString()}/${getMonthString(
-			date.getMonth()
-		)}/${date.getFullYear()} `;
-	} else {
-		return "";
-	}
-};
-
 // Format Url
 export const formatUrl = (url: { link: string; text: string }): string => {
 	return `[url=${url.link}]${url.text}[/url]`;

@@ -1,9 +1,8 @@
 import "firebase/auth";
 import "firebase/firestore";
 
-import app, { firestore } from "firebase/app";
-
 import { BBCodeFormType } from "types/formTypes";
+import app from "firebase/app";
 
 const config =
 	process.env.NODE_ENV === "production"
@@ -40,32 +39,28 @@ const Firebase = () => {
 		passwordReset,
 		updateUser,
 		saveForm,
-		streamUserForms,
-		getUserForm,
+		getShareableForm,
 		deleteUserForm,
 		deserializeBBCodeForm,
 		batchUpdateForms
 	};
 };
 
-// All API methods shall return a Promise. Errors return a translatable code.
+const ERR_ACCESS_DENIED = "auth/access-denied";
 
+// All API methods return a Promise. Errors return a translatable error code.
+
+/* User API */
 export const createUser = (email: string, password: string): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		Firebase()
 			.auth.createUserWithEmailAndPassword(email, password)
-			.then((authUser) => {
-				Firebase().firestore.collection("users").doc(authUser.user!.uid).set({
-					email
-				});
-			})
 			.then(() => resolve())
 			.catch((error) => {
 				reject(error.code);
 			});
 	});
 };
-
 export const signIn = (
 	email?: string | null,
 	password?: string | null
@@ -83,7 +78,6 @@ export const signIn = (
 		}
 	});
 };
-
 export const signOut = (): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		Firebase()
@@ -108,13 +102,17 @@ export const updateUser = (
 ): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		if (email) {
-			updateEmail(email).then(() => {
-				if (password) {
-					updatePassword(password)
-						.then(() => resolve())
-						.catch((error) => reject(error.code));
-				}
-			});
+			updateEmail(email)
+				.then(() => {
+					if (password) {
+						updatePassword(password)
+							.then(() => resolve())
+							.catch((error) => reject(error.code));
+					} else {
+						resolve();
+					}
+				})
+				.catch((error) => reject(error.code));
 		} else if (password) {
 			updatePassword(password)
 				.then(() => resolve())
@@ -122,11 +120,10 @@ export const updateUser = (
 		}
 	});
 };
-
 const updateEmail = (email: string) => {
 	return new Promise((resolve, reject) => {
 		if (!Firebase().auth.currentUser) {
-			reject("auth/access-denied");
+			reject(ERR_ACCESS_DENIED);
 		} else {
 			Firebase()
 				.auth.currentUser!.updateEmail(email)
@@ -135,11 +132,10 @@ const updateEmail = (email: string) => {
 		}
 	});
 };
-
 const updatePassword = (password: string) => {
 	return new Promise((resolve, reject) => {
 		if (!Firebase().auth.currentUser) {
-			reject("auth/access-denied");
+			reject(ERR_ACCESS_DENIED);
 		} else {
 			Firebase()
 				.auth.currentUser!.updatePassword(password)
@@ -149,6 +145,7 @@ const updatePassword = (password: string) => {
 	});
 };
 
+/* Form API */
 export const saveForm = (
 	currentFormUid: string | null,
 	bbCodeForm: BBCodeFormType,
@@ -156,7 +153,7 @@ export const saveForm = (
 ): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		if (!userUid) {
-			reject("auth/access-denied");
+			reject(ERR_ACCESS_DENIED);
 		} else {
 			const serializedBBCodeForm = serializeBBCodeForm(bbCodeForm);
 			const collRef = Firebase()
@@ -168,7 +165,7 @@ export const saveForm = (
 				/* New User Form */
 				collRef
 					.doc(bbCodeForm.uid)
-					.set(serializedBBCodeForm, { merge: true })
+					.set(serializedBBCodeForm)
 					.then(() => resolve())
 					.catch((error) => {
 						reject(error.code);
@@ -201,14 +198,13 @@ export const saveForm = (
 		}
 	});
 };
-
 export const batchUpdateForms = (
 	bbCodeForms: BBCodeFormType[],
 	userUid?: string
 ): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		if (!userUid) {
-			reject("auth/access-denied");
+			reject(ERR_ACCESS_DENIED);
 		} else {
 			const batch = Firebase().firestore.batch();
 			bbCodeForms.forEach((form) => {
@@ -229,23 +225,13 @@ export const batchUpdateForms = (
 		}
 	});
 };
-
-export const streamUserForms = (
-	observer: (snapshot: firestore.QuerySnapshot) => void,
-	userUid?: string
-) => {
-	Firebase()
-		.firestore.collection("users")
-		.doc(userUid)
-		.collection("forms")
-		.orderBy("order")
-		.onSnapshot((snapshot) => observer(snapshot));
-};
-
-export const getUserForm = (userUid: string, formUid: string): Promise<any> => {
+export const getShareableForm = (
+	userUid: string,
+	formUid: string
+): Promise<any> => {
 	return new Promise((resolve, reject) => {
 		if (!userUid || !formUid) {
-			reject("auth/access-denied");
+			reject(ERR_ACCESS_DENIED);
 		} else {
 			Firebase()
 				.firestore.collection("users")

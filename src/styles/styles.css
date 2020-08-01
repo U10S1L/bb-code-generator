@@ -8,7 +8,9 @@ html {
 	/* Fix for jumpy scrollbar */
 	margin-left: calc(100vw - 100%);
 }
-
+body.modal-open {
+	padding-right: 0 !important;
+}
 /* Chrome/Edge/Safari */
 *::-webkit-scrollbar {
 	width: 10px;

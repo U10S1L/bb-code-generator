@@ -16,10 +16,10 @@ export const Url = ({ readOnly, val, setVal }: InputTypeProps) => {
 				</InputGroup.Prepend>
 				<Form.Control
 					type="text"
-					value={valObj && valObj.link !== undefined ? valObj.link : ""}
+					value={valObj && valObj.text !== undefined ? valObj.text : ""}
 					onChange={(e) => {
 						setVal &&
-							setVal(JSON.stringify({ ...valObj, link: e.target.value }));
+							setVal(JSON.stringify({ ...valObj, text: e.target.value }));
 					}}
 					placeholder={"Text"}
 					readOnly={readOnly}
@@ -33,10 +33,10 @@ export const Url = ({ readOnly, val, setVal }: InputTypeProps) => {
 				</InputGroup.Prepend>
 				<Form.Control
 					type="text"
-					value={valObj && valObj.text !== undefined ? valObj.text : ""}
+					value={valObj && valObj.link !== undefined ? valObj.link : ""}
 					onChange={(e) => {
 						setVal &&
-							setVal(JSON.stringify({ ...valObj, text: e.target.value }));
+							setVal(JSON.stringify({ ...valObj, link: e.target.value }));
 					}}
 					placeholder={"Link"}
 					readOnly={readOnly}

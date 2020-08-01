@@ -15,9 +15,9 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import Firebase from "components/firebase/firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormCreator from "pages/form/creator/formCreator";
+import { InfoToast } from "components/toast/toast";
 import { LinkContainer } from "react-router-bootstrap";
 import StandardModal from "components/modals/standardModal";
-import { SuccessToast } from "components/toast/toast";
 import { getFormUid } from "formatters";
 
 const DragHandle = SortableHandle(() => (
@@ -64,9 +64,7 @@ const SortableFormElement = SortableElement(
 										? `localhost:3000/form/shareable/${authUser?.uid}/${form.uid}`
 										: `fuckbbcode.netlify.app/form/shareable/${authUser?.uid}/${form.uid}`
 								}
-								onCopy={() =>
-									SuccessToast(`Shareable link copied to clipboard`)
-								}>
+								onCopy={() => InfoToast(`Shareable link copied to clipboard`)}>
 								<Button variant="link" size="sm" onClick={() => null}>
 									<FontAwesomeIcon icon="link"></FontAwesomeIcon>
 								</Button>
@@ -74,7 +72,11 @@ const SortableFormElement = SortableElement(
 						</Card.Title>
 						{showEditButtons && (
 							<ButtonGroup>
-								<Button variant="warning" size="sm" onClick={() => editForm()}>
+								<Button
+									variant="warning"
+									size="sm"
+									onClick={() => editForm()}
+									style={{ marginRight: "1rem" }}>
 									Edit
 								</Button>
 								<Button variant="danger" size="sm" onClick={() => deleteForm()}>
@@ -182,7 +184,7 @@ const FormList = () => {
 			.deleteUserForm(bbCodeForm.uid)
 			.then(() => {
 				setShowEditButtons(false);
-				SuccessToast(`Form '${bbCodeForm.name}' deleted.`);
+				InfoToast(`'${bbCodeForm.name}' deleted.`);
 			});
 	};
 
@@ -230,20 +232,33 @@ const FormList = () => {
 						<h3>My Forms</h3>
 					</div>
 					<LinkContainer to={"/forms/new"}>
-						<Button variant="info">New Form</Button>
+						<Button variant="secondary">New Form</Button>
 					</LinkContainer>
 				</div>
 			</Col>
 			<Col xs={12} style={{ marginTop: "1rem" }}>
-				<div style={{ display: "flex" }}>
-					<Button
-						variant="link"
-						onClick={() => toggleEditFormList()}
-						style={{ marginBottom: "1rem", marginRight: "1rem", padding: 0 }}>
-						<FontAwesomeIcon icon={!showEditButtons ? "lock" : "lock-open"} />
-					</Button>
-					{showEditButtons && <div>Relock to save changes.</div>}
-				</div>
+				{forms.length > 0 && (
+					<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							marginBottom: "1rem"
+						}}>
+						<Button
+							variant="link"
+							size="sm"
+							onClick={() => toggleEditFormList()}
+							style={{ marginRight: "1rem", padding: "0" }}>
+							<FontAwesomeIcon
+								color={!showEditButtons ? "grey" : "#46a989"}
+								icon={!showEditButtons ? "lock" : "lock-open"}
+							/>
+						</Button>
+						<div className="small text-muted">
+							{!showEditButtons ? "Unlock to edit." : "Relock to save."}
+						</div>
+					</div>
+				)}
 				<SortableFormContainer
 					useDragHandle
 					onSortEnd={onDragEnd}

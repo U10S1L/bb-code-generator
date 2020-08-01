@@ -10,6 +10,10 @@ export const errorMessage = (errorCode: string) => {
 			return "Incorrect password.";
 		case "auth/user-not-found":
 			return "No account exists with that email address.";
+		case "permission-denied":
+			return "Permission denied.";
+		case "auth/access-denied":
+			return "Access denied.";
 		default:
 			return "Internal server error.";
 	}
