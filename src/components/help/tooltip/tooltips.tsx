@@ -1,17 +1,11 @@
 import { Button, Card, OverlayTrigger, Tooltip } from "react-bootstrap";
 
-import BBCodeVisualizer from "components/bbCode/visualizer/bbCodeVisualizer";
 import React from "react";
 
 type ShapeTooltipProps = {
 	text: string;
 	id: string;
 	styles?: React.CSSProperties;
-};
-type BBCodeVisualizerTooltipProps = {
-	id: string;
-	styles?: React.CSSProperties;
-	bbCode: string;
 };
 export const QuestionMarkTooltip = ({
 	text,
@@ -46,48 +40,6 @@ export const QuestionMarkTooltip = ({
 				</Tooltip>
 			}>
 			<span style={tooltipStyles}>?</span>
-		</OverlayTrigger>
-	);
-};
-
-export const BBCodeVisualizerButton = ({
-	id,
-	styles,
-	bbCode
-}: BBCodeVisualizerTooltipProps) => {
-	const tooltipStyles = {
-		display: "inline",
-		...styles
-	};
-
-	return (
-		<OverlayTrigger
-			placement="bottom"
-			rootClose
-			trigger="click"
-			overlay={
-				<Card
-					bg="dark"
-					id={`tooltip-${id}`}
-					style={{
-						overflowY: "auto",
-						width: "40%",
-						height: "50%",
-						zIndex: 9999
-					}}>
-					<Card.Body>
-						<div style={{ color: "white" }}>Test</div>
-
-						<BBCodeVisualizer bbCode={bbCode} />
-					</Card.Body>
-				</Card>
-			}>
-			<Button variant="secondary" style={tooltipStyles}>
-				BBCode Visualizer
-				{/* <div>
-					<FontAwesomeIcon icon="caret-square-down" />
-				</div> */}
-			</Button>
 		</OverlayTrigger>
 	);
 };
