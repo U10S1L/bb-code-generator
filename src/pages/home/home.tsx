@@ -51,7 +51,7 @@ const Home = () => {
 				<Col></Col>
 				<Col xs={7} className="comparison-image-wrapper">
 					<img
-						src="https://i.imgur.com/oJ3OXF4.png"
+						src="https://i.imgur.com/uhmh7r0.png"
 						alt="after-nice-bbcodeform"
 						className="img-fluid"
 					/>
