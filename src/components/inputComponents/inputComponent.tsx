@@ -68,13 +68,14 @@ const InputComponent: React.FC<InputComponentProps> = ({
 						/>
 						<InputGroup.Append hidden={!multi}>
 							<Button
-								variant="warning"
+								variant="outline-danger"
+								style={{ margin: "0 .2rem" }}
 								onClick={() => removeInput(inputType)}
 								disabled={!canRemoveInput}>
 								<FontAwesomeIcon icon="minus" />
 							</Button>
 							<Button
-								variant="secondary"
+								variant="outline-success"
 								onClick={() => addNewInput(inputType, i)}
 								disabled={!canAddInput}>
 								<FontAwesomeIcon icon="plus" />

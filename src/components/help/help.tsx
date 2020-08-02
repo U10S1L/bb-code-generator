@@ -1,7 +1,6 @@
 import { Button, Card, OverlayTrigger } from "react-bootstrap";
 
 import React from "react";
-import { title } from "process";
 
 type Props = {
 	title: string;
