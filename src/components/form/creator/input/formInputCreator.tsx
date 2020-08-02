@@ -1,10 +1,6 @@
 import "./formInputCreator.css";
 
 import {
-	BBCodeVisualizerButton,
-	QuestionMarkTooltip
-} from "components/help/tooltip/tooltips";
-import {
 	Button,
 	Col,
 	Form,
@@ -32,6 +28,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormPreviewer from "components/form/previewer/formPreviewer";
 import InputComponent from "components/inputComponents/inputComponent";
 import InputType from "components/inputComponents/inputType";
+import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
@@ -226,13 +223,6 @@ const FormInputCreator = ({
 
 	return (
 		<Row>
-			<Col xs={12} style={{ display: "flex", justifyContent: "center" }}>
-				<BBCodeVisualizerButton
-					id="visualizedBBCode>"
-					styles={{ zIndex: 9999 }}
-					bbCode={newBBCodeForm.rawBBCode}
-				/>
-			</Col>
 			<Col xs={12} md={2} className="input-selector-container">
 				<h4 className="header">Field Types</h4>
 				<div className="input-selector">
