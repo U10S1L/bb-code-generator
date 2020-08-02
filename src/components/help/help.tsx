@@ -1,5 +1,6 @@
 import { Button, Card, OverlayTrigger } from "react-bootstrap";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 type Props = {
@@ -37,7 +38,7 @@ const Help = (props: Props) => {
 				</Card>
 			}>
 			<Button
-				variant="success"
+				variant="secondary"
 				id="help-button"
 				style={{
 					height: "3rem",
@@ -47,7 +48,8 @@ const Help = (props: Props) => {
 					zIndex: 9999,
 					fontWeight: "bold"
 				}}>
-				<span dangerouslySetInnerHTML={htmlTitle()} />
+				<span dangerouslySetInnerHTML={htmlTitle()} />{" "}
+				<FontAwesomeIcon icon="caret-right" />
 			</Button>
 		</OverlayTrigger>
 	);
