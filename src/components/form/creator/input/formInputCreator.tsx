@@ -222,13 +222,6 @@ const FormInputCreator = ({
 
 	return (
 		<Row>
-			<Col xs={12} style={{ display: "flex", justifyContent: "center" }}>
-				<BBCodeVisualizerButton
-					id="visualizedBBCode>"
-					styles={{ zIndex: 9999 }}
-					bbCode={newBBCodeForm.rawBBCode}
-				/>
-			</Col>
 			<Col xs={12} md={2} className="input-selector-container">
 				<h4 className="header">Field Types</h4>
 				<div className="input-selector">
