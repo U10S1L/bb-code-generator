@@ -68,7 +68,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 						/>
 						<InputGroup.Append hidden={!multi}>
 							<Button
-								variant="secondary"
+								variant="warning"
 								onClick={() => removeInput(inputType)}
 								disabled={!canRemoveInput}>
 								<FontAwesomeIcon icon="minus" />

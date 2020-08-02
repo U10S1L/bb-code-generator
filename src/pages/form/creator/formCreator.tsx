@@ -55,9 +55,13 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	const getHelpTitle = () => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
-				return `<ins>Form Setup</ins>`;
+				return `Setup Demo`;
+			case FormCreationStep.BBCODE_UPLOAD:
+				return `Raw BBCode Demo`;
 			case FormCreationStep.FIELD_CREATION:
-				return `<ins>Field Creation</ins>`;
+				return `Field Creation Demo`;
+			case FormCreationStep.BBCODE_MATCH:
+				return `BBCode Match Demo`;
 			default:
 				return ``;
 		}
@@ -67,17 +71,17 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	const getHelpText = () => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
-				return `
+				return `<img class="img-fluid" src="https://i.imgur.com/cEtsx5O.gif"/>
 				`;
-			case FormCreationStep.FIELD_CREATION:
-				return `
+			case FormCreationStep.BBCODE_UPLOAD:
+				return `<img class="img-fluid" src="https://i.imgur.com/sdxzJLb.gif"/>
 				`;
 
-			case FormCreationStep.BBCODE_UPLOAD:
-				return `
+			case FormCreationStep.FIELD_CREATION:
+				return `<img class="img-fluid" src="https://i.imgur.com/yHX1Lv0.gif"/>
 				`;
 			case FormCreationStep.BBCODE_MATCH:
-				return `
+				return `<img class="img-fluid" src="https://i.imgur.com/KvDUNTl.gif"/>
 				`;
 			default:
 				return ``;
@@ -327,7 +331,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 					setMatchedBBCode={updateMatchedBBCode}
 				/>
 			)}
-			<Row style={{ marginTop: "2rem" }}>
+			<Row style={{ marginTop: "2rem", paddingBottom: "1rem" }}>
 				<Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
 					{formCreationStep !== FormCreationStep.FORM_SETUP && (
 						<Button
