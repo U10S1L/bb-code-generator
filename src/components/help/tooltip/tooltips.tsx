@@ -1,4 +1,4 @@
-import { Button, Card, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import React from "react";
 
@@ -23,6 +23,7 @@ export const QuestionMarkTooltip = ({
 		marginLeft: "1rem",
 		display: "flex",
 		justifyContent: "center",
+		cursor: "pointer",
 		...styles
 	};
 
@@ -31,7 +32,7 @@ export const QuestionMarkTooltip = ({
 	}
 	return (
 		<OverlayTrigger
-			placement={"auto"}
+			placement={"top"}
 			overlay={
 				<Tooltip id={`tooltip-${id}`}>
 					<div

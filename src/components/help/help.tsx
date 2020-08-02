@@ -25,8 +25,8 @@ const Help = (props: Props) => {
 					bg="dark"
 					text="white"
 					style={{
-						width: "45%",
-						height: "50%",
+						width: "75%",
+						height: "75%",
 						overflowY: "auto",
 						border: "5px solid gray",
 						padding: "1rem",
@@ -40,7 +40,6 @@ const Help = (props: Props) => {
 				variant="success"
 				id="help-button"
 				style={{
-					width: "4rem",
 					height: "3rem",
 					position: "fixed",
 					top: "50%",
@@ -48,7 +47,7 @@ const Help = (props: Props) => {
 					zIndex: 9999,
 					fontWeight: "bold"
 				}}>
-				Help
+				<span dangerouslySetInnerHTML={htmlTitle()} />
 			</Button>
 		</OverlayTrigger>
 	);

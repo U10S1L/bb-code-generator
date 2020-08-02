@@ -120,7 +120,7 @@ const FormBBCodeMatch = ({
 							BBCode
 							<QuestionMarkTooltip
 								id="bbCodeMatchIDs"
-								text={`Paste each <span role="img" aria-label="id"> 🆔 </span> into the BBCode below where you would normally type the value.`}
+								text={`Paste each <span role="img" aria-label="id"> 🆔 </span> into the BBCode where you would normally type the value.`}
 							/>
 						</h5>
 

@@ -135,7 +135,7 @@ const FormPreviewer = ({
 		setBBCodeFormPreview(bbCodeFormWithDefaults);
 	}, [bbCodeForm]);
 	return (
-		<Form>
+		<Form style={{ backgroundColor: "lightgrey", padding: "1rem" }}>
 			<h4>{bbCodeFormPreview.name}</h4>
 			<SortableSelectedInputComponents
 				inputComponents={bbCodeFormPreview.inputComponents}

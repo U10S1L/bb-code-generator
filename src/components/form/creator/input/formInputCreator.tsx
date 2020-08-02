@@ -55,7 +55,18 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		inputs: [{ type: "longText", val: "" }],
 		onUpdateInputs: undefined
 	},
-
+	{
+		uniqueId: "",
+		label: "",
+		description: "",
+		multi: true,
+		defaultVal: "",
+		type: "listItem",
+		typeName: "List Items [*]",
+		typeIcon: faCircle,
+		inputs: [{ type: "listItem", val: "" }],
+		onUpdateInputs: undefined
+	},
 	{
 		uniqueId: "",
 		label: "",
@@ -132,18 +143,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		inputs: [{ type: "url", val: JSON.stringify({ text: "", link: "" }) }],
 		onUpdateInputs: undefined,
 		selectOptions: [""]
-	},
-	{
-		uniqueId: "",
-		label: "",
-		description: "",
-		multi: true,
-		defaultVal: "",
-		type: "listItem",
-		typeName: "List Items [*]",
-		typeIcon: faCircle,
-		inputs: [{ type: "listItem", val: "" }],
-		onUpdateInputs: undefined
 	}
 ];
 
