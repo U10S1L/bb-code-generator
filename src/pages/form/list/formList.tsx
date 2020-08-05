@@ -62,7 +62,7 @@ const SortableFormElement = SortableElement(
 								text={
 									process.env.NODE_ENV === "development"
 										? `localhost:3000/form/shareable/${authUser?.uid}/${form.uid}`
-										: `bbcode.rip/form/shareable/${authUser?.uid}/${form.uid}`
+										: `https://bbcode.rip/form/shareable/${authUser?.uid}/${form.uid}`
 								}
 								onCopy={() => InfoToast(`Shareable link copied to clipboard`)}>
 								<Button variant="link" size="sm" onClick={() => null}>
