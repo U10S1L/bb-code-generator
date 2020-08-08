@@ -165,7 +165,9 @@ const BBCodeForm = () => {
 					}
 				/>
 			</Col>
-			<Col xs={12} style={{ display: "flex", alignItems: "center" }}>
+			<Col
+				xs={12}
+				style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
 				<CopyToClipboard
 					text={generateBBCode()}
 					onCopy={() => InfoToast("BBCode Copied To Clipboard")}>
