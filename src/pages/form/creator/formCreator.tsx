@@ -55,19 +55,18 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 	const getHelpTitle = () => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
-				return `Setup Demo`;
+				return `Demo: Setup`;
 			case FormCreationStep.BBCODE_UPLOAD:
-				return `Raw BBCode Demo`;
+				return `Demo: Raw BBCode`;
 			case FormCreationStep.FIELD_CREATION:
-				return `Field Creation Demo`;
+				return `Demo: Field Creation`;
 			case FormCreationStep.BBCODE_MATCH:
-				return `BBCode Match Demo`;
+				return `Demo: BBCode Match`;
 			default:
 				return ``;
 		}
 	};
 
-	// TODO: fix this ass 'help' UX
 	const getHelpText = () => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
@@ -332,7 +331,10 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 				/>
 			)}
 			<Row style={{ marginTop: "2rem", paddingBottom: "1rem" }}>
-				<Col xs={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+				<Col xs={2} style={{ display: "flex", justifyContent: "flex-start" }}>
+					<Help title={getHelpTitle()} text={getHelpText()}></Help>
+				</Col>
+				<Col xs={10} style={{ display: "flex", justifyContent: "flex-end" }}>
 					{formCreationStep !== FormCreationStep.FORM_SETUP && (
 						<Button
 							variant="secondary"
@@ -365,7 +367,6 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 					)}
 				</Col>
 			</Row>
-			<Help title={getHelpTitle()} text={getHelpText()}></Help>
 		</Fragment>
 	);
 };

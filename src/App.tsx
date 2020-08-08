@@ -24,6 +24,7 @@ import {
 	faLock,
 	faLockOpen,
 	faMinus,
+	faPlayCircle,
 	faPlus,
 	faQuestionCircle,
 	faSearch,
@@ -76,7 +77,8 @@ library.add(
 	faExclamationCircle,
 	faLock,
 	faLockOpen,
-	faUser
+	faUser,
+	faPlayCircle
 );
 
 const App = () => {
