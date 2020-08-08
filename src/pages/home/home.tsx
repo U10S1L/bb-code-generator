@@ -64,10 +64,10 @@ const Home = () => {
 				</Col>
 				<Col>
 					<FeatureText type="bad" text="Outdated and clunky text editor" />
-					<FeatureText type="bad" text="Progress is prone to accidental loss" />
+					<FeatureText type="bad" text="Accidentally lose your work" />
 					<FeatureText
 						type="bad"
-						text="A tool for this form <i>may</i> exist"
+						text="A BBCode Generator tool <i>may</i> exist"
 					/>
 				</Col>
 			</Row>
@@ -124,7 +124,7 @@ const Home = () => {
 					<FeatureText type="good" text="Never lose your work again" />
 					<FeatureText
 						type="good"
-						text="A tool for this form <i>does</i> exist"
+						text="A BBCode Generator tool <i>does</i> exist"
 					/>
 				</Col>
 				{/* <Col xs={1}>
