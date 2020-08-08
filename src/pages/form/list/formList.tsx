@@ -57,8 +57,7 @@ const SortableFormElement = SortableElement(
 				<Card bg="light" color="white" style={{ borderRadius: 0 }}>
 					<Card.Body>
 						<Card.Title>
-							{form.name}
-
+							{form.name}{" "}
 							<CopyToClipboard
 								text={
 									process.env.NODE_ENV === "development"
@@ -70,7 +69,7 @@ const SortableFormElement = SortableElement(
 									variant="link"
 									size="sm"
 									onClick={() => null}
-									style={{ padding: 0 }}>
+									style={{ padding: 0, float: "right" }}>
 									<span className="text-muted">
 										[ SHARE <FontAwesomeIcon icon="link"></FontAwesomeIcon> ]
 									</span>
