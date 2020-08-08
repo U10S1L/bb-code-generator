@@ -20,7 +20,7 @@ const Help = (props: Props) => {
 		<OverlayTrigger
 			rootClose
 			trigger="click"
-			placement="right"
+			placement="auto"
 			overlay={
 				<Card
 					bg="dark"
@@ -38,18 +38,11 @@ const Help = (props: Props) => {
 				</Card>
 			}>
 			<Button
-				variant="secondary"
+				variant="dark"
 				id="help-button"
-				style={{
-					height: "3rem",
-					position: "fixed",
-					top: "50%",
-					left: "1rem",
-					zIndex: 9999,
-					fontWeight: "bold"
-				}}>
-				<span dangerouslySetInnerHTML={htmlTitle()} />{" "}
-				<FontAwesomeIcon icon="caret-right" />
+				style={{ display: "flex", alignItems: "center" }}>
+				<span style={{ marginRight: ".2rem" }}>Demo</span>{" "}
+				<FontAwesomeIcon icon={"play-circle"} />
 			</Button>
 		</OverlayTrigger>
 	);
