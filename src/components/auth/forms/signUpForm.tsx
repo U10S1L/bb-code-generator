@@ -86,8 +86,9 @@ const SignUpForm = ({ onSignUp }: SignUpFormProps) => {
 					style={{ marginLeft: "auto" }}
 					disabled={!isSignUpValid}
 					variant="info"
+					block
 					onClick={() => handleSignUp()}>
-					Sign Up
+					Create Account
 				</Button>
 			</div>
 		</Form>
