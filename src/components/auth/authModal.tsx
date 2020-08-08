@@ -14,8 +14,8 @@ type AuthModalProps = {
 };
 
 enum Form {
-	SignIn = "Sign In",
-	SignUp = "Sign Up",
+	SignIn = "Login",
+	SignUp = "Create Account",
 	ForgotPassword = "Forgot Password",
 	Account = "Account"
 }

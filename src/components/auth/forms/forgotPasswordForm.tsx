@@ -41,12 +41,15 @@ const ForgotPasswordForm = () => {
 					}}></Form.Control>
 			</Form.Group>
 			<div style={{ color: "red" }}>{forgotPassword.errorMessage}</div>
-			<Button
-				disabled={!isForgotPasswordValid}
-				variant="info"
-				onClick={() => handleForgotPassword()}>
-				Reset My Password
-			</Button>
+			<div style={{ display: "flex", justifyContent: "flex-end" }}>
+				<Button
+					disabled={!isForgotPasswordValid}
+					block
+					variant="info"
+					onClick={() => handleForgotPassword()}>
+					Reset My Password
+				</Button>
+			</div>
 		</Form>
 	);
 };

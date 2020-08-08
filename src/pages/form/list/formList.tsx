@@ -58,6 +58,7 @@ const SortableFormElement = SortableElement(
 					<Card.Body>
 						<Card.Title>
 							{form.name}
+
 							<CopyToClipboard
 								text={
 									process.env.NODE_ENV === "development"
@@ -65,8 +66,14 @@ const SortableFormElement = SortableElement(
 										: `https://bbcode.rip/form/shareable/${authUser?.uid}/${form.uid}`
 								}
 								onCopy={() => InfoToast(`Shareable link copied to clipboard`)}>
-								<Button variant="link" size="sm" onClick={() => null}>
-									<FontAwesomeIcon icon="link"></FontAwesomeIcon>
+								<Button
+									variant="link"
+									size="sm"
+									onClick={() => null}
+									style={{ padding: 0 }}>
+									<span className="text-muted">
+										[ SHARE <FontAwesomeIcon icon="link"></FontAwesomeIcon> ]
+									</span>
 								</Button>
 							</CopyToClipboard>
 						</Card.Title>
