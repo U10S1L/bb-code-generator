@@ -1,4 +1,11 @@
-import { Col, Form, FormGroup, InputGroup, Row } from "react-bootstrap";
+import {
+	Col,
+	Form,
+	FormGroup,
+	InputGroup,
+	ResponsiveEmbed,
+	Row
+} from "react-bootstrap";
 import React, { useEffect, useRef } from "react";
 
 import { BBCodeFormType } from "types/formTypes";
@@ -39,6 +46,16 @@ const FormNameCreator = ({
 						/>
 					</FormGroup>
 				</InputGroup>
+			</Col>
+			<Col xs={12}>
+				<ResponsiveEmbed aspectRatio="16by9">
+					<iframe
+						src="https://www.youtube.com/embed/MDZ6BUEVi28"
+						frameBorder="0"
+						allowFullScreen
+						title="video"
+					/>
+				</ResponsiveEmbed>
 			</Col>
 		</Row>
 	);
