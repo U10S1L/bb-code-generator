@@ -53,7 +53,6 @@ const BBCodeForm = () => {
 					/* Handle Multi Items */
 					inputComponent.inputs.forEach((input) => {
 						const indexOfInput = inputComponent.inputs.indexOf(input);
-						const inputsLength = inputComponent.inputs.length;
 						if (indexOfInput === 0) {
 							inputComponentVal += `${input.val}`;
 						} else {

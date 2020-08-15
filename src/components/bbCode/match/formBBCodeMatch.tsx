@@ -13,6 +13,60 @@ type FormBBCodeMatchProps = {
 	matchedBBCode: string;
 	setMatchedBBCode: (bbCode: string) => void;
 };
+type CopyToClipboardButtonProps = {
+	inputComponent: InputComponentProps;
+};
+
+const getInputComponentDescription = (inputComponent: InputComponentProps) => {
+	const { type } = inputComponent;
+	if (type === "checkbox") {
+		return `Renders as a [cb] or [cbc].`;
+	} else if (type === "listItem") {
+		return `Paste like [list]🆔[/list].`;
+	} else if (type === "url") {
+		return `Replace [url][/url] with 🆔.`;
+	} else {
+		return ``;
+	}
+};
+
+const CopyToClipboardButton = ({
+	inputComponent
+}: CopyToClipboardButtonProps) => {
+	return (
+		<CopyToClipboard
+			text={inputComponent.uniqueId}
+			onCopy={() => {
+				if (inputComponent.type === "listItem") {
+					InfoToast(
+						`'${
+							inputComponent.label
+						}' 🆔 copied. ${getInputComponentDescription(inputComponent)}`
+					);
+				} else if (inputComponent.type === "checkbox") {
+					InfoToast(
+						`'${
+							inputComponent.label
+						}' 🆔 copied. ${getInputComponentDescription(inputComponent)}`
+					);
+				} else if (inputComponent.type === "url") {
+					InfoToast(
+						`'${
+							inputComponent.label
+						}' 🆔 copied. ${getInputComponentDescription(inputComponent)}`
+					);
+				} else {
+					InfoToast(`'${inputComponent.label}' 🆔 copied. `);
+				}
+			}}>
+			<Button variant="light" style={{ paddingLeft: 0 }}>
+				<span role="img" aria-label="id">
+					🆔
+				</span>
+			</Button>
+		</CopyToClipboard>
+	);
+};
 
 const FormBBCodeMatch = ({
 	selectedInputComponents,
@@ -54,36 +108,30 @@ const FormBBCodeMatch = ({
 						{selectedInputComponents.map((inputComponent, i) => {
 							const matched = inputComponentIsMatched(inputComponent.uniqueId);
 							return (
-								<Card key={i} style={{ borderRadius: 0 }}>
+								<Card key={i} style={{ borderRadius: 0, margin: ".25rem 0" }}>
 									<Card.Body>
-										<Card.Title>
+										<Card.Title style={{ marginBottom: ".35rem" }}>
 											{inputComponent.label}
-											<span className="text-muted small">
-												{inputComponent.multi &&
-												inputComponent.type !== "listItem"
-													? " (Multi)"
-													: null}
-												{inputComponent.type === "listItem"
-													? " (List Items [*])"
-													: null}
-											</span>
 										</Card.Title>
+										<Card.Subtitle style={{ marginBottom: ".75rem" }}>
+											<span className="small" style={{ opacity: ".65" }}>
+												{getInputComponentDescription(inputComponent)}
+											</span>
+										</Card.Subtitle>
 										{!matched ? (
-											<CopyToClipboard
-												text={inputComponent.uniqueId}
-												onCopy={() =>
-													InfoToast(
-														`Copied 🆔 for field '${inputComponent.label}' to clipboard. Paste it in the BBCode.`
-													)
-												}>
-												<Button variant="light">
-													<span role="img" aria-label="id">
-														🆔
-													</span>
-												</Button>
-											</CopyToClipboard>
+											<div style={{ display: "flex", alignItems: "center" }}>
+												<CopyToClipboardButton
+													inputComponent={inputComponent}
+												/>
+												<span style={{ color: "red", marginLeft: "auto" }}>
+													Unmatched
+												</span>
+											</div>
 										) : (
-											<div>
+											<div style={{ display: "flex", alignItems: "center" }}>
+												<CopyToClipboardButton
+													inputComponent={inputComponent}
+												/>
 												<Button
 													variant="light"
 													onClick={() =>
@@ -100,16 +148,11 @@ const FormBBCodeMatch = ({
 													}>
 													<FontAwesomeIcon icon="times"></FontAwesomeIcon>
 												</Button>
+												<span style={{ color: "green", marginLeft: "auto" }}>
+													Matched
+												</span>
 											</div>
 										)}
-										<div
-											style={{ display: "flex", justifyContent: "flex-end" }}>
-											{!matched ? (
-												<span style={{ color: "red" }}>Unmatched</span>
-											) : (
-												<span style={{ color: "green" }}>Matched</span>
-											)}
-										</div>
 									</Card.Body>
 								</Card>
 							);
