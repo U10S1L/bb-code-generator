@@ -1,5 +1,6 @@
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/analytics";
 
 import { BBCodeFormType } from "types/formTypes";
 import app from "firebase/app";
@@ -33,10 +34,12 @@ const Firebase = () => {
 	}
 	const auth = app.auth();
 	const firestore = app.firestore();
+	const analytics = app.analytics();
 
 	return {
 		auth,
 		firestore,
+		analytics,
 		createUser,
 		signIn,
 		signOut,
