@@ -52,18 +52,13 @@ const BBCodeForm = () => {
 				if (inputComponent.multi) {
 					/* Handle Multi Items */
 					inputComponent.inputs.forEach((input) => {
-						// if(inputComponent.inputs.indexOf(input) === 0 && inputComponent.inputs.length > 1) {
-						// 	inputComponentVal += `${input.val}\n`;
-						// } else if (inputComponent.inputs.indexOf(input) === inputComponent.inputs.length) {
-						// 	inputComponentVal += `${input.val}`
-						// }
-						inputComponentVal += `\n${input.val}`;
-						// inputComponentVal +=
-						// 	inputComponent.inputs.indexOf(input) === 0 ||
-						// 	inputComponent.inputs.indexOf(input) ===
-						// 		inputComponent.inputs.length
-						// 		? `\n${input.val}\n`
-						// 		: `${input.val}\n`;
+						const indexOfInput = inputComponent.inputs.indexOf(input);
+						const inputsLength = inputComponent.inputs.length;
+						if (indexOfInput === 0) {
+							inputComponentVal += `${input.val}`;
+						} else {
+							inputComponentVal += `\n${input.val}`;
+						}
 					});
 				} else {
 					inputComponentVal =
