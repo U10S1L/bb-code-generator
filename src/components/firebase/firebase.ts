@@ -34,11 +34,12 @@ const Firebase = () => {
 	}
 	const auth = app.auth();
 	const firestore = app.firestore();
-	app.analytics();
+	const analytics = app.analytics();
 
 	return {
 		auth,
 		firestore,
+		analytics,
 		createUser,
 		signIn,
 		signOut,
