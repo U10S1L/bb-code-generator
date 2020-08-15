@@ -50,13 +50,14 @@ const BBCodeForm = () => {
 			inputComponents.forEach((inputComponent) => {
 				var inputComponentVal = ``;
 				if (inputComponent.multi) {
+					/* Handle Multi Items */
 					inputComponent.inputs.forEach((input) => {
-						inputComponentVal +=
-							inputComponent.inputs.indexOf(input) === 0 ||
-							inputComponent.inputs.indexOf(input) ===
-								inputComponent.inputs.length
-								? `\n${input.val}\n`
-								: `${input.val}\n`;
+						const indexOfInput = inputComponent.inputs.indexOf(input);
+						if (indexOfInput === 0) {
+							inputComponentVal += `${input.val}`;
+						} else {
+							inputComponentVal += `\n${input.val}`;
+						}
 					});
 				} else {
 					inputComponentVal =

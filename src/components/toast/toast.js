@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 export const InfoToast = (message) => {
 	return toast.info(message, {
 		position: toast.POSITION.TOP_CENTER,
-		autoClose: 2500
+		autoClose: 3000
 	});
 };
 
