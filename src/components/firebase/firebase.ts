@@ -12,7 +12,9 @@ const config =
 				databaseURL: process.env.REACT_APP_PROD_DATABASE_URL,
 				projectId: process.env.REACT_APP_PROD_PROJECT_ID,
 				storageBucket: process.env.REACT_APP_PROD_STORAGE_BUCKET,
-				messagingSenderId: process.env.REACT_APP_PROD_MESSAGING_SENDER_ID
+				messagingSenderId: process.env.REACT_APP_PROD_MESSAGING_SENDER_ID,
+				appId: process.env.REACT_APP_PROD_APP_ID,
+				measurementId: process.env.REACT_APP_PROD_MEASUREMENT_ID
 		  }
 		: {
 				apiKey: process.env.REACT_APP_DEV_API_KEY,
@@ -20,7 +22,9 @@ const config =
 				databaseURL: process.env.REACT_APP_DEV_DATABASE_URL,
 				projectId: process.env.REACT_APP_DEV_PROJECT_ID,
 				storageBucket: process.env.REACT_APP_DEV_STORAGE_BUCKET,
-				messagingSenderId: process.env.REACT_APP_DEV_MESSAGING_SENDER_ID
+				messagingSenderId: process.env.REACT_APP_DEV_MESSAGING_SENDER_ID,
+				appId: process.env.REACT_APP_DEV_APP_ID,
+				measurementId: process.env.REACT_APP_DEV_MEASUREMENT_ID
 		  };
 
 const Firebase = () => {
