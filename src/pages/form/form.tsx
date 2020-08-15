@@ -50,13 +50,20 @@ const BBCodeForm = () => {
 			inputComponents.forEach((inputComponent) => {
 				var inputComponentVal = ``;
 				if (inputComponent.multi) {
+					/* Handle Multi Items */
 					inputComponent.inputs.forEach((input) => {
-						inputComponentVal +=
-							inputComponent.inputs.indexOf(input) === 0 ||
-							inputComponent.inputs.indexOf(input) ===
-								inputComponent.inputs.length
-								? `\n${input.val}\n`
-								: `${input.val}\n`;
+						// if(inputComponent.inputs.indexOf(input) === 0 && inputComponent.inputs.length > 1) {
+						// 	inputComponentVal += `${input.val}\n`;
+						// } else if (inputComponent.inputs.indexOf(input) === inputComponent.inputs.length) {
+						// 	inputComponentVal += `${input.val}`
+						// }
+						inputComponentVal += `\n${input.val}`;
+						// inputComponentVal +=
+						// 	inputComponent.inputs.indexOf(input) === 0 ||
+						// 	inputComponent.inputs.indexOf(input) ===
+						// 		inputComponent.inputs.length
+						// 		? `\n${input.val}\n`
+						// 		: `${input.val}\n`;
 					});
 				} else {
 					inputComponentVal =
