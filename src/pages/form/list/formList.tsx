@@ -239,13 +239,13 @@ const FormList = () => {
 		if (searchText === "") {
 			setForms(stateForms);
 		} else {
-			setForms(
-				new Fuse(forms, { keys: ["name"] })
+			setForms((f) =>
+				new Fuse(f, { keys: ["name"] })
 					.search(searchText)
 					.map((result) => result.item)
 			);
 		}
-	}, [searchText]);
+	}, [searchText, stateForms]);
 
 	useEffect(() => {
 		setForms(stateForms);
