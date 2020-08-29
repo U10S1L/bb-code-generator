@@ -49,7 +49,8 @@ const Firebase = () => {
 		getShareableForm,
 		deleteUserForm,
 		deserializeBBCodeForm,
-		batchUpdateForms
+		batchUpdateForms,
+		backfillForms
 	};
 };
 
@@ -285,6 +286,41 @@ export const deserializeBBCodeForm = (serializedForm: any): BBCodeFormType => {
 	};
 
 	return bbCodeForm;
+};
+
+/* Backfill API */
+export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
+	const currUser = Firebase().auth.currentUser;
+	var changesToPropogate = false;
+	var backfilledBBCodeForms = bbCodeForms.concat();
+
+	// Backfill for form InputComponents
+	backfilledBBCodeForms.forEach((bbCodeForm) => {
+		bbCodeForm.inputComponents.map((inputComponent) => {
+			// Change listItem inputComponents to multiStar
+			if (inputComponent.type === "listItem" && !inputComponent.multiStar) {
+				changesToPropogate = true;
+				inputComponent.multiStar = true;
+				inputComponent.multi = false;
+			}
+
+			return inputComponent;
+		});
+	});
+
+	return new Promise((resolve, reject) => {
+		if (!Firebase().auth.currentUser) {
+			reject(ERR_ACCESS_DENIED);
+		}
+
+		if (changesToPropogate) {
+			batchUpdateForms(backfilledBBCodeForms, currUser?.uid)
+				.then(() => resolve())
+				.catch((err) => reject(err));
+		} else {
+			resolve();
+		}
+	});
 };
 
 export default Firebase;

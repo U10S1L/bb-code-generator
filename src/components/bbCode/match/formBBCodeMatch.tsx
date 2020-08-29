@@ -18,10 +18,10 @@ type CopyToClipboardButtonProps = {
 };
 
 const getInputComponentDescription = (inputComponent: InputComponentProps) => {
-	const { type } = inputComponent;
+	const { type, multiStar } = inputComponent;
 	if (type === "checkbox") {
 		return `Renders as a [cb] or [cbc].`;
-	} else if (type === "listItem") {
+	} else if (multiStar) {
 		return `Paste like [list]🆔[/list].`;
 	} else if (type === "url") {
 		return `Replace [url][/url] with 🆔.`;
@@ -37,7 +37,7 @@ const CopyToClipboardButton = ({
 		<CopyToClipboard
 			text={inputComponent.uniqueId}
 			onCopy={() => {
-				if (inputComponent.type === "listItem") {
+				if (inputComponent.multi) {
 					InfoToast(
 						`'${
 							inputComponent.label
