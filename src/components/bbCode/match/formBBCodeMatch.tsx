@@ -19,15 +19,18 @@ type CopyToClipboardButtonProps = {
 
 const getInputComponentDescription = (inputComponent: InputComponentProps) => {
 	const { type, multiStar } = inputComponent;
+	var description = "";
 	if (type === "checkbox") {
-		return `Renders as a [cb] or [cbc].`;
-	} else if (multiStar) {
-		return `Paste like [list]🆔[/list].`;
+		description += `Renders as a [cb] or [cbc]. `;
 	} else if (type === "url") {
-		return `Replace [url][/url] with 🆔.`;
-	} else {
-		return ``;
+		return `Replace [url][/url] with 🆔. `;
 	}
+
+	if (multiStar) {
+		description += `Paste like [list]🆔[/list]. `;
+	}
+
+	return description;
 };
 
 const CopyToClipboardButton = ({
@@ -37,27 +40,11 @@ const CopyToClipboardButton = ({
 		<CopyToClipboard
 			text={inputComponent.uniqueId}
 			onCopy={() => {
-				if (inputComponent.multi) {
-					InfoToast(
-						`'${
-							inputComponent.label
-						}' 🆔 copied. ${getInputComponentDescription(inputComponent)}`
-					);
-				} else if (inputComponent.type === "checkbox") {
-					InfoToast(
-						`'${
-							inputComponent.label
-						}' 🆔 copied. ${getInputComponentDescription(inputComponent)}`
-					);
-				} else if (inputComponent.type === "url") {
-					InfoToast(
-						`'${
-							inputComponent.label
-						}' 🆔 copied. ${getInputComponentDescription(inputComponent)}`
-					);
-				} else {
-					InfoToast(`'${inputComponent.label}' 🆔 copied. `);
-				}
+				InfoToast(
+					`'${inputComponent.label}' 🆔 copied. ${getInputComponentDescription(
+						inputComponent
+					)}`
+				);
 			}}>
 			<Button variant="light" style={{ paddingLeft: 0 }}>
 				<span role="img" aria-label="id">
