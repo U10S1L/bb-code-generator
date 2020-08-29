@@ -42,6 +42,7 @@ export type InputComponentProps = {
 	label?: string; // User-created
 	description?: string;
 	multi?: boolean;
+	multiStar?: boolean;
 	defaultVal: string;
 	inputs: InputTypeProps[];
 	onUpdateInputs?: (inputs: InputTypeProps[]) => void;

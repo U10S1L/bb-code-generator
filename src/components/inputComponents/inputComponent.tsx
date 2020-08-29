@@ -11,6 +11,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	type,
 	defaultVal,
 	multi,
+	multiStar,
 	inputs,
 	onUpdateInputs,
 	selectOptions,
@@ -50,12 +51,12 @@ const InputComponent: React.FC<InputComponentProps> = ({
 				<div className="small text-muted">{description}</div>
 			</Form.Label>
 			{inputs.map((inputType, i) => {
-				const canAddInput = multi;
-				const canRemoveInput = multi && inputs.length !== 1;
+				const canAddInput = multi || multiStar;
+				const canRemoveInput = (multi || multiStar) && inputs.length !== 1;
 
 				return (
 					<InputGroup key={i}>
-						{type === "listItem" && (
+						{multiStar && (
 							<InputGroup.Prepend>
 								<InputGroup.Text>{`[*]`}</InputGroup.Text>
 							</InputGroup.Prepend>
@@ -66,7 +67,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 							selectOptions={selectOptions}
 							type={type}
 						/>
-						<InputGroup.Append hidden={!multi}>
+						<InputGroup.Append hidden={!multi && !multiStar}>
 							<Button
 								variant="outline-danger"
 								style={{ margin: "0 .2rem" }}

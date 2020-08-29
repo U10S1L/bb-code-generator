@@ -28,7 +28,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 					snapshot.docs.forEach((doc) => {
 						bbCodeForms.push(Firebase().deserializeBBCodeForm(doc.data()));
 					});
-					setStateForms(bbCodeForms);
+					Firebase()
+						.backfillForms(bbCodeForms)
+						.then(() => {
+							setStateForms(bbCodeForms);
+						});
 				});
 		} else {
 			setStateForms([]);
