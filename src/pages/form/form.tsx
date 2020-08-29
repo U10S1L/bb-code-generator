@@ -41,7 +41,9 @@ const BBCodeForm = () => {
 						input.val = input.val === "true" ? "[cbc]" : "[cb]";
 					} else if (inputComponent.type === "url") {
 						input.val = formatUrl(JSON.parse(input.val));
-					} else if (inputComponent.type === "listItem") {
+					}
+
+					if (inputComponent.multiStar) {
 						input.val = `[*] ${input.val}`;
 					}
 				});
@@ -49,7 +51,7 @@ const BBCodeForm = () => {
 			// Matching up Fields and replacing their IDs with the inputted vals
 			inputComponents.forEach((inputComponent) => {
 				var inputComponentVal = ``;
-				if (inputComponent.multi) {
+				if (inputComponent.multi || inputComponent.multiStar) {
 					/* Handle Multi Items */
 					inputComponent.inputs.forEach((input) => {
 						const indexOfInput = inputComponent.inputs.indexOf(input);

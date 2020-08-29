@@ -33,9 +33,6 @@ import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
 		defaultVal: "",
 		type: "shortText",
 		typeName: "Single Line",
@@ -45,9 +42,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
 		defaultVal: "",
 		type: "longText",
 		typeName: "Multi Line",
@@ -57,10 +51,8 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: true,
 		defaultVal: "",
+		multiStar: true,
 		type: "listItem",
 		typeName: "List Items [*]",
 		typeIcon: faCircle,
@@ -69,9 +61,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
 		defaultVal: "DD/MMM/YYYY",
 		type: "date",
 		typeName: "Date",
@@ -82,9 +71,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
 		defaultVal: "XX:XX",
 		type: "time",
 		typeName: "Time",
@@ -95,9 +81,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
 		defaultVal: "DD/MMM/YYYY — XX:XX",
 		type: "dateTime",
 		typeName: "Date & Time",
@@ -107,9 +90,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
 		defaultVal: " ",
 		type: "dropdown",
 		typeName: "Dropdown",
@@ -120,9 +100,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
 		defaultVal: "",
 		type: "checkbox",
 		typeName: "Checkbox",
@@ -133,9 +110,6 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		label: "",
-		description: "",
-		multi: false,
 		defaultVal: JSON.stringify({ text: "", link: "" }),
 		type: "url",
 		typeName: "Hyperlink",
@@ -298,16 +272,19 @@ const InputComponentModal = ({
 	deleteInput
 }: InputComponentModalProps) => {
 	const [label, setLabel] = useState(
-		inputComponent ? inputComponent.label : ""
+		inputComponent?.label ? inputComponent.label : ""
 	);
 	const [description, setDescription] = useState(
-		inputComponent ? inputComponent.description : ""
+		inputComponent?.description ? inputComponent.description : ""
 	);
 	const [defaultVal, setDefaultVal] = useState(
 		inputComponent ? inputComponent.defaultVal : ""
 	);
 	const [multi, setMulti] = useState(
-		inputComponent ? inputComponent.multi : false
+		inputComponent?.multi ? inputComponent.multi : false
+	);
+	const [multiStar, setMultiStar] = useState(
+		inputComponent?.multiStar ? inputComponent.multiStar : false
 	);
 	const [inputs, setInputs] = useState(
 		inputComponent ? inputComponent.inputs : []
@@ -334,6 +311,7 @@ const InputComponentModal = ({
 				description,
 				defaultVal,
 				multi,
+				multiStar,
 				selectOptions
 			};
 			handleSubmit && handleSubmit(newInputComponent);
@@ -365,10 +343,7 @@ const InputComponentModal = ({
 	};
 
 	useEffect(() => {
-		labelRef.current.focus();
-	}, []);
-
-	useEffect(() => {
+		// Input Component Label validation
 		if (!labelValid) {
 			setLabelValid(isValidLabel() as boolean);
 			labelRef.current.focus();
@@ -376,6 +351,7 @@ const InputComponentModal = ({
 	}, [label, labelValid, isValidLabel]);
 
 	useEffect(() => {
+		// Sets defaults on the Input Components
 		var inputComponentInputsWithDefaults = inputComponent
 			? inputComponent.inputs.map((input) => {
 					return { ...input, val: defaultVal };
@@ -383,6 +359,22 @@ const InputComponentModal = ({
 			: [];
 		setInputs(inputComponentInputsWithDefaults);
 	}, [defaultVal, inputComponent]);
+
+	useEffect(() => {
+		if (multi) {
+			setMultiStar(false);
+		}
+	}, [multi]);
+
+	useEffect(() => {
+		if (multiStar) {
+			setMulti(false);
+		}
+	}, [multiStar]);
+
+	useEffect(() => {
+		labelRef.current.focus();
+	}, []);
 
 	return (
 		<Modal
@@ -417,6 +409,7 @@ const InputComponentModal = ({
 								{...inputComponent}
 								label={label}
 								multi={multi}
+								multiStar={multiStar}
 								defaultVal={defaultVal}
 								description={description}
 								inputs={inputs}
@@ -455,25 +448,40 @@ const InputComponentModal = ({
 							onChange={(e) => setDescription(e.target.value)}
 						/>
 					</Form.Group>
-					{inputComponent?.type !== "listItem" && (
+					<Form.Group>
 						<div style={{ display: "flex", alignItems: "center" }}>
-							<Form.Group>
-								<Form.Check
-									type="switch"
-									id="isMulti"
-									label="Multi"
-									checked={multi}
-									onChange={() => setMulti(!multi)}
-								/>
-							</Form.Group>
-							<Form.Group>
-								<QuestionMarkTooltip
-									id="multi"
-									text="Allows you to add more than one value. Each value will generate on a new line."
-								/>
-							</Form.Group>
+							<Form.Check
+								inline
+								type="switch"
+								id="isMulti"
+								label="Multi"
+								checked={multi}
+								onChange={() => setMulti(!multi)}
+								disabled={inputComponent?.type === "listItem"}
+								style={{ marginRight: ".5rem" }}
+							/>
+							<QuestionMarkTooltip
+								id="multi"
+								text="Allows you to add more than one value. Each value will generate on a new line."
+								styles={{ marginLeft: 0, marginRight: "2rem" }}
+							/>
+							<Form.Check
+								inline
+								type="switch"
+								id="isMultiStar"
+								label="Multi [*]"
+								checked={multiStar}
+								onChange={() => setMultiStar(!multiStar)}
+								disabled={inputComponent?.type === "listItem"}
+								style={{ marginRight: ".5rem" }}
+							/>
+							<QuestionMarkTooltip
+								id="multi"
+								text="Same as multi, but each value will generate with a [*] in front of it."
+								styles={{ marginLeft: 0 }}
+							/>
 						</div>
-					)}
+					</Form.Group>
 					{inputComponent?.type !== undefined &&
 						inputComponent?.type !== "dropdown" && (
 							<Form.Group>
