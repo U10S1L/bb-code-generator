@@ -61,7 +61,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		defaultVal: "DD/MMM/YYYY",
+		defaultVal: "",
 		type: "date",
 		typeName: "Date",
 		typeIcon: faCalendarAlt,
@@ -71,7 +71,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		defaultVal: "XX:XX",
+		defaultVal: "",
 		type: "time",
 		typeName: "Time",
 		typeIcon: faClock,
@@ -81,7 +81,7 @@ const inputComponentChoiceList: InputComponentProps[] = [
 	},
 	{
 		uniqueId: "",
-		defaultVal: "DD/MMM/YYYY — XX:XX",
+		defaultVal: "",
 		type: "dateTime",
 		typeName: "Date & Time",
 		typeIcon: faCalendarTimes,

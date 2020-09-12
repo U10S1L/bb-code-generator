@@ -1,3 +1,4 @@
+import "react-datepicker/dist/react-datepicker.css";
 import "../dateTimePicker.css";
 
 import React, { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { InputTypeProps } from "types/formTypes";
 
-export const Time = ({ readOnly, val, setVal }: InputTypeProps) => {
+export const TDate = ({ readOnly, val, setVal }: InputTypeProps) => {
 	const [openToDate, setOpenToDate] = useState<Date>();
 	useEffect(() => {
 		const utc = new Date();
@@ -21,6 +22,7 @@ export const Time = ({ readOnly, val, setVal }: InputTypeProps) => {
 			)
 		);
 	}, []);
+
 	return (
 		<DatePicker
 			selected={val ? new Date(val) : null}
@@ -28,14 +30,11 @@ export const Time = ({ readOnly, val, setVal }: InputTypeProps) => {
 				setVal && setVal(date?.toString());
 			}}
 			popperPlacement="auto"
-			timeFormat={"HH:mm"}
-			dateFormat={"HH:mm"}
-			placeholderText="HH:MM"
+			dateFormat={"dd/MMM/yyyy"}
+			dateFormatCalendar={"MMM yyyy"}
+			placeholderText="DD/MMM/YYYY"
 			isClearable
-			timeIntervals={5}
 			openToDate={openToDate}
-			showTimeSelect
-			showTimeSelectOnly
 			readOnly={readOnly}
 			fixedHeight
 			className="form-control"
