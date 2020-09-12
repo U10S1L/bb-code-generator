@@ -4,6 +4,7 @@ import "firebase/analytics";
 
 import { BBCodeFormType } from "types/formTypes";
 import app from "firebase/app";
+import { getFormProgressString } from "formatters";
 
 const config =
 	process.env.NODE_ENV === "production"
@@ -294,8 +295,14 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 	var changesToPropogate = false;
 	var backfilledBBCodeForms = bbCodeForms.concat();
 
-	// Backfill for form InputComponents
 	backfilledBBCodeForms.forEach((bbCodeForm) => {
+		// Locate corresponding FormProgress
+		const formProg = localStorage.getItem(getFormProgressString(bbCodeForm));
+		const formProgBBCodeForm: BBCodeFormType = formProg
+			? JSON.parse(formProg)
+			: null;
+
+		// Backfill for database form InputComponents
 		bbCodeForm.inputComponents.map((inputComponent) => {
 			// Change listItem inputComponents to multiStar
 			if (inputComponent.type === "listItem" && !inputComponent.multiStar) {
@@ -303,7 +310,6 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 				inputComponent.multi = false;
 				changesToPropogate = true;
 			} else if (
-				// DateTime component, need to get rid of defaultVals
 				(inputComponent.type === "date" ||
 					inputComponent.type === "time" ||
 					inputComponent.type === "dateTime") &&
@@ -315,6 +321,25 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 
 			return inputComponent;
 		});
+
+		// Backfill for formProgress form InputComponents
+		if (formProgBBCodeForm) {
+			formProgBBCodeForm.inputComponents.map((inputComponent) => {
+				if (
+					(inputComponent.type === "date" ||
+						inputComponent.type === "time" ||
+						inputComponent.type === "dateTime") &&
+					inputComponent.defaultVal !== ""
+				) {
+					inputComponent.defaultVal = "";
+				}
+				return inputComponent;
+			});
+			localStorage.setItem(
+				getFormProgressString(bbCodeForm),
+				JSON.stringify(formProgBBCodeForm)
+			);
+		}
 	});
 
 	return new Promise((resolve, reject) => {
