@@ -1,6 +1,9 @@
-import { Form } from "react-bootstrap";
+import "../dateTimePicker.css";
+
+import React, { useEffect, useState } from "react";
+
+import DatePicker from "react-datepicker";
 import { InputTypeProps } from "types/formTypes";
-import React from "react";
 
 export const DateTime = ({
 	placeholder,
@@ -8,15 +11,38 @@ export const DateTime = ({
 	val,
 	setVal
 }: InputTypeProps) => {
+	const [openToDate, setOpenToDate] = useState<Date>();
+	useEffect(() => {
+		const utc = new Date();
+		setOpenToDate(
+			new Date(
+				utc.getUTCFullYear(),
+				utc.getUTCMonth(),
+				utc.getUTCDate(),
+				utc.getUTCHours(),
+				utc.getUTCMinutes()
+			)
+		);
+	}, []);
+
 	return (
-		<Form.Control
-			type="text"
-			value={val}
-			onChange={(e) => {
-				setVal && setVal(e.target.value);
+		<DatePicker
+			selected={val ? new Date(val) : null}
+			onChange={(date) => {
+				setVal && setVal(date?.toString());
 			}}
-			placeholder={placeholder}
+			// popperPlacement="auto"
+			dateFormat={"dd/MMM/yyyy HH:mm"}
+			timeFormat={"HH:mm"}
+			dateFormatCalendar={"MMM yyyy"}
+			placeholderText="DD/MMM/YYYY HH:MM"
+			isClearable
+			showTimeSelect={true}
+			openToDate={openToDate}
 			readOnly={readOnly}
+			fixedHeight
+			timeIntervals={5}
+			className="form-control"
 		/>
 	);
 };
