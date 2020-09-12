@@ -1,5 +1,4 @@
 import { Checkbox } from "components/inputComponents/checkbox/checkbox";
-import { Date } from "components/inputComponents/date/date";
 import { DateTime } from "components/inputComponents/dateTime/dateTime";
 import { Dropdown } from "components/inputComponents/dropdown/dropdown";
 import { InputTypeProps } from "types/formTypes";
@@ -7,6 +6,7 @@ import ListItem from "components/inputComponents/listItem/ListItem";
 import LongText from "components/inputComponents/longText/longText";
 import React from "react";
 import ShortText from "components/inputComponents/shortText/shortText";
+import { TDate } from "components/inputComponents/tDate/tDate";
 import { Time } from "components/inputComponents/time/time";
 import { Url } from "components/inputComponents/url/url";
 
@@ -23,7 +23,7 @@ const InputType = (props: InputTypeProps) => {
 		case "dateTime":
 			return <DateTime {...props} />;
 		case "date":
-			return <Date {...props} />;
+			return <TDate {...props} />;
 		case "time":
 			return <Time {...props} />;
 		case "url":

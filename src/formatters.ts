@@ -35,6 +35,24 @@ const getMonthString = (monthNumber: number) => {
 	}
 };
 
+export const getDateString = (date: Date): string => {
+	if (!isNaN(date.getDate())) {
+		return `${date.getDate()}/${getMonthString(
+			date.getMonth()
+		)}/${date.getFullYear()}`;
+	} else {
+		return "";
+	}
+};
+
+export const getTimeString = (date: Date): string => {
+	if (!isNaN(date.getDate())) {
+		return `${date.getHours()}:${date.getMinutes()}`;
+	} else {
+		return "";
+	}
+};
+
 export const formatDateTimeWithSeconds = (dateTime: Date): string => {
 	if (!isNaN(dateTime.getDate())) {
 		return `${dateTime.getDate().toString()}/${getMonthString(

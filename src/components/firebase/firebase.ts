@@ -299,9 +299,18 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 		bbCodeForm.inputComponents.map((inputComponent) => {
 			// Change listItem inputComponents to multiStar
 			if (inputComponent.type === "listItem" && !inputComponent.multiStar) {
-				changesToPropogate = true;
 				inputComponent.multiStar = true;
 				inputComponent.multi = false;
+				changesToPropogate = true;
+			} else if (
+				// DateTime component, need to get rid of defaultVals
+				(inputComponent.type === "date" ||
+					inputComponent.type === "time" ||
+					inputComponent.type === "dateTime") &&
+				inputComponent.defaultVal !== ""
+			) {
+				inputComponent.defaultVal = "";
+				changesToPropogate = true;
 			}
 
 			return inputComponent;
