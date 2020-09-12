@@ -23,7 +23,7 @@ export const Time = ({ readOnly, val, setVal }: InputTypeProps) => {
 	}, []);
 	return (
 		<DatePicker
-			selected={val ? new Date(val) : null}
+			selected={val && !isNaN(new Date(val).getDate()) ? new Date(val) : null}
 			onChange={(date) => {
 				setVal && setVal(date?.toString());
 			}}

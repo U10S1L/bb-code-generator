@@ -483,7 +483,10 @@ const InputComponentModal = ({
 						</div>
 					</Form.Group>
 					{inputComponent?.type !== undefined &&
-						inputComponent?.type !== "dropdown" && (
+						inputComponent?.type !== "dropdown" &&
+						inputComponent?.type !== "time" &&
+						inputComponent?.type !== "date" &&
+						inputComponent?.type !== "dateTime" && (
 							<Form.Group>
 								<Form.Label style={{ display: "flex", alignItems: "center" }}>
 									Default
