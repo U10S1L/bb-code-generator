@@ -38,6 +38,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		inputComponents: [],
 		rawBBCode: "",
 		matchedBBCode: "",
+		bookmarkLink: "",
 		createdTimestamp: Date.now(),
 		updatedTimestamp: Date.now()
 	});
@@ -48,6 +49,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		inputComponents: [],
 		rawBBCode: "",
 		matchedBBCode: "",
+		bookmarkLink: "",
 		createdTimestamp: Date.now(),
 		updatedTimestamp: Date.now()
 	});
@@ -140,13 +142,18 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		}
 	};
 
-	// Form Name
-	const updateFormName = (newName: string) => {
+	// Form Setup
+	const updateFormSetup = (setupFields: {
+		name: string;
+		bookmarkLink: string;
+	}) => {
 		setBBCodeForm({
 			...bbCodeForm,
-			name: newName
+			name: setupFields.name,
+			bookmarkLink: setupFields.bookmarkLink
 		});
 	};
+
 	const doesFormNameExist = () => {
 		if (!editMode) {
 			return (
@@ -300,11 +307,12 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 			</Row>
 			{formCreationStep === FormCreationStep.FORM_SETUP && (
 				<FormSetupCreator
-					val={bbCodeForm.name}
-					setVal={updateFormName}
-					loadBBCodeForm={(bbCodeForm: BBCodeFormType) =>
-						setBBCodeForm(bbCodeForm)
-					}
+					setupFields={{
+						name: bbCodeForm.name,
+						bookmarkLink: bbCodeForm.bookmarkLink
+					}}
+					updateSetupFields={updateFormSetup}
+					showVideoPreview={stateForms.length < 1}
 				/>
 			)}
 

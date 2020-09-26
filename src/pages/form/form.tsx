@@ -7,12 +7,14 @@ import {
 	formatDateTimeWithSeconds,
 	formatUrl,
 	getDateString,
-	getTimeString
+	getTimeString,
+	parseBookmarkLink
 } from "formatters";
 import { getFormProgressString, getFormWithDefaultVals } from "formatters";
 
 import { AuthContext } from "context/authContext";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormRenderer from "components/form/renderer/formRenderer";
 import { InfoToast } from "components/toast/toast";
 import StandardModal from "components/modals/standardModal";
@@ -182,15 +184,35 @@ const BBCodeForm = () => {
 			</Col>
 			<Col
 				xs={12}
-				style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
+				style={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "flex-end",
+					marginBottom: "1rem"
+				}}>
 				<CopyToClipboard
 					text={generateBBCode()}
 					onCopy={() => InfoToast("BBCode Copied To Clipboard")}>
-					<Button variant="info" style={{ marginLeft: "auto" }}>
-						Generate BBCode
-					</Button>
+					<Button variant="info">Copy BBCode</Button>
 				</CopyToClipboard>
+				{bbCodeForm.bookmarkLink && (
+					<CopyToClipboard
+						text={generateBBCode()}
+						onCopy={() => {
+							InfoToast("BBCode Copied. Opening bookmark...");
+							setTimeout(
+								() => window.open(parseBookmarkLink(bbCodeForm.bookmarkLink)),
+								2000
+							);
+						}}>
+						<Button variant="success">
+							<span style={{ marginRight: ".5rem" }}>Copy BBCode and Open</span>
+							<FontAwesomeIcon icon={"bookmark"} />
+						</Button>
+					</CopyToClipboard>
+				)}
 			</Col>
+
 			<StandardModal
 				visible={pageModal?.visible || false}
 				handleClose={() =>

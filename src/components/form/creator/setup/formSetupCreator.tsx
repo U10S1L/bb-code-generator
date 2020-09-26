@@ -1,4 +1,6 @@
 import {
+	Accordion,
+	Button,
 	Col,
 	Form,
 	FormGroup,
@@ -6,28 +8,31 @@ import {
 	ResponsiveEmbed,
 	Row
 } from "react-bootstrap";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { BBCodeFormType } from "types/formTypes";
+import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
 
-type FormNameCreatorProps = {
-	val: string;
-	setVal: (name: string) => void;
-	loadBBCodeForm: (bbCodeForm: BBCodeFormType) => void;
+type FormSetupCreatorProps = {
+	setupFields: { name: string; bookmarkLink: string };
+	updateSetupFields: (setupFields: {
+		name: string;
+		bookmarkLink: string;
+	}) => void;
+	showVideoPreview: boolean;
 };
 
-const FormNameCreator = ({
-	val,
-	setVal,
-	loadBBCodeForm
-}: FormNameCreatorProps) => {
+const FormSetupCreator = ({
+	setupFields,
+	updateSetupFields,
+	showVideoPreview
+}: FormSetupCreatorProps) => {
 	const formNameRef = useRef<HTMLInputElement>(null!);
 
 	useEffect(() => {
 		if (formNameRef.current != null) {
 			formNameRef.current.focus();
 		}
-	});
+	}, []);
 
 	return (
 		<Row>
@@ -38,9 +43,9 @@ const FormNameCreator = ({
 						<Form.Control
 							type="text"
 							size="lg"
-							value={val}
+							value={setupFields.name}
 							onChange={(e) => {
-								setVal(e.target.value);
+								updateSetupFields({ ...setupFields, name: e.target.value });
 							}}
 							ref={formNameRef}
 						/>
@@ -48,17 +53,61 @@ const FormNameCreator = ({
 				</InputGroup>
 			</Col>
 			<Col xs={12}>
-				<ResponsiveEmbed aspectRatio="16by9">
-					<iframe
-						src="https://www.youtube.com/embed/MDZ6BUEVi28"
-						frameBorder="0"
-						allowFullScreen
-						title="video"
+				<h5 className="header">
+					Bookmark Link
+					<QuestionMarkTooltip
+						id="bookmarkLinkExplanation"
+						text={`Creates a button on `}
 					/>
-				</ResponsiveEmbed>
+				</h5>
+				<InputGroup>
+					<FormGroup style={{ width: "100%" }}>
+						<Form.Control
+							type="text"
+							size="lg"
+							value={setupFields.bookmarkLink}
+							onChange={(e) => {
+								updateSetupFields({
+									...setupFields,
+									bookmarkLink: e.target.value
+								});
+							}}
+						/>
+					</FormGroup>
+				</InputGroup>
+			</Col>
+
+			<Col xs={12}>
+				{showVideoPreview && (
+					<ResponsiveEmbed aspectRatio="16by9">
+						<iframe
+							src="https://www.youtube.com/embed/MDZ6BUEVi28"
+							frameBorder="0"
+							allowFullScreen
+							title="video"
+						/>
+					</ResponsiveEmbed>
+				)}
+				{!showVideoPreview && (
+					<Accordion>
+						<Accordion.Toggle as={Button} variant="secondary" eventKey="0">
+							Tutorial / Overview Video
+						</Accordion.Toggle>
+						<Accordion.Collapse eventKey="0">
+							<ResponsiveEmbed aspectRatio="16by9">
+								<iframe
+									src="https://www.youtube.com/embed/MDZ6BUEVi28"
+									frameBorder="0"
+									allowFullScreen
+									title="video"
+								/>
+							</ResponsiveEmbed>
+						</Accordion.Collapse>
+					</Accordion>
+				)}
 			</Col>
 		</Row>
 	);
 };
 
-export default FormNameCreator;
+export default FormSetupCreator;

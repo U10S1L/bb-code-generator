@@ -20,6 +20,7 @@ import { InfoToast } from "components/toast/toast";
 import { LinkContainer } from "react-router-bootstrap";
 import StandardModal from "components/modals/standardModal";
 import { getFormUid } from "formatters";
+import { parseBookmarkLink } from "formatters";
 
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
@@ -58,28 +59,60 @@ const SortableFormElement = SortableElement(
 				<Card bg="light" color="white" style={{ borderRadius: 0 }}>
 					<Card.Body style={{ padding: "1rem" }}>
 						<Card.Title style={{ marginBottom: 0 }}>
-							{form.name}{" "}
-							{!showEditButtons && (
-								<CopyToClipboard
-									text={
-										process.env.NODE_ENV === "development"
-											? `localhost:3000/form/shareable/${authUser?.uid}/${form.uid}`
-											: `https://bbcode.rip/form/shareable/${authUser?.uid}/${form.uid}`
-									}
-									onCopy={() =>
-										InfoToast(`Shareable link copied to clipboard`)
-									}>
-									<Button
-										variant="link"
-										size="sm"
-										onClick={() => null}
-										style={{ padding: 0, float: "right" }}>
-										<span className="text-muted">
-											[ SHARE <FontAwesomeIcon icon="link"></FontAwesomeIcon> ]
-										</span>
-									</Button>
-								</CopyToClipboard>
-							)}
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "space-between",
+									flexWrap: "wrap"
+								}}>
+								{form.name}
+								{!showEditButtons && (
+									<div style={{ display: "flex", flexDirection: "column" }}>
+										<div>
+											<CopyToClipboard
+												text={
+													process.env.NODE_ENV === "development"
+														? `localhost:3000/form/shareable/${authUser?.uid}/${form.uid}`
+														: `https://bbcode.rip/form/shareable/${authUser?.uid}/${form.uid}`
+												}
+												onCopy={() =>
+													InfoToast(`Shareable link copied to clipboard`)
+												}>
+												<Button
+													variant="link"
+													size="sm"
+													onClick={() => null}
+													style={{ padding: 0, float: "right" }}>
+													<span className="text-muted">
+														Shareable{" "}
+														<FontAwesomeIcon
+															icon="link"
+															fixedWidth></FontAwesomeIcon>
+													</span>
+												</Button>
+											</CopyToClipboard>
+										</div>
+										{form.bookmarkLink && (
+											<div>
+												<Button
+													as="a"
+													target="_blank"
+													variant="link"
+													size="sm"
+													href={parseBookmarkLink(form.bookmarkLink)}
+													style={{ padding: 0, float: "right" }}>
+													<span className="text-muted">
+														Open{" "}
+														<FontAwesomeIcon
+															icon="bookmark"
+															fixedWidth></FontAwesomeIcon>
+													</span>
+												</Button>
+											</div>
+										)}
+									</div>
+								)}
+							</div>
 						</Card.Title>
 						{showEditButtons && (
 							<ButtonGroup style={{ marginTop: ".75rem" }}>
