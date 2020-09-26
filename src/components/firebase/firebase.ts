@@ -302,9 +302,14 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 			? JSON.parse(formProg)
 			: null;
 
-		// Backfill for database form InputComponents
+		/* Backfill for database */
+		// database form root fields
+		if (!bbCodeForm.bookmarkLink) {
+			bbCodeForm.bookmarkLink = "";
+			changesToPropogate = true;
+		}
+		// database form InputComponents
 		bbCodeForm.inputComponents.map((inputComponent) => {
-			// Change listItem inputComponents to multiStar
 			if (inputComponent.type === "listItem" && !inputComponent.multiStar) {
 				inputComponent.multiStar = true;
 				inputComponent.multi = false;
@@ -318,12 +323,17 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 				inputComponent.defaultVal = "";
 				changesToPropogate = true;
 			}
-
 			return inputComponent;
 		});
 
-		// Backfill for formProgress form InputComponents
+		/* Backfill for formProgress */
 		if (formProgBBCodeForm) {
+			// formProgress root form fields
+			if (!formProgBBCodeForm.bookmarkLink) {
+				formProgBBCodeForm.bookmarkLink = "";
+				changesToPropogate = true;
+			}
+			// formProgress form InputComponents
 			formProgBBCodeForm.inputComponents.map((inputComponent) => {
 				if (
 					(inputComponent.type === "date" ||

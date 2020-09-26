@@ -6,10 +6,11 @@ export type BBCodeFormType = {
 	inputComponents: InputComponentProps[];
 	rawBBCode: string;
 	matchedBBCode: string;
+	bookmarkLink: string;
+	order?: number;
 	createdTimestamp: number;
 	updatedTimestamp: number;
 	progressTimestamp?: number;
-	order?: number;
 };
 
 type inputTypes =

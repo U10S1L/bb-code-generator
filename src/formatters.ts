@@ -100,3 +100,14 @@ export const getFormWithDefaultVals = (
 export const getFormProgressString = (bbCodeForm: BBCodeFormType): string => {
 	return `formProgress_${bbCodeForm.uid}`;
 };
+
+export const parseBookmarkLink = (bookmarkLink: string): string => {
+	if (
+		bookmarkLink.indexOf("http://") == -1 &&
+		bookmarkLink.indexOf("https://") == -1
+	) {
+		return `//${bookmarkLink}`;
+	} else {
+		return bookmarkLink;
+	}
+};

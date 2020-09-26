@@ -6,6 +6,7 @@ import {
 	faArrowLeft,
 	faArrowRight,
 	faBars,
+	faBookmark,
 	faCalendarAlt,
 	faCalendarTimes,
 	faCaretRight,
@@ -78,7 +79,8 @@ library.add(
 	faLock,
 	faLockOpen,
 	faUser,
-	faPlayCircle
+	faPlayCircle,
+	faBookmark
 );
 
 const App = () => {
