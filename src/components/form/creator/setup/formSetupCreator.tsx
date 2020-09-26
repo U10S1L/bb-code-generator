@@ -8,7 +8,7 @@ import {
 	ResponsiveEmbed,
 	Row
 } from "react-bootstrap";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
 
@@ -57,7 +57,7 @@ const FormSetupCreator = ({
 					Bookmark Link
 					<QuestionMarkTooltip
 						id="bookmarkLinkExplanation"
-						text={`Creates a button on `}
+						text={`Adds buttons to open this link on the My Forms page and when Generated BBCode for a form.`}
 					/>
 				</h5>
 				<InputGroup>
