@@ -47,7 +47,10 @@ export const getDateString = (date: Date): string => {
 
 export const getTimeString = (date: Date): string => {
 	if (!isNaN(date.getDate())) {
-		return `${date.getHours()}:${date.getMinutes()}`;
+		return `${date
+			.getHours()
+			.toString()
+			.padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 	} else {
 		return "";
 	}
@@ -99,4 +102,15 @@ export const getFormWithDefaultVals = (
 
 export const getFormProgressString = (bbCodeForm: BBCodeFormType): string => {
 	return `formProgress_${bbCodeForm.uid}`;
+};
+
+export const parseBookmarkLink = (bookmarkLink: string): string => {
+	if (
+		bookmarkLink.indexOf("http://") === -1 &&
+		bookmarkLink.indexOf("https://") === -1
+	) {
+		return `//${bookmarkLink}`;
+	} else {
+		return bookmarkLink;
+	}
 };
