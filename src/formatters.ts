@@ -47,7 +47,10 @@ export const getDateString = (date: Date): string => {
 
 export const getTimeString = (date: Date): string => {
 	if (!isNaN(date.getDate())) {
-		return `${date.getHours()}:${date.getMinutes()}`;
+		return `${date
+			.getHours()
+			.toString()
+			.padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
 	} else {
 		return "";
 	}
