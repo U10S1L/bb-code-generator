@@ -88,10 +88,14 @@ export const getFormWithDefaultVals = (
 			inputComponents: bbCodeForm.inputComponents.map((inputComponent) => {
 				return {
 					...inputComponent,
-					inputs: inputComponent.inputs.map((input) => {
+					inputs: inputComponent.inputs.map((input, i) => {
 						return {
 							...input,
-							val: inputComponent.defaultVal
+							val: inputComponent.defaultVal,
+							uniqueId: genInputComponentInputUniqueId(
+								inputComponent.uniqueId,
+								i
+							)
 						};
 					})
 				};
@@ -113,4 +117,11 @@ export const parseBookmarkLink = (bookmarkLink: string): string => {
 	} else {
 		return bookmarkLink;
 	}
+};
+
+export const genInputComponentInputUniqueId = (
+	inputComponentUniqueId: string,
+	index: number
+) => {
+	return `{${inputComponentUniqueId}_input_${index}}`;
 };

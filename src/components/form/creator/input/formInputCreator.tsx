@@ -171,16 +171,6 @@ const FormInputCreator = ({
 	};
 
 	const handleSaveInput = (inputComponent: InputComponentProps) => {
-		inputComponent.inputs.map((input) => {
-			return input.uniqueId !== null
-				? input
-				: {
-						...input,
-						uniqueId: `{<${input.type}>_${
-							Math.floor(Math.random() * (9999 - 0)) + 0
-						}}`
-				  };
-		});
 		if (!inputComponentModalProps.editMode) {
 			// Add New
 			inputComponent.uniqueId = `{<${inputComponent.label}>_${

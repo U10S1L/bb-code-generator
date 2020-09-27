@@ -1,8 +1,10 @@
+import React, { useEffect } from "react";
+
 import { BBCodeFormType } from "types/formTypes";
 import { Form } from "react-bootstrap";
 import InputComponent from "components/inputComponents/inputComponent";
 import { InputTypeProps } from "types/formTypes";
-import React from "react";
+import { genInputComponentInputUniqueId } from "formatters";
 
 type FormRendererProps = {
 	bbCodeForm: BBCodeFormType;
@@ -18,7 +20,17 @@ const FormRenderer = ({
 		inputComponentInputs: InputTypeProps[]
 	) => {
 		var newInputComponents = bbCodeForm.inputComponents.concat();
-		newInputComponents[inputComponentIndex].inputs = inputComponentInputs;
+		newInputComponents[inputComponentIndex].inputs = inputComponentInputs.map(
+			(input) => {
+				return {
+					...input,
+					uniqueId: genInputComponentInputUniqueId(
+						newInputComponents[inputComponentIndex].uniqueId,
+						newInputComponents[inputComponentIndex].inputs.indexOf(input)
+					)
+				};
+			}
+		);
 		const updatedBBCodeForm = {
 			...bbCodeForm,
 			inputComponents: newInputComponents

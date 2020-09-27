@@ -1,11 +1,14 @@
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { InputComponentProps, InputTypeProps } from "types/formTypes";
+import React, { useCallback, useEffect, useState } from "react";
 
+import BBCodeFormatButtons from "components/bbCodeFormatButtons/bbCodeFormatButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputType from "components/inputComponents/inputType";
-import React from "react";
+import { genInputComponentInputUniqueId } from "formatters";
 
 const InputComponent: React.FC<InputComponentProps> = ({
+	uniqueId,
 	label,
 	description,
 	type,
@@ -17,16 +20,17 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	selectOptions,
 	orderNum
 }) => {
+	const [currInputRef, setCurrInputRef] = useState<React.MutableRefObject<
+		HTMLInputElement | HTMLTextAreaElement
+	> | null>(null!);
+
 	const addNewInput = (inputTypeItem: InputTypeProps, startIndex: number) => {
 		// Make a copy of the current inputComponentInputs
 		var currInputComponentInputs = inputs.concat();
 		// Insert new inputTypeItem after the item whose "+" button was clicked
 		currInputComponentInputs.splice(startIndex + 1, 0, {
 			...inputTypeItem,
-			val: defaultVal,
-			uniqueId: `{<${inputTypeItem.type}>_${
-				Math.floor(Math.random() * (9999 - 0)) + 0
-			}}`
+			val: defaultVal
 		});
 		// Update the list of components
 		onUpdateInputs && onUpdateInputs(currInputComponentInputs);
@@ -38,8 +42,8 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	const updateInput = (index: number, value: any) => {
 		onUpdateInputs &&
 			onUpdateInputs(
-				inputs.map((inputComponent, i) =>
-					index === i ? { ...inputComponent, val: value } : inputComponent
+				inputs.map((input, i) =>
+					index === i ? { ...input, val: value } : input
 				)
 			);
 	};
@@ -66,9 +70,42 @@ const InputComponent: React.FC<InputComponentProps> = ({
 						<InputType
 							{...inputType}
 							setVal={(val: any) => updateInput(i, val)}
-							selectOptions={selectOptions}
 							type={type}
+							selectOptions={selectOptions}
+							setInputRef={
+								type === "shortText" ||
+								type === "longText" ||
+								type === "url" ||
+								type === "listItem"
+									? (
+											ref: React.MutableRefObject<
+												HTMLInputElement | HTMLTextAreaElement
+											> | null
+									  ) => setCurrInputRef(ref)
+									: undefined
+							}
+							uniqueId={
+								inputType.uniqueId ||
+								genInputComponentInputUniqueId(uniqueId, i)
+							}
 						/>
+						{currInputRef?.current &&
+							currInputRef.current.id === inputType.uniqueId && (
+								<BBCodeFormatButtons
+									text={inputType.val}
+									selectedText={
+										currInputRef?.current.selectionStart &&
+										currInputRef?.current.selectionEnd
+											? inputType.val.substring(
+													currInputRef?.current.selectionStart,
+													currInputRef?.current.selectionEnd
+											  )
+											: ""
+									}
+									cursorPos={currInputRef?.current.selectionStart || 0}
+									updateText={(val: string) => updateInput(i, val)}
+								/>
+							)}
 						<InputGroup.Append hidden={!multi && !multiStar}>
 							<Button
 								variant="outline-danger"

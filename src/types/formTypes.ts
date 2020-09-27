@@ -59,4 +59,7 @@ export type InputTypeProps = {
 	placeholder?: string;
 	readOnly?: boolean;
 	selectOptions?: string[];
+	setInputRef?: (
+		ref: React.MutableRefObject<HTMLInputElement | HTMLTextAreaElement> | null
+	) => void;
 };
