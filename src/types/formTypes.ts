@@ -39,27 +39,26 @@ export type InputComponentProps = {
 	uniqueId: string;
 	type: inputTypes;
 	typeName: inputTypeNames;
-	typeIcon: IconDefinition;
 	label?: string; // User-created
 	description?: string;
 	multi?: boolean;
 	multiStar?: boolean;
 	defaultVal: string;
 	inputs: InputTypeProps[];
-	onUpdateInputs?: (inputs: InputTypeProps[]) => void;
 	selectOptions?: string[];
 	orderNum?: number;
+	onUpdateInputs?: (inputs: InputTypeProps[]) => void;
+
+	// Deprecated
+	typeIcon?: string; // Set for deletion in backfill procedures
 };
 
 export type InputTypeProps = {
+	uniqueId?: string;
 	type: inputTypes;
 	val: string;
-	setVal?: (val: any) => void;
-	uniqueId?: string;
 	placeholder?: string;
 	readOnly?: boolean;
 	selectOptions?: string[];
-	setInputRef?: (
-		ref: React.MutableRefObject<HTMLInputElement | HTMLTextAreaElement> | null
-	) => void;
+	onUpdateVal?: (val: any) => void;
 };

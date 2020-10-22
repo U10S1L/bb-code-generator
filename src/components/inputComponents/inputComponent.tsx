@@ -1,11 +1,11 @@
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Button, InputGroup } from "react-bootstrap";
 import { InputComponentProps, InputTypeProps } from "types/formTypes";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import BBCodeFormatButtons from "components/bbCodeFormatButtons/bbCodeFormatButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputType from "components/inputComponents/inputType";
-import { genInputComponentInputUniqueId } from "formatters";
+import StandardModal from "components/modals/standardModal";
+import { genInputUniqueId } from "formatters";
 
 const InputComponent: React.FC<InputComponentProps> = ({
 	uniqueId,
@@ -16,24 +16,26 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	multi,
 	multiStar,
 	inputs,
-	onUpdateInputs,
 	selectOptions,
-	orderNum
+	onUpdateInputs
 }) => {
-	const [currInputRef, setCurrInputRef] = useState<React.MutableRefObject<
-		HTMLInputElement | HTMLTextAreaElement
-	> | null>(null!);
+	const [hoveringResetButton, setHoveringResetButton] = useState({
+		hovering: false,
+		inputUniqueId: ""
+	});
+
+	const [resetModalProps, setResetModalProps] = useState({ visible: false });
 
 	const addNewInput = (inputTypeItem: InputTypeProps, startIndex: number) => {
-		// Make a copy of the current inputComponentInputs
-		var currInputComponentInputs = inputs.concat();
+		// Make a copy of the current inputs
+		var currInputs = inputs.concat();
 		// Insert new inputTypeItem after the item whose "+" button was clicked
-		currInputComponentInputs.splice(startIndex + 1, 0, {
+		currInputs.splice(startIndex + 1, 0, {
 			...inputTypeItem,
 			val: defaultVal
 		});
 		// Update the list of components
-		onUpdateInputs && onUpdateInputs(currInputComponentInputs);
+		onUpdateInputs && onUpdateInputs(currInputs);
 	};
 	const removeInput = (inputType: InputTypeProps) => {
 		onUpdateInputs &&
@@ -47,84 +49,114 @@ const InputComponent: React.FC<InputComponentProps> = ({
 				)
 			);
 	};
-
 	return (
-		<Form.Group style={{ marginBottom: "0" }}>
-			<Form.Label>
-				<span style={{ fontWeight: "bold" }}>
-					{orderNum ? `${orderNum}. ${label}` : `${label}`}
-				</span>
-				<div className="small text-muted">{description}</div>
-			</Form.Label>
-			{inputs.map((inputType, i) => {
+		<div id={uniqueId}>
+			{inputs.map((input, i) => {
 				const canAddInput = multi || multiStar;
 				const canRemoveInput = (multi || multiStar) && inputs.length !== 1;
-
 				return (
-					<InputGroup key={i}>
-						{multiStar && (
-							<InputGroup.Prepend>
-								<InputGroup.Text>{`[*]`}</InputGroup.Text>
-							</InputGroup.Prepend>
-						)}
-						<InputType
-							{...inputType}
-							setVal={(val: any) => updateInput(i, val)}
-							type={type}
-							selectOptions={selectOptions}
-							setInputRef={
-								type === "shortText" ||
-								type === "longText" ||
-								type === "url" ||
-								type === "listItem"
-									? (
-											ref: React.MutableRefObject<
-												HTMLInputElement | HTMLTextAreaElement
-											> | null
-									  ) => setCurrInputRef(ref)
-									: undefined
-							}
-							uniqueId={
-								inputType.uniqueId ||
-								genInputComponentInputUniqueId(uniqueId, i)
-							}
-						/>
-						{currInputRef?.current &&
-							currInputRef.current.id === inputType.uniqueId && (
-								<BBCodeFormatButtons
-									text={inputType.val}
-									selectedText={
-										currInputRef?.current.selectionStart &&
-										currInputRef?.current.selectionEnd
-											? inputType.val.substring(
-													currInputRef?.current.selectionStart,
-													currInputRef?.current.selectionEnd
-											  )
-											: ""
-									}
-									cursorPos={currInputRef?.current.selectionStart || 0}
-									updateText={(val: string) => updateInput(i, val)}
-								/>
+					<div key={i}>
+						<InputGroup>
+							{multiStar && (
+								<InputGroup.Prepend>
+									<InputGroup.Text>{`[*]`}</InputGroup.Text>
+								</InputGroup.Prepend>
 							)}
-						<InputGroup.Append hidden={!multi && !multiStar}>
-							<Button
-								variant="outline-danger"
-								style={{ margin: "0 .2rem" }}
-								onClick={() => removeInput(inputType)}
-								disabled={!canRemoveInput}>
-								<FontAwesomeIcon icon="minus" />
-							</Button>
-							<Button
-								variant="outline-success"
-								onClick={() => addNewInput(inputType, i)}
-								disabled={!canAddInput}>
-								<FontAwesomeIcon icon="plus" />
-							</Button>
-						</InputGroup.Append>
-					</InputGroup>
+							<InputType
+								{...input}
+								onUpdateVal={(val: any) => updateInput(i, val)}
+								type={type}
+								selectOptions={selectOptions}
+								uniqueId={input.uniqueId || genInputUniqueId(uniqueId, i)}
+							/>
+							{input.type !== "date" &&
+								input.type !== "time" &&
+								input.type !== "dateTime" &&
+								input.type !== "dropdown" &&
+								input.val !== defaultVal && (
+									<Button
+										variant="link"
+										onClick={() => setResetModalProps({ visible: true })}
+										onMouseEnter={() =>
+											setHoveringResetButton({
+												hovering: true,
+												inputUniqueId: input.uniqueId || ""
+											})
+										}
+										onMouseLeave={() =>
+											setHoveringResetButton({
+												hovering: false,
+												inputUniqueId: ""
+											})
+										}
+										style={{
+											position: "absolute",
+											right: "0",
+											zIndex: 3
+										}}>
+										<FontAwesomeIcon
+											icon="undo"
+											style={{ pointerEvents: "none" }}
+											color={
+												hoveringResetButton.hovering &&
+												hoveringResetButton.inputUniqueId === input.uniqueId
+													? "red"
+													: "lightgrey"
+											}
+										/>
+									</Button>
+								)}
+						</InputGroup>
+						{(multi || multiStar) && (
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "flex-end",
+									float: "right"
+								}}>
+								<Button
+									variant="link"
+									size="sm"
+									onClick={() => removeInput(input)}
+									disabled={!canRemoveInput}>
+									<FontAwesomeIcon
+										icon="minus"
+										color="#bd3f5d"
+										style={{ pointerEvents: "none" }}
+									/>
+								</Button>
+								<Button
+									variant="link"
+									size="sm"
+									onClick={() => addNewInput(input, i)}
+									disabled={!canAddInput}>
+									<FontAwesomeIcon
+										icon="plus"
+										color="#46a989"
+										style={{ pointerEvents: "none" }}
+									/>
+								</Button>
+							</div>
+						)}
+
+						{resetModalProps.visible && (
+							<StandardModal
+								visible={true}
+								handleClose={() => setResetModalProps({ visible: false })}
+								handleContinue={() => {
+									updateInput(i, defaultVal);
+									setResetModalProps({ visible: false });
+								}}
+								title={"Erase this text?"}
+								message={`"${input.val}" will be erased from this field. This cannot be done.`}
+								closeBtnText={"Cancel"}
+								continueBtnText={"Reset"}
+							/>
+						)}
+					</div>
 				);
 			})}
-		</Form.Group>
+		</div>
 	);
 };
 

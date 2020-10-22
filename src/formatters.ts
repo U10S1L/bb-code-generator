@@ -92,10 +92,7 @@ export const getFormWithDefaultVals = (
 						return {
 							...input,
 							val: inputComponent.defaultVal,
-							uniqueId: genInputComponentInputUniqueId(
-								inputComponent.uniqueId,
-								i
-							)
+							uniqueId: genInputUniqueId(inputComponent.uniqueId, i)
 						};
 					})
 				};
@@ -119,7 +116,7 @@ export const parseBookmarkLink = (bookmarkLink: string): string => {
 	}
 };
 
-export const genInputComponentInputUniqueId = (
+export const genInputUniqueId = (
 	inputComponentUniqueId: string,
 	index: number
 ) => {
