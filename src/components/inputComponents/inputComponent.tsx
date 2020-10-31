@@ -1,35 +1,42 @@
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Button, InputGroup } from "react-bootstrap";
 import { InputComponentProps, InputTypeProps } from "types/formTypes";
+import React, { useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputType from "components/inputComponents/inputType";
-import React from "react";
+import StandardModal from "components/modals/standardModal";
+import { genInputUniqueId } from "formatters";
 
 const InputComponent: React.FC<InputComponentProps> = ({
-	label,
-	description,
+	uniqueId,
 	type,
 	defaultVal,
 	multi,
 	multiStar,
 	inputs,
-	onUpdateInputs,
 	selectOptions,
-	orderNum
+	onUpdateInputs
 }) => {
+	const [hoveringResetButton, setHoveringResetButton] = useState({
+		hovering: false,
+		inputUniqueId: ""
+	});
+
+	const [resetModalProps, setResetModalProps] = useState({
+		visible: false,
+		inputIndex: -1
+	});
+
 	const addNewInput = (inputTypeItem: InputTypeProps, startIndex: number) => {
-		// Make a copy of the current inputComponentInputs
-		var currInputComponentInputs = inputs.concat();
+		// Make a copy of the current inputs
+		var currInputs = inputs.concat();
 		// Insert new inputTypeItem after the item whose "+" button was clicked
-		currInputComponentInputs.splice(startIndex + 1, 0, {
+		currInputs.splice(startIndex + 1, 0, {
 			...inputTypeItem,
-			val: defaultVal,
-			uniqueId: `{<${inputTypeItem.type}>_${
-				Math.floor(Math.random() * (9999 - 0)) + 0
-			}}`
+			val: defaultVal
 		});
 		// Update the list of components
-		onUpdateInputs && onUpdateInputs(currInputComponentInputs);
+		onUpdateInputs && onUpdateInputs(currInputs);
 	};
 	const removeInput = (inputType: InputTypeProps) => {
 		onUpdateInputs &&
@@ -38,56 +45,124 @@ const InputComponent: React.FC<InputComponentProps> = ({
 	const updateInput = (index: number, value: any) => {
 		onUpdateInputs &&
 			onUpdateInputs(
-				inputs.map((inputComponent, i) =>
-					index === i ? { ...inputComponent, val: value } : inputComponent
+				inputs.map((input, i) =>
+					index === i ? { ...input, val: value } : input
 				)
 			);
 	};
-
 	return (
-		<Form.Group style={{ marginBottom: "0" }}>
-			<Form.Label>
-				<span style={{ fontWeight: "bold" }}>
-					{orderNum ? `${orderNum}. ${label}` : `${label}`}
-				</span>
-				<div className="small text-muted">{description}</div>
-			</Form.Label>
-			{inputs.map((inputType, i) => {
+		<div id={uniqueId}>
+			{inputs.map((input, i) => {
 				const canAddInput = multi || multiStar;
 				const canRemoveInput = (multi || multiStar) && inputs.length !== 1;
-
 				return (
-					<InputGroup key={i}>
-						{multiStar && (
-							<InputGroup.Prepend>
-								<InputGroup.Text>{`[*]`}</InputGroup.Text>
-							</InputGroup.Prepend>
+					<div key={i}>
+						<InputGroup>
+							{multiStar && (
+								<InputGroup.Prepend>
+									<InputGroup.Text>{`[*]`}</InputGroup.Text>
+								</InputGroup.Prepend>
+							)}
+							<InputType
+								{...input}
+								onUpdateVal={(val: any) => updateInput(i, val)}
+								type={type}
+								selectOptions={selectOptions}
+								uniqueId={input.uniqueId || genInputUniqueId(uniqueId, i)}
+							/>
+							{input.type !== "date" &&
+								input.type !== "time" &&
+								input.type !== "dateTime" &&
+								input.type !== "dropdown" &&
+								input.type !== "checkbox" &&
+								input.val !== defaultVal && (
+									<Button
+										variant="link"
+										onClick={() =>
+											setResetModalProps({ visible: true, inputIndex: i })
+										}
+										onMouseEnter={() =>
+											setHoveringResetButton({
+												hovering: true,
+												inputUniqueId: input.uniqueId || ""
+											})
+										}
+										onMouseLeave={() =>
+											setHoveringResetButton({
+												hovering: false,
+												inputUniqueId: ""
+											})
+										}
+										style={{
+											position: "absolute",
+											right: "0",
+											zIndex: 3
+										}}>
+										<FontAwesomeIcon
+											icon="undo"
+											style={{ pointerEvents: "none" }}
+											color={
+												hoveringResetButton.hovering &&
+												hoveringResetButton.inputUniqueId === input.uniqueId
+													? "red"
+													: "lightgrey"
+											}
+										/>
+									</Button>
+								)}
+						</InputGroup>
+						{(multi || multiStar) && (
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "flex-end",
+									float: "right"
+								}}>
+								<Button
+									variant="link"
+									size="sm"
+									onClick={() => removeInput(input)}
+									disabled={!canRemoveInput}>
+									<FontAwesomeIcon
+										icon="minus"
+										color="#bd3f5d"
+										style={{ pointerEvents: "none" }}
+									/>
+								</Button>
+								<Button
+									variant="link"
+									size="sm"
+									onClick={() => addNewInput(input, i)}
+									disabled={!canAddInput}>
+									<FontAwesomeIcon
+										icon="plus"
+										color="#46a989"
+										style={{ pointerEvents: "none" }}
+									/>
+								</Button>
+							</div>
 						)}
-						<InputType
-							{...inputType}
-							setVal={(val: any) => updateInput(i, val)}
-							selectOptions={selectOptions}
-							type={type}
+
+						<StandardModal
+							visible={
+								resetModalProps.visible && i === resetModalProps.inputIndex
+							}
+							handleClose={() =>
+								setResetModalProps({ visible: false, inputIndex: -1 })
+							}
+							handleContinue={() => {
+								updateInput(i, defaultVal);
+								setResetModalProps({ visible: false, inputIndex: -1 });
+							}}
+							title={"Erase this text?"}
+							message={`"${input.val}" will be erased from this field. This cannot be done.`}
+							closeBtnText={"Cancel"}
+							continueBtnText={"Reset"}
 						/>
-						<InputGroup.Append hidden={!multi && !multiStar}>
-							<Button
-								variant="outline-danger"
-								style={{ margin: "0 .2rem" }}
-								onClick={() => removeInput(inputType)}
-								disabled={!canRemoveInput}>
-								<FontAwesomeIcon icon="minus" />
-							</Button>
-							<Button
-								variant="outline-success"
-								onClick={() => addNewInput(inputType, i)}
-								disabled={!canAddInput}>
-								<FontAwesomeIcon icon="plus" />
-							</Button>
-						</InputGroup.Append>
-					</InputGroup>
+					</div>
 				);
 			})}
-		</Form.Group>
+		</div>
 	);
 };
 

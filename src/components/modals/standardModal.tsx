@@ -31,7 +31,7 @@ const StandardModal = ({
 			<Modal.Header>
 				<h3>{title}</h3>
 			</Modal.Header>
-			<Modal.Body>{message}</Modal.Body>
+			<Modal.Body style={{ overflowWrap: "break-word" }}>{message}</Modal.Body>
 			<Modal.Footer>
 				<Button variant="danger" onClick={handleClose} className="mr-auto">
 					{closeBtnText}

@@ -6,15 +6,15 @@ export const Dropdown = ({
 	placeholder,
 	readOnly,
 	val,
-	setVal,
-	selectOptions
+	selectOptions,
+	onUpdateVal
 }: InputTypeProps) => {
 	return (
 		<Form.Control
 			as="select"
 			value={val}
 			onChange={(e) => {
-				setVal && setVal(e.target.value);
+				onUpdateVal && onUpdateVal(e.target.value);
 			}}
 			placeholder={placeholder}
 			readOnly={readOnly}>

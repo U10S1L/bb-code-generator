@@ -17,7 +17,7 @@ import InputComponent from "components/inputComponents/inputComponent";
 type SelectedInputComponentProps = {
 	inputComponent: InputComponentProps;
 	editInputComponent: () => void;
-	onUpdateInputComponentInputs: (inputs: InputTypeProps[]) => void;
+	onUpdateInputs: (inputs: InputTypeProps[]) => void;
 	num: number;
 };
 type SortableSelectedInputComponentsProps = {
@@ -42,7 +42,7 @@ const SelectedInputComponent = SortableElement(
 	({
 		inputComponent,
 		editInputComponent,
-		onUpdateInputComponentInputs,
+		onUpdateInputs,
 		num
 	}: SelectedInputComponentProps) => {
 		return (
@@ -51,7 +51,7 @@ const SelectedInputComponent = SortableElement(
 					<InputComponent
 						{...inputComponent}
 						onUpdateInputs={(inputs: InputTypeProps[]) =>
-							onUpdateInputComponentInputs(inputs)
+							onUpdateInputs(inputs)
 						}
 						orderNum={num}
 					/>
@@ -80,12 +80,10 @@ const SortableSelectedInputComponents = SortableContainer(
 
 		const onUpdatePreviewInputComponent = (
 			inputComponentIndex: number,
-			inputComponentInputs: InputTypeProps[]
+			inputs: InputTypeProps[]
 		) => {
 			var newPreviewInputComponents = previewInputComponents.concat();
-			newPreviewInputComponents[
-				inputComponentIndex
-			].inputs = inputComponentInputs;
+			newPreviewInputComponents[inputComponentIndex].inputs = inputs;
 			setPreviewInputComponents(newPreviewInputComponents);
 		};
 
@@ -102,7 +100,7 @@ const SortableSelectedInputComponents = SortableContainer(
 							key={index}
 							num={index + 1}
 							editInputComponent={() => editInputComponent(inputComponent)}
-							onUpdateInputComponentInputs={(updatedInputs) =>
+							onUpdateInputs={(updatedInputs) =>
 								onUpdatePreviewInputComponent(index, updatedInputs)
 							}
 						/>

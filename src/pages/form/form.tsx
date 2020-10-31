@@ -171,7 +171,7 @@ const BBCodeForm = () => {
 					</Button>
 				</div>
 			</Col>
-			<Col xs={12} className="mt-3">
+			<Col xs={12}>
 				<FormRenderer
 					bbCodeForm={bbCodeForm}
 					onUpdateBBCodeForm={(updatedBBCodeForm) =>
@@ -199,11 +199,7 @@ const BBCodeForm = () => {
 					<CopyToClipboard
 						text={generateBBCode()}
 						onCopy={() => {
-							InfoToast("BBCode Copied. Opening bookmark...");
-							setTimeout(
-								() => window.open(parseBookmarkLink(bbCodeForm.bookmarkLink)),
-								2000
-							);
+							window.open(parseBookmarkLink(bbCodeForm.bookmarkLink));
 						}}>
 						<Button variant="success">
 							<span style={{ marginRight: ".5rem" }}>Copy BBCode and Open</span>
