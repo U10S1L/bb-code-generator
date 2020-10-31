@@ -11,24 +11,26 @@ import {
 } from "react-bootstrap";
 import { InputComponentProps, InputTypeProps } from "types/formTypes";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-	faCalendarAlt,
-	faCalendarTimes,
-	faCaretSquareDown,
-	faCheckSquare,
-	faCircle,
-	faClock,
-	faLink,
-	faTextHeight,
-	faTextWidth
-} from "@fortawesome/free-solid-svg-icons";
 
 import { BBCodeFormType } from "types/formTypes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormPreviewer from "components/form/previewer/formPreviewer";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import InputComponent from "components/inputComponents/inputComponent";
 import InputType from "components/inputComponents/inputType";
 import { QuestionMarkTooltip } from "components/help/tooltip/tooltips";
+
+const inputIconMap = {
+	shortText: "text-width" as IconProp,
+	longText: "text-height" as IconProp,
+	listItem: "circle" as IconProp,
+	date: "calendar-alt" as IconProp,
+	time: "clock" as IconProp,
+	dateTime: "calendar-times" as IconProp,
+	dropdown: "caret-square-down" as IconProp,
+	checkbox: "check-square" as IconProp,
+	url: "link" as IconProp
+};
 
 const inputComponentChoiceList: InputComponentProps[] = [
 	{
@@ -36,18 +38,14 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "shortText",
 		typeName: "Single Line",
-		typeIcon: faTextWidth,
-		inputs: [{ type: "shortText", val: "" }],
-		onUpdateInputs: undefined
+		inputs: [{ type: "shortText", val: "" }]
 	},
 	{
 		uniqueId: "",
 		defaultVal: "",
 		type: "longText",
 		typeName: "Multi Line",
-		typeIcon: faTextHeight,
-		inputs: [{ type: "longText", val: "" }],
-		onUpdateInputs: undefined
+		inputs: [{ type: "longText", val: "" }]
 	},
 	{
 		uniqueId: "",
@@ -55,47 +53,35 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		multiStar: true,
 		type: "listItem",
 		typeName: "List Items [*]",
-		typeIcon: faCircle,
-		inputs: [{ type: "listItem", val: "" }],
-		onUpdateInputs: undefined
+		inputs: [{ type: "listItem", val: "" }]
 	},
 	{
 		uniqueId: "",
 		defaultVal: "",
 		type: "date",
 		typeName: "Date",
-		typeIcon: faCalendarAlt,
-		inputs: [{ type: "date", val: "" }],
-		onUpdateInputs: undefined,
-		selectOptions: [""]
+		inputs: [{ type: "date", val: "" }]
 	},
 	{
 		uniqueId: "",
 		defaultVal: "",
 		type: "time",
 		typeName: "Time",
-		typeIcon: faClock,
-		inputs: [{ type: "time", val: "" }],
-		onUpdateInputs: undefined,
-		selectOptions: [""]
+		inputs: [{ type: "time", val: "" }]
 	},
 	{
 		uniqueId: "",
 		defaultVal: "",
 		type: "dateTime",
 		typeName: "Date & Time",
-		typeIcon: faCalendarTimes,
-		inputs: [{ type: "dateTime", val: "" }],
-		onUpdateInputs: undefined
+		inputs: [{ type: "dateTime", val: "" }]
 	},
 	{
 		uniqueId: "",
 		defaultVal: " ",
 		type: "dropdown",
 		typeName: "Dropdown",
-		typeIcon: faCaretSquareDown,
 		inputs: [{ type: "dropdown", val: "" }],
-		onUpdateInputs: undefined,
 		selectOptions: [" ", ""]
 	},
 	{
@@ -103,20 +89,14 @@ const inputComponentChoiceList: InputComponentProps[] = [
 		defaultVal: "",
 		type: "checkbox",
 		typeName: "Checkbox",
-		typeIcon: faCheckSquare,
-		inputs: [{ type: "checkbox", val: "false" }],
-		onUpdateInputs: undefined,
-		selectOptions: [""]
+		inputs: [{ type: "checkbox", val: "false" }]
 	},
 	{
 		uniqueId: "",
 		defaultVal: JSON.stringify({ text: "", link: "" }),
 		type: "url",
 		typeName: "Hyperlink",
-		typeIcon: faLink,
-		inputs: [{ type: "url", val: JSON.stringify({ text: "", link: "" }) }],
-		onUpdateInputs: undefined,
-		selectOptions: [""]
+		inputs: [{ type: "url", val: JSON.stringify({ text: "", link: "" }) }]
 	}
 ];
 
@@ -171,16 +151,6 @@ const FormInputCreator = ({
 	};
 
 	const handleSaveInput = (inputComponent: InputComponentProps) => {
-		inputComponent.inputs.map((input) => {
-			return input.uniqueId !== null
-				? input
-				: {
-						...input,
-						uniqueId: `{<${input.type}>_${
-							Math.floor(Math.random() * (9999 - 0)) + 0
-						}}`
-				  };
-		});
 		if (!inputComponentModalProps.editMode) {
 			// Add New
 			inputComponent.uniqueId = `{<${inputComponent.label}>_${
@@ -217,7 +187,7 @@ const FormInputCreator = ({
 											{inputComponent.typeName}
 										</span>
 										<FontAwesomeIcon
-											icon={inputComponent.typeIcon}
+											icon={inputIconMap[inputComponent.type]}
 											fixedWidth
 										/>
 									</Button>
@@ -318,7 +288,6 @@ const InputComponentModal = ({
 		}
 	};
 
-	// Select Options
 	const [selectOptions, setSelectOptions] = useState(
 		inputComponent ? inputComponent.selectOptions : []
 	);
@@ -328,14 +297,13 @@ const InputComponentModal = ({
 		setSelectOptions(currSelectOptions);
 	};
 	const addSelectOption = (startIndex: number) => {
-		// Make a copy of the current inputComponentInputs
+		// Make a copy of the current Inputs
 		var currSelectOptions = selectOptions?.concat();
 		// Insert new inputTypeItem after the item whose "+" button was clicked
 		currSelectOptions?.splice(startIndex + 1, 0, "");
 		// Update the list of components
 		setSelectOptions(currSelectOptions);
 	};
-
 	const removeSelectOption = (index: number) => {
 		var currSelectOptions = selectOptions?.concat();
 		currSelectOptions?.splice(index, 1);
@@ -352,12 +320,12 @@ const InputComponentModal = ({
 
 	useEffect(() => {
 		// Sets defaults on the Input Components
-		var inputComponentInputsWithDefaults = inputComponent
+		var inputsWithDefaults = inputComponent
 			? inputComponent.inputs.map((input) => {
 					return { ...input, val: defaultVal };
 			  })
 			: [];
-		setInputs(inputComponentInputsWithDefaults);
+		setInputs(inputsWithDefaults);
 	}, [defaultVal, inputComponent]);
 
 	useEffect(() => {
@@ -498,7 +466,7 @@ const InputComponentModal = ({
 								<InputType
 									type={inputComponent?.type}
 									val={defaultVal}
-									setVal={(val) => setDefaultVal(val)}
+									onUpdateVal={(val) => setDefaultVal(val)}
 								/>
 							</Form.Group>
 						)}

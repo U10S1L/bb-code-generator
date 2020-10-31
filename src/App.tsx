@@ -6,6 +6,7 @@ import {
 	faArrowLeft,
 	faArrowRight,
 	faBars,
+	faBold,
 	faBookmark,
 	faCalendarAlt,
 	faCalendarTimes,
@@ -18,9 +19,13 @@ import {
 	faClock,
 	faDownload,
 	faEdit,
+	faEnvelope as faEnvelopeSolid,
 	faExclamationCircle,
 	faEye,
+	faEyeSlash,
 	faFont,
+	faImage,
+	faItalic,
 	faLink,
 	faLock,
 	faLockOpen,
@@ -32,6 +37,8 @@ import {
 	faTextHeight,
 	faTextWidth,
 	faTimes,
+	faUnderline,
+	faUndo,
 	faUser
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -40,6 +47,7 @@ import { Container } from "react-bootstrap";
 import NavigationBar from "components/navigationBar/navigationBar";
 import React from "react";
 import SwitchRoutes from "./SwitchRoutes";
+import { faEnvelope as faEnvelopeRegular } from "@fortawesome/free-regular-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import pages from "./constants/pages";
 
@@ -80,7 +88,17 @@ library.add(
 	faLockOpen,
 	faUser,
 	faPlayCircle,
-	faBookmark
+	faBookmark,
+	faImage,
+	faUndo,
+	faBold,
+	faEnvelopeSolid,
+	faEyeSlash,
+	faImage,
+	faItalic,
+	faLink,
+	faUnderline,
+	faEnvelopeRegular
 );
 
 const App = () => {

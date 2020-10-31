@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputTypeProps } from "types/formTypes";
 import React from "react";
 
-export const Url = ({ readOnly, val, setVal }: InputTypeProps) => {
+export const Url = ({ readOnly, val, onUpdateVal }: InputTypeProps) => {
 	const valObj = JSON.parse(val);
 	return (
 		<div style={{ display: "flex", flex: 1 }}>
@@ -18,11 +18,12 @@ export const Url = ({ readOnly, val, setVal }: InputTypeProps) => {
 					type="text"
 					value={valObj && valObj.text !== undefined ? valObj.text : ""}
 					onChange={(e) => {
-						setVal &&
-							setVal(JSON.stringify({ ...valObj, text: e.target.value }));
+						onUpdateVal &&
+							onUpdateVal(JSON.stringify({ ...valObj, text: e.target.value }));
 					}}
 					placeholder={"Text"}
 					readOnly={readOnly}
+					style={{ paddingRight: "2.5rem" }}
 				/>
 			</InputGroup>
 			<InputGroup>
@@ -35,11 +36,12 @@ export const Url = ({ readOnly, val, setVal }: InputTypeProps) => {
 					type="text"
 					value={valObj && valObj.link !== undefined ? valObj.link : ""}
 					onChange={(e) => {
-						setVal &&
-							setVal(JSON.stringify({ ...valObj, link: e.target.value }));
+						onUpdateVal &&
+							onUpdateVal(JSON.stringify({ ...valObj, link: e.target.value }));
 					}}
 					placeholder={"Link"}
 					readOnly={readOnly}
+					style={{ paddingRight: "2.5rem" }}
 				/>
 			</InputGroup>
 		</div>

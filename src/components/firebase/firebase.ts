@@ -310,6 +310,14 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 		}
 		// database form InputComponents
 		bbCodeForm.inputComponents.map((inputComponent) => {
+			if (inputComponent.typeIcon) {
+				delete inputComponent["typeIcon"];
+				changesToPropogate = true;
+			}
+			if (inputComponent.type !== "dropdown" && inputComponent.selectOptions) {
+				delete inputComponent["selectOptions"];
+				changesToPropogate = true;
+			}
 			if (inputComponent.type === "listItem" && !inputComponent.multiStar) {
 				inputComponent.multiStar = true;
 				inputComponent.multi = false;
@@ -323,6 +331,14 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 				inputComponent.defaultVal = "";
 				changesToPropogate = true;
 			}
+			// InputComponents Input[]
+			inputComponent.inputs.map((input) => {
+				if (input.type !== "dropdown" && input.selectOptions) {
+					delete input["selectOptions"];
+					changesToPropogate = true;
+				}
+				return input;
+			});
 			return inputComponent;
 		});
 
@@ -335,6 +351,7 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 			}
 			// formProgress form InputComponents
 			formProgBBCodeForm.inputComponents.map((inputComponent) => {
+				delete inputComponent["typeIcon"];
 				if (
 					(inputComponent.type === "date" ||
 						inputComponent.type === "time" ||
@@ -343,6 +360,13 @@ export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
 				) {
 					inputComponent.defaultVal = "";
 				}
+				inputComponent.inputs.map((input) => {
+					if (input.type !== "dropdown" && input.selectOptions) {
+						delete input["selectOptions"];
+						changesToPropogate = true;
+					}
+					return input;
+				});
 				return inputComponent;
 			});
 			localStorage.setItem(

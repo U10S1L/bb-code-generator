@@ -29,7 +29,6 @@ const AuthModal = ({ visible, onClose, user }: AuthModalProps) => {
 	return (
 		<Modal
 			show={visible}
-			// onHide={handleClose}
 			animation={false}
 			backdrop="static"
 			keyboard={false}

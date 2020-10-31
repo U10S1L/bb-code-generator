@@ -2,16 +2,25 @@ import { Form } from "react-bootstrap";
 import { InputTypeProps } from "types/formTypes";
 import React from "react";
 
-const ShortText = ({ placeholder, readOnly, val, setVal }: InputTypeProps) => {
+const ShortText = ({
+	uniqueId,
+	placeholder,
+	readOnly,
+	val,
+	onUpdateVal
+}: InputTypeProps) => {
 	return (
 		<Form.Control
+			id={uniqueId}
 			type="text"
 			value={val}
-			onChange={(e) => {
-				setVal && setVal(e.target.value);
-			}}
 			placeholder={placeholder}
 			readOnly={readOnly}
+			autoComplete="off"
+			onChange={(e) => {
+				onUpdateVal && onUpdateVal(e.target.value);
+			}}
+			style={{ paddingRight: "2.5rem" }}
 		/>
 	);
 };

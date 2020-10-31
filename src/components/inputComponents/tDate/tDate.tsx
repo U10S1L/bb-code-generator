@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { InputTypeProps } from "types/formTypes";
 
-export const TDate = ({ readOnly, val, setVal }: InputTypeProps) => {
+export const TDate = ({ readOnly, val, onUpdateVal }: InputTypeProps) => {
 	const [openToDate, setOpenToDate] = useState<Date>();
 	useEffect(() => {
 		const utc = new Date();
@@ -27,7 +27,7 @@ export const TDate = ({ readOnly, val, setVal }: InputTypeProps) => {
 		<DatePicker
 			selected={val && !isNaN(new Date(val).getDate()) ? new Date(val) : null}
 			onChange={(date) => {
-				setVal && setVal(date?.toString());
+				onUpdateVal && onUpdateVal(date?.toString());
 			}}
 			popperPlacement="auto"
 			dateFormat={"dd/MMM/yyyy"}
