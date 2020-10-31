@@ -57,7 +57,7 @@ module.exports = {
 		"plugin:prettier/recommended"
 	],
 	"rules": {
-		// "no-console": 1,
+		"no-console": 1,
 		"prettier/prettier": "error",
 		"import/no-unresolved": "error"
 	}

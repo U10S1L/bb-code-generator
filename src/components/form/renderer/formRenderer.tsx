@@ -98,7 +98,6 @@ const FormRenderer = ({
 				e.target instanceof HTMLTextAreaElement
 			) {
 				const target = e.target;
-				console.log(e);
 				const parentInputComponent = bbCodeForm.inputComponents.find(
 					(inputComponent) =>
 						inputComponent.uniqueId ===
