@@ -40,13 +40,8 @@ const BBCodeFormatButtons = ({
 	text,
 	selectionStart,
 	selectionEnd,
-	updateText,
-	visible
+	updateText
 }: BBCodeFormatButtonsProps) => {
-	const [hoveringButton, setHoveringButton] = useState({
-		hovering: false,
-		tagType: ""
-	});
 	return (
 		<div
 			id={"bbCodeFormatButtons"}
@@ -79,13 +74,8 @@ const BBCodeFormatButtons = ({
 								updateText
 							})
 						}
+						size="sm"
 						tabIndex={-1}
-						onMouseOver={() =>
-							setHoveringButton({ hovering: true, tagType: button.tagType })
-						}
-						onMouseLeave={() =>
-							setHoveringButton({ hovering: false, tagType: "" })
-						}
 						variant="light">
 						<FontAwesomeIcon
 							color="grey"

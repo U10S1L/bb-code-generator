@@ -9,8 +9,6 @@ import { genInputUniqueId } from "formatters";
 
 const InputComponent: React.FC<InputComponentProps> = ({
 	uniqueId,
-	label,
-	description,
 	type,
 	defaultVal,
 	multi,
@@ -24,7 +22,10 @@ const InputComponent: React.FC<InputComponentProps> = ({
 		inputUniqueId: ""
 	});
 
-	const [resetModalProps, setResetModalProps] = useState({ visible: false });
+	const [resetModalProps, setResetModalProps] = useState({
+		visible: false,
+		inputIndex: -1
+	});
 
 	const addNewInput = (inputTypeItem: InputTypeProps, startIndex: number) => {
 		// Make a copy of the current inputs
@@ -73,10 +74,13 @@ const InputComponent: React.FC<InputComponentProps> = ({
 								input.type !== "time" &&
 								input.type !== "dateTime" &&
 								input.type !== "dropdown" &&
+								input.type !== "checkbox" &&
 								input.val !== defaultVal && (
 									<Button
 										variant="link"
-										onClick={() => setResetModalProps({ visible: true })}
+										onClick={() =>
+											setResetModalProps({ visible: true, inputIndex: i })
+										}
 										onMouseEnter={() =>
 											setHoveringResetButton({
 												hovering: true,
@@ -139,20 +143,22 @@ const InputComponent: React.FC<InputComponentProps> = ({
 							</div>
 						)}
 
-						{resetModalProps.visible && (
-							<StandardModal
-								visible={true}
-								handleClose={() => setResetModalProps({ visible: false })}
-								handleContinue={() => {
-									updateInput(i, defaultVal);
-									setResetModalProps({ visible: false });
-								}}
-								title={"Erase this text?"}
-								message={`"${input.val}" will be erased from this field. This cannot be done.`}
-								closeBtnText={"Cancel"}
-								continueBtnText={"Reset"}
-							/>
-						)}
+						<StandardModal
+							visible={
+								resetModalProps.visible && i == resetModalProps.inputIndex
+							}
+							handleClose={() =>
+								setResetModalProps({ visible: false, inputIndex: -1 })
+							}
+							handleContinue={() => {
+								updateInput(i, defaultVal);
+								setResetModalProps({ visible: false, inputIndex: -1 });
+							}}
+							title={"Erase this text?"}
+							message={`"${input.val}" will be erased from this field. This cannot be done.`}
+							closeBtnText={"Cancel"}
+							continueBtnText={"Reset"}
+						/>
 					</div>
 				);
 			})}

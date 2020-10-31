@@ -21,6 +21,7 @@ const LongText = ({
 			className="form-control"
 			minRows={3}
 			autoComplete="off"
+			style={{ paddingRight: "2.5rem" }}
 		/>
 	);
 };

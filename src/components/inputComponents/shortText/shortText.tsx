@@ -20,6 +20,7 @@ const ShortText = ({
 			onChange={(e) => {
 				onUpdateVal && onUpdateVal(e.target.value);
 			}}
+			style={{ paddingRight: "2.5rem" }}
 		/>
 	);
 };

@@ -23,6 +23,7 @@ export const Url = ({ readOnly, val, onUpdateVal }: InputTypeProps) => {
 					}}
 					placeholder={"Text"}
 					readOnly={readOnly}
+					style={{ paddingRight: "2.5rem" }}
 				/>
 			</InputGroup>
 			<InputGroup>
@@ -40,6 +41,7 @@ export const Url = ({ readOnly, val, onUpdateVal }: InputTypeProps) => {
 					}}
 					placeholder={"Link"}
 					readOnly={readOnly}
+					style={{ paddingRight: "2.5rem" }}
 				/>
 			</InputGroup>
 		</div>
