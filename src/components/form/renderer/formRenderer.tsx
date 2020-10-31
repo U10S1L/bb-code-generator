@@ -106,7 +106,8 @@ const FormRenderer = ({
 				if (
 					parentInputComponent &&
 					(parentInputComponent.type === "shortText" ||
-						parentInputComponent.type === "longText")
+						parentInputComponent.type === "longText" ||
+						parentInputComponent.type === "listItem")
 				) {
 					setBBCodeFormatInfo((prev) => ({ ...prev, inputRef: target }));
 				} else {

@@ -18,6 +18,7 @@ const ListItem = ({
 			placeholder={placeholder}
 			className="form-control"
 			minRows={1}
+			style={{ paddingRight: "2.5rem" }}
 		/>
 	);
 };
