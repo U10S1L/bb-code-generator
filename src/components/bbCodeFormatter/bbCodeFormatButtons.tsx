@@ -1,8 +1,8 @@
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
-import React, { useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import React from "react";
 import bbCodeTagFormatter from "components/bbCodeFormatter/bbCodeTagFormatter";
 
 type BBCodeFormatButtonsProps = {

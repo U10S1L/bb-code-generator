@@ -145,7 +145,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
 
 						<StandardModal
 							visible={
-								resetModalProps.visible && i == resetModalProps.inputIndex
+								resetModalProps.visible && i === resetModalProps.inputIndex
 							}
 							handleClose={() =>
 								setResetModalProps({ visible: false, inputIndex: -1 })
