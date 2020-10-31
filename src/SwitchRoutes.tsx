@@ -24,7 +24,9 @@ const SwitchRoutes = () => {
 						children={<page.component />}
 					/>
 				) : (
-					<Route key={i} path={page.path} children={<page.component />} exact />
+					<Route key={i} path={page.path}>
+						<page.component />
+					</Route>
 				)
 			)}
 		</Switch>

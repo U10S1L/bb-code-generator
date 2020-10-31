@@ -35,11 +35,11 @@ const BBCodeForm = () => {
 
 	const generateBBCode = (): string => {
 		if (bbCodeForm !== null && bbCodeForm !== undefined) {
-			var inputComponents: InputComponentProps[] = JSON.parse(
+			let inputComponents: InputComponentProps[] = JSON.parse(
 				JSON.stringify(bbCodeForm.inputComponents)
 			);
 			const { matchedBBCode } = bbCodeForm;
-			var generatedBBCode: string = matchedBBCode.concat();
+			let generatedBBCode: string = matchedBBCode.concat();
 
 			// Formatting for special Input Types
 			inputComponents.forEach((inputComponent) => {
@@ -64,7 +64,7 @@ const BBCodeForm = () => {
 			});
 			// Matching up Fields and replacing their IDs with the inputted vals
 			inputComponents.forEach((inputComponent) => {
-				var inputComponentVal = ``;
+				let inputComponentVal = ``;
 				if (inputComponent.multi || inputComponent.multiStar) {
 					/* Handle Multi Items */
 					inputComponent.inputs.forEach((input) => {
@@ -82,7 +82,7 @@ const BBCodeForm = () => {
 							: "";
 				}
 				// Creates a regex pattern to find the unique Id. Takes care to escape all special regex characters
-				var regexpForUniqueId = new RegExp(
+				let regexpForUniqueId = new RegExp(
 					inputComponent.uniqueId.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"),
 					"g"
 				);

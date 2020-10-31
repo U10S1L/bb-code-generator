@@ -12,10 +12,10 @@ const bbCodeTagFormatter = ({
 	selectionEnd,
 	updateText
 }: BBCodeTagFormatterProps): void => {
-	var before = text.substring(0, selectionStart);
-	var between = "";
-	var after = text.substring(selectionEnd);
-	var updatedText = "";
+	const before = text.substring(0, selectionStart);
+	let between = "";
+	const after = text.substring(selectionEnd);
+	let updatedText = "";
 	switch (tagType) {
 		case "bold":
 			between = `[b]${text.substring(selectionStart, selectionEnd)}[/b]`;
