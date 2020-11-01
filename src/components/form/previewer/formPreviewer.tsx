@@ -48,6 +48,17 @@ const SelectedInputComponent = SortableElement(
 		return (
 			<Row className="preview-input-component">
 				<Col xs={10}>
+					<Form.Group>
+						<Form.Label>
+							<span
+								style={{
+									fontWeight: "bold"
+								}}>{`${inputComponent.label}`}</span>
+							<div className="small text-muted">
+								{inputComponent.description}
+							</div>
+						</Form.Label>
+					</Form.Group>
 					<InputComponent
 						{...inputComponent}
 						onUpdateInputs={(inputs: InputTypeProps[]) =>
