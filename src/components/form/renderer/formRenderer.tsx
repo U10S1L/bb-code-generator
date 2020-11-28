@@ -1,15 +1,15 @@
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 
-import { BBCodeFormType } from "types/formTypes";
+import { BBCodeForm } from "types/formTypes";
 import BBCodeFormatButtons from "components/bbCodeFormatter/bbCodeFormatButtons";
+import FieldComponent from "components/field/fieldComponent";
 import { Form } from "react-bootstrap";
-import InputComponent from "components/inputComponents/inputComponent";
-import { InputTypeProps } from "types/formTypes";
-import { genInputUniqueId } from "formatters";
+import { Input } from "types/formTypes";
+import { genInputUniqueId } from "common/utils";
 
 type FormRendererProps = {
-	bbCodeForm: BBCodeFormType;
-	onUpdateBBCodeForm: (bbCodeForm: BBCodeFormType) => void;
+	bbCodeForm: BBCodeForm;
+	onUpdateBBCodeForm: (bbCodeForm: BBCodeForm) => void;
 };
 
 const FormRenderer = ({
@@ -28,46 +28,40 @@ const FormRenderer = ({
 		selectionEnd: 0
 	});
 
-	const updateInputs = (
-		inputComponentIndex: number,
-		inputs: InputTypeProps[]
-	) => {
-		var newInputComponents = bbCodeForm.inputComponents.concat();
-		newInputComponents[inputComponentIndex].inputs = inputs.map((input, i) => {
+	const updateInputs = (fieldIndex: number, inputs: Input[]) => {
+		var newFields = bbCodeForm.fields.concat();
+		newFields[fieldIndex].inputs = inputs.map((input, i) => {
 			return {
 				...input,
-				uniqueId: genInputUniqueId(
-					newInputComponents[inputComponentIndex].uniqueId,
-					i
-				)
+				uniqueId: genInputUniqueId(newFields[fieldIndex].uniqueId, i)
 			};
 		});
 		const updatedBBCodeForm = {
 			...bbCodeForm,
-			inputComponents: newInputComponents
+			fields: newFields
 		};
 		onUpdateBBCodeForm(updatedBBCodeForm);
 	};
 
 	const updateInputWithBBCodeFormatting = (inputVal: string) => {
 		if (bbCodeFormatInfo.inputRef) {
-			const parentInputComponent = bbCodeForm.inputComponents.find(
-				(inputComponent) =>
-					inputComponent.uniqueId ===
+			const parentField = bbCodeForm.fields.find(
+				(field) =>
+					field.uniqueId ===
 					bbCodeFormatInfo.inputRef?.parentElement?.parentElement?.parentElement
 						?.id
 			);
-			if (parentInputComponent) {
-				const input = parentInputComponent?.inputs.find(
+			if (parentField) {
+				const input = parentField?.inputs.find(
 					(input) => (input.uniqueId = bbCodeFormatInfo.inputRef?.id)
 				);
 
 				if (input) {
 					const prevVal = bbCodeFormatInfo.inputRef?.value;
 					updateInputs(
-						bbCodeForm.inputComponents.indexOf(parentInputComponent),
-						parentInputComponent.inputs.map((input, i) =>
-							i === parentInputComponent.inputs.indexOf(input)
+						bbCodeForm.fields.indexOf(parentField),
+						parentField.inputs.map((input, i) =>
+							i === parentField.inputs.indexOf(input)
 								? { ...input, val: inputVal }
 								: input
 						)
@@ -111,16 +105,16 @@ const FormRenderer = ({
 				e.target instanceof HTMLTextAreaElement
 			) {
 				const target = e.target;
-				const parentInputComponent = bbCodeForm.inputComponents.find(
-					(inputComponent) =>
-						inputComponent.uniqueId ===
+				const parentField = bbCodeForm.fields.find(
+					(field) =>
+						field.uniqueId ===
 						target.parentElement?.parentElement?.parentElement?.id
 				);
 				if (
-					parentInputComponent &&
-					(parentInputComponent.type === "shortText" ||
-						parentInputComponent.type === "longText" ||
-						parentInputComponent.type === "listItem")
+					parentField &&
+					(parentField.fieldType.typeCode === "shortText" ||
+						parentField.fieldType.typeCode === "longText" ||
+						parentField.fieldType.typeCode === "listItem")
 				) {
 					setBBCodeFormatInfo((prev) => ({ ...prev, inputRef: target }));
 				} else {
@@ -131,7 +125,7 @@ const FormRenderer = ({
 				}
 			}
 		},
-		[bbCodeForm.inputComponents]
+		[bbCodeForm.fields]
 	);
 
 	useEffect(() => {
@@ -162,30 +156,26 @@ const FormRenderer = ({
 
 	return (
 		<Form onSubmit={(e: FormEvent) => e.preventDefault()}>
-			{bbCodeForm.inputComponents != null &&
-				bbCodeForm.inputComponents.map((inputComponent, i) => {
+			{bbCodeForm.fields != null &&
+				bbCodeForm.fields.map((field, i) => {
 					return (
 						<Form.Group key={i} style={{ marginBottom: "1rem" }}>
 							<Form.Label>
 								<span
 									style={{
 										fontWeight: "bold"
-									}}>{`${inputComponent.label}`}</span>
-								<div className="small text-muted">
-									{inputComponent.description}
-								</div>
+									}}>{`${field.label}`}</span>
+								<div className="small text-muted">{field.description}</div>
 							</Form.Label>
 
-							<InputComponent
-								{...inputComponent}
+							<FieldComponent
+								{...field}
 								onUpdateInputs={(updatedInputs) =>
 									updateInputs(i, updatedInputs)
 								}
 							/>
 							{bbCodeFormatInfo?.inputRef?.id != null &&
-								bbCodeFormatInfo?.inputRef?.id.indexOf(
-									inputComponent.uniqueId
-								) > -1 && (
+								bbCodeFormatInfo?.inputRef?.id.indexOf(field.uniqueId) > -1 && (
 									<BBCodeFormatButtons
 										text={bbCodeFormatInfo.inputRef?.value || ""}
 										selectionStart={bbCodeFormatInfo.selectionStart}
@@ -199,9 +189,8 @@ const FormRenderer = ({
 										}}
 										visible={
 											bbCodeFormatInfo?.inputRef?.id != null &&
-											bbCodeFormatInfo?.inputRef?.id.indexOf(
-												inputComponent.uniqueId
-											) > -1
+											bbCodeFormatInfo?.inputRef?.id.indexOf(field.uniqueId) >
+												-1
 										}
 									/>
 								)}

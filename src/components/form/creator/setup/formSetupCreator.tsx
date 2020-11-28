@@ -2,8 +2,8 @@ import {
 	Accordion,
 	Button,
 	Col,
+	Container,
 	Form,
-	FormGroup,
 	InputGroup,
 	ResponsiveEmbed,
 	Row
@@ -37,34 +37,34 @@ const FormSetupCreator = ({
 	return (
 		<Row>
 			<Col xs={12}>
-				<h4 className="header">Form Name</h4>
 				<InputGroup>
-					<FormGroup style={{ width: "100%" }}>
+					<Form.Group style={{ width: "100%" }}>
+						<Form.Label>Form Name</Form.Label>
 						<Form.Control
 							type="text"
-							size="lg"
 							value={setupFields.name}
 							onChange={(e) => {
 								updateSetupFields({ ...setupFields, name: e.target.value });
 							}}
 							ref={formNameRef}
 						/>
-					</FormGroup>
+					</Form.Group>
 				</InputGroup>
 			</Col>
 			<Col xs={12}>
-				<h5 className="header">
-					Bookmark Link
-					<QuestionMarkTooltip
-						id="bookmarkLinkExplanation"
-						text={`Adds buttons to open this link on the My Forms page and when Generated BBCode for a form.`}
-					/>
-				</h5>
 				<InputGroup>
-					<FormGroup style={{ width: "100%" }}>
+					<Form.Group style={{ width: "100%" }}>
+						<Form.Label>
+							<div style={{ display: "flex", alignItems: "center" }}>
+								Bookmark Link
+								<QuestionMarkTooltip
+									id="bookmarkLinkExplanation"
+									text={`Adds buttons to open this link on the My Forms page and when Generated BBCode for a form.`}
+								/>
+							</div>
+						</Form.Label>
 						<Form.Control
 							type="text"
-							size="lg"
 							value={setupFields.bookmarkLink}
 							onChange={(e) => {
 								updateSetupFields({
@@ -73,7 +73,7 @@ const FormSetupCreator = ({
 								});
 							}}
 						/>
-					</FormGroup>
+					</Form.Group>
 				</InputGroup>
 			</Col>
 
@@ -90,8 +90,8 @@ const FormSetupCreator = ({
 				)}
 				{!showVideoPreview && (
 					<Accordion>
-						<Accordion.Toggle as={Button} variant="secondary" eventKey="0">
-							Tutorial / Overview Video
+						<Accordion.Toggle as={Button} variant="info" eventKey="0">
+							Tutorial
 						</Accordion.Toggle>
 						<Accordion.Collapse eventKey="0">
 							<ResponsiveEmbed aspectRatio="16by9">

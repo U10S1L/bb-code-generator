@@ -1,6 +1,15 @@
 import "./formList.css";
 
-import { Button, ButtonGroup, Card, Col, Form, Row } from "react-bootstrap";
+import {
+	Button,
+	ButtonGroup,
+	Col,
+	Form,
+	OverlayTrigger,
+	Row,
+	Table,
+	Tooltip
+} from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
 import {
 	SortableContainer,
@@ -8,19 +17,24 @@ import {
 	SortableHandle,
 	arrayMove
 } from "react-sortable-hoc";
+import {
+	formatDateTimeWithSeconds,
+	getFormUid,
+	parseBookmarkLink
+} from "common/formatters";
+import { getFormProgressString, getFormProgressTimestamp } from "common/utils";
 
 import { AuthContext } from "context/authContext";
-import { BBCodeFormType } from "types/formTypes";
+import { BBCodeForm } from "types/formTypes";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { DefaultToast } from "components/toast/oldToast";
 import Firebase from "components/firebase/firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormCreator from "pages/form/creator/formCreator";
 import Fuse from "fuse.js";
-import { InfoToast } from "components/toast/toast";
 import { LinkContainer } from "react-router-bootstrap";
 import StandardModal from "components/modals/standardModal";
-import { getFormUid } from "formatters";
-import { parseBookmarkLink } from "formatters";
+import _ from "lodash";
 
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
@@ -29,22 +43,12 @@ const DragHandle = SortableHandle(() => (
 ));
 
 type SortableFormElementProps = {
-	form: BBCodeFormType;
+	form: BBCodeForm;
 	showEditButtons: boolean;
 	editForm: () => void;
 	deleteForm: () => void;
 };
-type SortableFormsContainerProps = {
-	forms: BBCodeFormType[];
-	showEditButtons: boolean;
-	editBBCodeForm: (form: BBCodeFormType) => void;
-	deleteBBCodeForm: (form: BBCodeFormType) => void;
-	setPageModal: (pageModal: {
-		message: string;
-		visible: boolean;
-		continueAction: () => void;
-	}) => void;
-};
+
 const SortableFormElement = SortableElement(
 	({
 		form,
@@ -53,94 +57,121 @@ const SortableFormElement = SortableElement(
 		showEditButtons
 	}: SortableFormElementProps) => {
 		const { authUser } = useContext(AuthContext);
+		const localStorageFormProgressJson = localStorage.getItem(
+			getFormProgressString(form)
+		);
+		const localStorageFormProgress = localStorageFormProgressJson
+			? (JSON.parse(localStorageFormProgressJson) as BBCodeForm)
+			: null;
+		const formProgressTimestamp =
+			localStorageFormProgress && localStorageFormProgress.progressTimestamp
+				? formatDateTimeWithSeconds(
+						new Date(localStorageFormProgress.progressTimestamp)
+				  )
+				: null;
 		return (
-			<div className="form-element">
-				{showEditButtons && <DragHandle />}
-				<Card bg="light" color="white" style={{ borderRadius: 0 }}>
-					<Card.Body style={{ padding: "1rem" }}>
-						<Card.Title style={{ marginBottom: 0 }}>
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-									flexWrap: "wrap"
-								}}>
-								{form.name}
-								{!showEditButtons && (
-									<div style={{ display: "flex", flexDirection: "column" }}>
-										<div>
-											<CopyToClipboard
-												text={
-													process.env.NODE_ENV === "development"
-														? `localhost:3000/form/shareable/${authUser?.uid}/${form.uid}`
-														: `https://bbcode.rip/form/shareable/${authUser?.uid}/${form.uid}`
-												}
-												onCopy={() =>
-													InfoToast(`Shareable link copied to clipboard`)
-												}>
-												<Button
-													variant="link"
-													size="sm"
-													onClick={() => null}
-													style={{ padding: 0, float: "right" }}>
-													<span className="text-muted">
-														Shareable{" "}
-														<FontAwesomeIcon
-															icon="link"
-															fixedWidth></FontAwesomeIcon>
-													</span>
-												</Button>
-											</CopyToClipboard>
-										</div>
-										{form.bookmarkLink && (
-											<div>
-												<Button
-													as="a"
-													target="_blank"
-													variant="link"
-													size="sm"
-													href={parseBookmarkLink(form.bookmarkLink)}
-													style={{ padding: 0, float: "right" }}>
-													<span className="text-muted">
-														Open{" "}
-														<FontAwesomeIcon
-															icon="bookmark"
-															fixedWidth></FontAwesomeIcon>
-													</span>
-												</Button>
-											</div>
-										)}
-									</div>
-								)}
-							</div>
-						</Card.Title>
-						{showEditButtons && (
-							<ButtonGroup style={{ marginTop: ".75rem" }}>
-								<Button
-									variant="warning"
-									size="sm"
-									onClick={() => editForm()}
-									style={{ marginRight: "1rem" }}>
-									Edit
-								</Button>
-								<Button variant="danger" size="sm" onClick={() => deleteForm()}>
-									Delete
-								</Button>
-							</ButtonGroup>
-						)}
-					</Card.Body>
-				</Card>
-				{!showEditButtons && (
-					<LinkContainer to={`/form/${form.uid}`} exact>
-						<Button className="form-element-go-button" variant="info">
-							<FontAwesomeIcon icon="arrow-right"></FontAwesomeIcon>
-						</Button>
-					</LinkContainer>
+			<tr>
+				{showEditButtons && (
+					<td>
+						<DragHandle />
+					</td>
 				)}
-			</div>
+				<td>{form.name}</td>
+				{!showEditButtons && (
+					<td>
+						<CopyToClipboard
+							text={
+								process.env.NODE_ENV === "development"
+									? `localhost:3000/form/shareable/${authUser?.uid}/${form.uid}`
+									: `https://bbcode.rip/form/shareable/${authUser?.uid}/${form.uid}`
+							}
+							onCopy={() =>
+								DefaultToast({ message: `Shareable link copied to clipboard` })
+							}>
+							<Button variant="dark" onClick={() => null}>
+								<FontAwesomeIcon icon="link" fixedWidth></FontAwesomeIcon>
+							</Button>
+						</CopyToClipboard>
+					</td>
+				)}
+				{!showEditButtons && (
+					<td>
+						{form.bookmarkLink && (
+							<Button
+								as="a"
+								target="_blank"
+								variant="dark"
+								href={parseBookmarkLink(form.bookmarkLink)}>
+								<FontAwesomeIcon icon="bookmark" fixedWidth></FontAwesomeIcon>
+							</Button>
+						)}
+					</td>
+				)}
+
+				<td>
+					{formProgressTimestamp && (
+						<OverlayTrigger
+							placement="auto"
+							overlay={(props) => (
+								<Tooltip id={`inProgressDateTooltip-${form.name}`} {...props}>
+									{formProgressTimestamp}
+								</Tooltip>
+							)}>
+							<FontAwesomeIcon
+								icon="circle"
+								fixedWidth
+								style={{
+									color: "var(--success)"
+								}}></FontAwesomeIcon>
+						</OverlayTrigger>
+					)}
+				</td>
+
+				{showEditButtons && (
+					<>
+						<td>
+							<Button
+								variant="warning"
+								onClick={() => editForm()}
+								style={{ marginRight: "1rem" }}>
+								<FontAwesomeIcon icon="edit" fixedWidth></FontAwesomeIcon>
+							</Button>
+						</td>
+						<td>
+							<Button variant="danger" onClick={() => deleteForm()}>
+								<FontAwesomeIcon icon="times" fixedWidth></FontAwesomeIcon>
+							</Button>
+						</td>
+					</>
+				)}
+
+				{!showEditButtons && (
+					<td align="right" style={{ paddingRight: 0 }}>
+						<LinkContainer to={`/form/${form.uid}`} exact>
+							<Button className="form-element-go-button" variant="primary">
+								<FontAwesomeIcon
+									icon="arrow-right"
+									fixedWidth></FontAwesomeIcon>
+							</Button>
+						</LinkContainer>
+					</td>
+				)}
+			</tr>
 		);
 	}
 );
+
+type SortableFormsContainerProps = {
+	forms: BBCodeForm[];
+	showEditButtons: boolean;
+	editBBCodeForm: (form: BBCodeForm) => void;
+	deleteBBCodeForm: (form: BBCodeForm) => void;
+	setPageModal: (pageModal: {
+		message: string;
+		visible: boolean;
+		continueAction: () => void;
+	}) => void;
+};
 
 const SortableFormContainer = SortableContainer(
 	({
@@ -151,33 +182,55 @@ const SortableFormContainer = SortableContainer(
 		showEditButtons
 	}: SortableFormsContainerProps) => {
 		return (
-			<ul style={{ padding: 0 }}>
-				{forms &&
-					forms.map((form, index) => {
-						return (
-							<SortableFormElement
-								form={form}
-								showEditButtons={showEditButtons}
-								key={index}
-								index={index}
-								editForm={() => {
-									setPageModal({
-										visible: true,
-										continueAction: () => editBBCodeForm(form),
-										message: `Editing '${form.name}' will clear out any current values in the form fields. This cannot be undone.`
-									});
-								}}
-								deleteForm={() => {
-									setPageModal({
-										visible: true,
-										continueAction: () => deleteBBCodeForm(form),
-										message: `Are you sure you want to permanently delete '${form.name}' from your forms?.`
-									});
-								}}
-							/>
-						);
-					})}
-			</ul>
+			<Table responsive borderless hover>
+				<thead>
+					{!showEditButtons && (
+						<tr>
+							<th>Form</th>
+							<th>Share</th>
+							<th>Bookmark</th>
+							<th>In Progress</th>
+							<th></th>
+						</tr>
+					)}
+					{showEditButtons && (
+						<tr>
+							<th>Order</th>
+							<th>Form</th>
+							<th>In Progress</th>
+							<th>Edit</th>
+							<th>Delete</th>
+						</tr>
+					)}
+				</thead>
+				<tbody>
+					{forms &&
+						forms.map((form, index) => {
+							return (
+								<SortableFormElement
+									form={form}
+									showEditButtons={showEditButtons}
+									key={index}
+									index={index}
+									editForm={() => {
+										setPageModal({
+											visible: true,
+											continueAction: () => editBBCodeForm(form),
+											message: `Editing '${form.name}' will clear out any current values in the form fields. This cannot be undone.`
+										});
+									}}
+									deleteForm={() => {
+										setPageModal({
+											visible: true,
+											continueAction: () => deleteBBCodeForm(form),
+											message: `Are you sure you want to permanently delete '${form.name}' from your forms?.`
+										});
+									}}
+								/>
+							);
+						})}
+				</tbody>
+			</Table>
 		);
 	}
 );
@@ -192,11 +245,11 @@ const FormList = () => {
 
 	const [editMode, setEditMode] = useState(false);
 	const [showEditButtons, setShowEditButtons] = useState(false);
-	const [forms, setForms] = useState<BBCodeFormType[]>(stateForms);
+	const [forms, setForms] = useState<BBCodeForm[]>(stateForms);
 	const [searchText, setSearchText] = useState("");
 
-	const editBBCodeForm = (bbCodeForm: BBCodeFormType) => {
-		const formProgressString = `formProgress_${bbCodeForm.uid}`;
+	const editBBCodeForm = (bbCodeForm: BBCodeForm) => {
+		const formProgressString = getFormProgressString(bbCodeForm);
 		localStorage.removeItem(formProgressString);
 		localStorage.setItem(
 			"editBBCodeForm",
@@ -204,7 +257,7 @@ const FormList = () => {
 		);
 		setEditMode(true);
 	};
-	const saveEdits = (bbCodeForm: BBCodeFormType) => {
+	const saveEdits = (bbCodeForm: BBCodeForm) => {
 		localStorage.removeItem("editBBCodeForm");
 		if (
 			JSON.stringify(bbCodeForm) !==
@@ -226,15 +279,21 @@ const FormList = () => {
 		}
 	};
 
-	const deleteBBCodeForm = (bbCodeForm: BBCodeFormType) => {
+	const deleteBBCodeForm = (bbCodeForm: BBCodeForm) => {
 		const formProgressString = `formProgress_${bbCodeForm.uid}`;
 		localStorage.removeItem(formProgressString);
 		Firebase()
 			.deleteUserForm(bbCodeForm.uid)
 			.then(() => {
 				setShowEditButtons(false);
-				InfoToast(`'${bbCodeForm.name}' deleted.`);
+				DefaultToast({ message: `'${bbCodeForm.name}' deleted.` });
 			});
+	};
+
+	const handleOnSortStart = ({ node, helper }: any) => {
+		node.childNodes.forEach((td: HTMLTableDataCellElement, index: number) => {
+			helper.childNodes[index].style.width = `${td.offsetWidth}px`;
+		});
 	};
 
 	const onDragEnd = (sortObject: { oldIndex: number; newIndex: number }) => {
@@ -256,7 +315,7 @@ const FormList = () => {
 		if (!showEditButtons) {
 			setShowEditButtons(true);
 		} else {
-			if (JSON.stringify(stateForms) !== JSON.stringify(forms)) {
+			if (!_.isEqual(stateForms, forms)) {
 				Firebase()
 					.batchUpdateForms(forms, authUser?.uid)
 					.then(() => {
@@ -280,22 +339,26 @@ const FormList = () => {
 		}
 	}, [searchText, stateForms]);
 
-	useEffect(() => {
-		setForms(stateForms);
-	}, [stateForms]);
-
 	return !editMode ? (
 		<Row>
 			<Col xs={12}>
 				<div
 					className="header"
 					style={{ display: "flex", justifyContent: "space-between" }}>
-					<div style={{ display: "flex" }}>
-						<h3>My Forms</h3>
-					</div>
-					<LinkContainer to={"/forms/new"}>
-						<Button variant="secondary">New Form</Button>
-					</LinkContainer>
+					<h4>My Forms</h4>
+					<ButtonGroup>
+						<LinkContainer to={"/forms/new"}>
+							<Button variant="secondary">+ Form</Button>
+						</LinkContainer>
+						{forms.length > 0 && (
+							<Button variant="secondary" onClick={() => toggleEditFormList()}>
+								<FontAwesomeIcon
+									color={!showEditButtons ? "grey" : "#46a989"}
+									icon={!showEditButtons ? "lock" : "lock-open"}
+								/>
+							</Button>
+						)}
+					</ButtonGroup>
 				</div>
 			</Col>
 			<Col xs={12} style={{ marginTop: "1rem" }}>
@@ -306,44 +369,33 @@ const FormList = () => {
 						marginBottom: "1rem",
 						justifyContent: "space-between"
 					}}>
-					{!showEditButtons && (forms.length !== 0 || searchText !== "") && (
-						<div>
-							<Form.Control
-								type="text"
-								value={searchText}
-								placeholder="Search/Filter"
-								onChange={(e) => {
-									setSearchText(e.target.value);
-								}}></Form.Control>
-						</div>
-					)}
-					{forms.length > 0 && (
-						<div
-							style={{
-								marginLeft: "auto",
-								display: "flex",
-								alignItems: "center"
-							}}>
-							<Button
-								variant="link"
-								size="sm"
-								onClick={() => toggleEditFormList()}
-								style={{ marginRight: "1rem", padding: "0" }}>
-								<FontAwesomeIcon
-									color={!showEditButtons ? "grey" : "#46a989"}
-									icon={!showEditButtons ? "lock" : "lock-open"}
-								/>
-							</Button>
-							<div className="small text-muted">
-								{!showEditButtons ? "Unlock to edit." : "Relock to save."}
-							</div>
-						</div>
-					)}
+					<div
+						style={{
+							visibility:
+								!showEditButtons && (forms.length !== 0 || searchText !== "")
+									? "visible"
+									: "hidden"
+						}}>
+						<Form.Control
+							type="text"
+							value={searchText}
+							placeholder="Search"
+							onChange={(e) => {
+								setSearchText(e.target.value);
+							}}></Form.Control>
+					</div>
 				</div>
 				<SortableFormContainer
+					forms={_.orderBy(
+						forms,
+						(form) => getFormProgressTimestamp(form) || "",
+						["desc"]
+					)}
 					useDragHandle
+					helperClass="dragging"
+					helperContainer={document.getElementsByTagName("tbody")[0]}
+					onSortStart={handleOnSortStart}
 					onSortEnd={onDragEnd}
-					forms={forms}
 					showEditButtons={showEditButtons}
 					editBBCodeForm={editBBCodeForm}
 					deleteBBCodeForm={deleteBBCodeForm}

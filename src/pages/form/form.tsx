@@ -1,7 +1,7 @@
 import "./form.css";
 
-import { BBCodeFormType, InputComponentProps } from "types/formTypes";
-import { Button, Col, Row } from "react-bootstrap";
+import { BBCodeForm, Field } from "types/formTypes";
+import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
 	formatDateTimeWithSeconds,
@@ -9,21 +9,21 @@ import {
 	getDateString,
 	getTimeString,
 	parseBookmarkLink
-} from "formatters";
-import { getFormProgressString, getFormWithDefaultVals } from "formatters";
+} from "common/formatters";
+import { getFormProgressString, getFormWithDefaultVals } from "common/utils";
 
 import { AuthContext } from "context/authContext";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { DefaultToast } from "components/toast/oldToast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FormRenderer from "components/form/renderer/formRenderer";
-import { InfoToast } from "components/toast/toast";
 import StandardModal from "components/modals/standardModal";
 import { useParams } from "react-router-dom";
 
-const BBCodeForm = () => {
+const Form = () => {
 	const params = useParams<{ uid: string }>();
 	const { stateForms } = useContext(AuthContext);
-	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType | undefined>();
+	const [bbCodeForm, setBBCodeForm] = useState<BBCodeForm | undefined>();
 	const [pageModal, setPageModal] = useState<{
 		message: string;
 		visible: boolean;
@@ -35,61 +35,55 @@ const BBCodeForm = () => {
 
 	const generateBBCode = (): string => {
 		if (bbCodeForm !== null && bbCodeForm !== undefined) {
-			let inputComponents: InputComponentProps[] = JSON.parse(
-				JSON.stringify(bbCodeForm.inputComponents)
-			);
+			let fields: Field[] = JSON.parse(JSON.stringify(bbCodeForm.fields));
 			const { matchedBBCode } = bbCodeForm;
 			let generatedBBCode: string = matchedBBCode.concat();
 
 			// Formatting for special Input Types
-			inputComponents.forEach((inputComponent) => {
-				inputComponent.inputs.forEach((input) => {
-					if (inputComponent.type === "checkbox") {
+			fields.forEach((field) => {
+				const { typeCode } = field.fieldType;
+				field.inputs.forEach((input) => {
+					if (typeCode === "checkbox") {
 						input.val = input.val === "true" ? "[cbc]" : "[cb]";
-					} else if (inputComponent.type === "url") {
+					} else if (typeCode === "url") {
 						input.val = formatUrl(JSON.parse(input.val));
-					} else if (inputComponent.type === "date") {
+					} else if (typeCode === "date") {
 						input.val = getDateString(new Date(input.val));
-					} else if (inputComponent.type === "time") {
+					} else if (typeCode === "time") {
 						input.val = getTimeString(new Date(input.val));
-					} else if (inputComponent.type === "dateTime") {
+					} else if (typeCode === "dateTime") {
 						const dateVal = new Date(input.val);
 						input.val = getDateString(dateVal) + " " + getTimeString(dateVal);
 					}
 
-					if (inputComponent.multiStar) {
+					if (field.multiStar) {
 						input.val = `[*] ${input.val}`;
 					}
 				});
 			});
 			// Matching up Fields and replacing their IDs with the inputted vals
-			inputComponents.forEach((inputComponent) => {
-				let inputComponentVal = ``;
-				if (inputComponent.multi || inputComponent.multiStar) {
+			fields.forEach((field) => {
+				let fieldVal = ``;
+				if (field.multi || field.multiStar) {
 					/* Handle Multi Items */
-					inputComponent.inputs.forEach((input) => {
-						const indexOfInput = inputComponent.inputs.indexOf(input);
+					field.inputs.forEach((input) => {
+						const indexOfInput = field.inputs.indexOf(input);
 						if (indexOfInput === 0) {
-							inputComponentVal += `${input.val}`;
+							fieldVal += `${input.val}`;
 						} else {
-							inputComponentVal += `\n${input.val}`;
+							fieldVal += `\n${input.val}`;
 						}
 					});
 				} else {
-					inputComponentVal =
-						inputComponent.inputs[0].val !== undefined
-							? inputComponent.inputs[0].val
-							: "";
+					fieldVal =
+						field.inputs[0].val !== undefined ? field.inputs[0].val : "";
 				}
 				// Creates a regex pattern to find the unique Id. Takes care to escape all special regex characters
 				let regexpForUniqueId = new RegExp(
-					inputComponent.uniqueId.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"),
+					field.uniqueId.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"),
 					"g"
 				);
-				generatedBBCode = generatedBBCode.replace(
-					regexpForUniqueId,
-					inputComponentVal
-				);
+				generatedBBCode = generatedBBCode.replace(regexpForUniqueId, fieldVal);
 			});
 			return generatedBBCode;
 		} else {
@@ -99,15 +93,15 @@ const BBCodeForm = () => {
 
 	const getOriginalBBCodeForm = useCallback(() => {
 		return getFormWithDefaultVals(
-			stateForms.find((form) => form.uid === params.uid)
+			stateForms.find((form) => form.uid == params.uid)
 		);
 	}, [params.uid, stateForms]);
 
 	const clearProg = () => {
+		setBBCodeForm(getOriginalBBCodeForm());
 		if (formProgressString) {
 			localStorage.removeItem(formProgressString);
 		}
-		setBBCodeForm(getOriginalBBCodeForm());
 	};
 
 	useEffect(() => {
@@ -145,26 +139,24 @@ const BBCodeForm = () => {
 						alignItems: "flex-start"
 					}}>
 					<div>
-						<h3>{bbCodeForm.name}</h3>
+						<h4>{bbCodeForm.name}</h4>
 						{bbCodeForm.progressTimestamp && (
 							<h6 className="small text-muted">
 								Auto Saved:{" "}
 								{formatDateTimeWithSeconds(
 									new Date(bbCodeForm.progressTimestamp)
 								)}{" "}
-								(Local Time)
 							</h6>
 						)}
 					</div>
 
 					<Button
-						variant="secondary"
+						variant="dark"
 						onClick={() =>
 							setPageModal({
 								visible: true,
 								continueAction: clearProg,
-								message:
-									"You are about to erase all the the values in the form fields."
+								message: "This will clear your saved progress for this form."
 							})
 						}>
 						Clear
@@ -190,23 +182,31 @@ const BBCodeForm = () => {
 					justifyContent: "flex-end",
 					marginBottom: "1rem"
 				}}>
-				<CopyToClipboard
-					text={generateBBCode()}
-					onCopy={() => InfoToast("BBCode Copied To Clipboard")}>
-					<Button variant="info">Copy BBCode</Button>
-				</CopyToClipboard>
-				{bbCodeForm.bookmarkLink && (
+				<ButtonGroup>
 					<CopyToClipboard
 						text={generateBBCode()}
-						onCopy={() => {
-							window.open(parseBookmarkLink(bbCodeForm.bookmarkLink));
-						}}>
-						<Button variant="success">
-							<span style={{ marginRight: ".5rem" }}>Copy BBCode and Open</span>
-							<FontAwesomeIcon icon={"bookmark"} />
+						onCopy={() =>
+							DefaultToast({ message: "BBCode Copied To Clipboard" })
+						}>
+						<Button variant={bbCodeForm.bookmarkLink ? "secondary" : "primary"}>
+							Copy BBCode
 						</Button>
 					</CopyToClipboard>
-				)}
+					{bbCodeForm.bookmarkLink && (
+						<CopyToClipboard
+							text={generateBBCode()}
+							onCopy={() => {
+								window.open(parseBookmarkLink(bbCodeForm.bookmarkLink));
+							}}>
+							<Button variant="primary">
+								<span style={{ marginRight: ".5rem" }}>
+									Copy BBCode and Open
+								</span>
+								<FontAwesomeIcon icon={"bookmark"} />
+							</Button>
+						</CopyToClipboard>
+					)}
+				</ButtonGroup>
 			</Col>
 
 			<StandardModal
@@ -228,4 +228,4 @@ const BBCodeForm = () => {
 	) : null;
 };
 
-export default BBCodeForm;
+export default Form;

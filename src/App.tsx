@@ -1,4 +1,6 @@
-import "styles/custom2.css";
+// import "styles/custom2.css";
+
+import "styles/darkly.min.css";
 import "styles/styles.css";
 
 import { Slide, ToastContainer } from "react-toastify";
@@ -26,10 +28,12 @@ import {
 	faFont,
 	faImage,
 	faItalic,
+	faLightbulb,
 	faLink,
 	faLock,
 	faLockOpen,
 	faMinus,
+	faPencilAlt,
 	faPlayCircle,
 	faPlus,
 	faQuestionCircle,
@@ -51,13 +55,6 @@ import { faEnvelope as faEnvelopeRegular } from "@fortawesome/free-regular-svg-i
 import { library } from "@fortawesome/fontawesome-svg-core";
 import pages from "./constants/pages";
 
-// import "./bootstrap-flatly.css";
-
-// FontAwesome
-
-// Site Pages
-
-// FontAwesome Library Setup
 library.add(
 	faTimes,
 	faQuestionCircle,
@@ -98,20 +95,21 @@ library.add(
 	faItalic,
 	faLink,
 	faUnderline,
-	faEnvelopeRegular
+	faEnvelopeRegular,
+	faLightbulb,
+	faPencilAlt
 );
 
 const App = () => {
 	return (
 		<AuthProvider>
-			<Container
-				id="#app-container"
-				style={{ backgroundColor: "white", minHeight: "100vh" }}>
-				<NavigationBar links={pages} style={{ margin: "0 -15px" }} />
+			<NavigationBar links={pages} />
+			<Container id="#app-container" style={{ minHeight: "100vh" }}>
 				<ToastContainer
-					hideProgressBar={true}
 					autoClose={2500}
 					transition={Slide}
+					pauseOnHover
+					hideProgressBar
 				/>
 				<SwitchRoutes />
 			</Container>

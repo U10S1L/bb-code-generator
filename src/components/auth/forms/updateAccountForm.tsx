@@ -2,8 +2,8 @@ import { Button, Form } from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "context/authContext";
+import { DefaultToast } from "components/toast/oldToast";
 import Firebase from "components/firebase/firebase";
-import { InfoToast } from "components/toast/toast";
 import SignOutButton from "./signOutButton";
 import { errorMessage } from "constants/errors";
 
@@ -36,7 +36,9 @@ const AccountForm = ({ onSignOut, onUpdateAccount }: AccountFormProps) => {
 			)
 			.then(() => {
 				setUpdateUser(defaultUpdateUser);
-				InfoToast("Account updated successfully. Redirecting...");
+				DefaultToast({
+					message: "Account updated successfully. Redirecting..."
+				});
 				setTimeout(() => Firebase().signOut(), 2500);
 				onUpdateAccount();
 			})

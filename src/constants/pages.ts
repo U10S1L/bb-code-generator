@@ -13,7 +13,7 @@ export type Page = {
 const pages: Page[] = [
 	{
 		id: "formList",
-		name: "My Forms",
+		name: "Forms",
 		component: FormList,
 		path: "/forms/list",
 		protected: true

@@ -2,9 +2,12 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/analytics";
 
-import { BBCodeFormType } from "types/formTypes";
+import { BBCodeForm, fieldType } from "types/formTypes";
+
 import app from "firebase/app";
-import { getFormProgressString } from "formatters";
+import { getFormProgressString } from "common/utils";
+
+var _ = require("lodash");
 
 const config =
 	process.env.NODE_ENV === "production"
@@ -157,7 +160,7 @@ const updatePassword = (password: string) => {
 /* Form API */
 export const saveForm = (
 	currentFormUid: string | null,
-	bbCodeForm: BBCodeFormType,
+	bbCodeForm: BBCodeForm,
 	userUid?: string
 ): Promise<any> => {
 	return new Promise((resolve, reject) => {
@@ -208,7 +211,7 @@ export const saveForm = (
 	});
 };
 export const batchUpdateForms = (
-	bbCodeForms: BBCodeFormType[],
+	bbCodeForms: BBCodeForm[],
 	userUid?: string
 ): Promise<any> => {
 	return new Promise((resolve, reject) => {
@@ -223,8 +226,7 @@ export const batchUpdateForms = (
 						.doc(userUid)
 						.collection("forms")
 						.doc(form.uid),
-					serializeBBCodeForm(form),
-					{ merge: true }
+					serializeBBCodeForm(form)
 				);
 			});
 			return batch
@@ -249,7 +251,10 @@ export const getShareableForm = (
 				.doc(formUid)
 				.get()
 				.then((doc) => {
-					resolve(deserializeBBCodeForm(doc.data()));
+					const deserializedBBCodeForm = deserializeBBCodeForm(doc.data());
+					const backfilledBBCodeForm = resolve(
+						deserializeBBCodeForm(doc.data())
+					);
 				})
 				.catch((error) => {
 					reject(error.code);
@@ -273,122 +278,164 @@ export const deleteUserForm = (userFormUID: string): Promise<any> => {
 	});
 };
 
-const serializeBBCodeForm = (bbCodeForm: BBCodeFormType) => {
+const serializeBBCodeForm = (bbCodeForm: BBCodeForm) => {
 	return {
 		...bbCodeForm,
-		inputComponents: JSON.stringify(bbCodeForm.inputComponents)
+		fields: JSON.stringify(bbCodeForm.fields)
 	};
 };
 
-export const deserializeBBCodeForm = (serializedForm: any): BBCodeFormType => {
-	let bbCodeForm: BBCodeFormType = {
-		...serializedForm,
-		inputComponents: JSON.parse(serializedForm.inputComponents)
+export const deserializeBBCodeForm = (serializedForm: any): BBCodeForm => {
+	let bbCodeForm: BBCodeForm = {
+		...serializedForm
 	};
+
+	if (serializedForm.fields) {
+		bbCodeForm.fields = JSON.parse(serializedForm.fields);
+	} else {
+		// Support for old forms with the now deprecated inputComponents field
+		bbCodeForm.inputComponents = JSON.parse(serializedForm.inputComponents);
+	}
 
 	return bbCodeForm;
 };
 
 /* Backfill API */
-export const backfillForms = (bbCodeForms: BBCodeFormType[]): Promise<any> => {
+// Backfills for updates or to remove deprecated values/fields occur on a 'go-forward' basis.
+export const backfillForms = (formsToBackfill: BBCodeForm[]): Promise<any> => {
 	const currUser = Firebase().auth.currentUser;
-	var changesToPropogate = false;
-	var backfilledBBCodeForms = bbCodeForms.concat();
 
-	backfilledBBCodeForms.forEach((bbCodeForm) => {
-		// Locate corresponding FormProgress
-		const formProg = localStorage.getItem(getFormProgressString(bbCodeForm));
-		const formProgBBCodeForm: BBCodeFormType = formProg
-			? JSON.parse(formProg)
-			: null;
+	const backfilledForms = formsToBackfill.map((bbCodeForm) => {
+		const backfilledBBCodeForm = getBackfilledBBCodeForm(bbCodeForm);
 
-		/* Backfill for database */
-		// database form root fields
-		if (!bbCodeForm.bookmarkLink) {
-			bbCodeForm.bookmarkLink = "";
-			changesToPropogate = true;
-		}
-		// database form InputComponents
-		bbCodeForm.inputComponents.map((inputComponent) => {
-			if (inputComponent.typeIcon) {
-				delete inputComponent["typeIcon"];
-				changesToPropogate = true;
+		if (_.isEqual(backfilledBBCodeForm, bbCodeForm)) {
+			return bbCodeForm;
+		} else {
+			/* Backfill the form's progress in localStorage */
+			const formProgressString = getFormProgressString(bbCodeForm);
+			const hasFormProgressInLocalStorage =
+				localStorage.getItem(formProgressString) != null;
+			if (hasFormProgressInLocalStorage) {
+				localStorage.setItem(
+					formProgressString,
+					JSON.stringify(backfilledBBCodeForm)
+				);
 			}
-			if (inputComponent.type !== "dropdown" && inputComponent.selectOptions) {
-				delete inputComponent["selectOptions"];
-				changesToPropogate = true;
-			}
-			if (inputComponent.type === "listItem" && !inputComponent.multiStar) {
-				inputComponent.multiStar = true;
-				inputComponent.multi = false;
-				changesToPropogate = true;
-			} else if (
-				(inputComponent.type === "date" ||
-					inputComponent.type === "time" ||
-					inputComponent.type === "dateTime") &&
-				inputComponent.defaultVal !== ""
-			) {
-				inputComponent.defaultVal = "";
-				changesToPropogate = true;
-			}
-			// InputComponents Input[]
-			inputComponent.inputs.map((input) => {
-				if (input.type !== "dropdown" && input.selectOptions) {
-					delete input["selectOptions"];
-					changesToPropogate = true;
-				}
-				return input;
-			});
-			return inputComponent;
-		});
 
-		/* Backfill for formProgress */
-		if (formProgBBCodeForm) {
-			// formProgress root form fields
-			if (!formProgBBCodeForm.bookmarkLink) {
-				formProgBBCodeForm.bookmarkLink = "";
-				changesToPropogate = true;
-			}
-			// formProgress form InputComponents
-			formProgBBCodeForm.inputComponents.map((inputComponent) => {
-				delete inputComponent["typeIcon"];
-				if (
-					(inputComponent.type === "date" ||
-						inputComponent.type === "time" ||
-						inputComponent.type === "dateTime") &&
-					inputComponent.defaultVal !== ""
-				) {
-					inputComponent.defaultVal = "";
-				}
-				inputComponent.inputs.map((input) => {
-					if (input.type !== "dropdown" && input.selectOptions) {
-						delete input["selectOptions"];
-						changesToPropogate = true;
-					}
-					return input;
-				});
-				return inputComponent;
-			});
-			localStorage.setItem(
-				getFormProgressString(bbCodeForm),
-				JSON.stringify(formProgBBCodeForm)
-			);
+			return backfilledBBCodeForm;
 		}
 	});
+
+	const hasChangesToPropogateToDatabase = !_.isEqual(
+		backfilledForms,
+		formsToBackfill
+	);
+
+	/* Backfill generic local storage forms used for form creation */
+	backfillFormCreationProgress();
 
 	return new Promise((resolve, reject) => {
 		if (!Firebase().auth.currentUser) {
 			reject(ERR_ACCESS_DENIED);
 		}
 
-		if (changesToPropogate) {
-			batchUpdateForms(backfilledBBCodeForms, currUser?.uid)
+		if (hasChangesToPropogateToDatabase) {
+			batchUpdateForms(backfilledForms, currUser?.uid)
 				.then(() => resolve())
 				.catch((err) => reject(err));
 		} else {
 			resolve();
 		}
 	});
+};
+
+const getBackfilledBBCodeForm = (form: BBCodeForm): BBCodeForm => {
+	// Form
+	var backfilledForm: BBCodeForm = _.cloneDeep(form);
+
+	// add: bookmarkLink
+	if (!backfilledForm.bookmarkLink) {
+		backfilledForm.bookmarkLink = "";
+	}
+
+	// rename: fields -> inputComponents
+	if (backfilledForm.inputComponents) {
+		backfilledForm.fields = backfilledForm.inputComponents;
+		delete backfilledForm.inputComponents;
+	}
+
+	// Form Fields
+	backfilledForm.fields.map((field) => {
+		// deprecated: typeIcon
+		if (field.typeIcon) {
+			delete field["typeIcon"];
+		}
+
+		// deprecated: type + typeName -> fieldType
+		if (field.type && field.typeName) {
+			field.fieldType = {
+				typeCode: field.type,
+				typeName: field.typeName
+			} as fieldType;
+			delete field.type;
+			delete field.typeName;
+		}
+
+		const fieldTypeCode = field.fieldType.typeCode;
+		if (
+			(fieldTypeCode === "date" ||
+				fieldTypeCode === "time" ||
+				fieldTypeCode === "dateTime") &&
+			field.defaultVal !== ""
+		) {
+			// populate: defaultVal for date/time objects
+			field.defaultVal = "";
+		} else if (fieldTypeCode !== "dropdown" && field.selectOptions) {
+			// cleanup: selectOptions from fields that aren't dropdowns
+			delete field["selectOptions"];
+		} else if (fieldTypeCode === "listItem" && !field.multiStar) {
+			// populate: multiStar and multi for listItem fields
+			field.multiStar = true;
+			field.multi = false;
+		}
+
+		// Field Inputs
+		field.inputs.map((input) => {
+			// cleanup: selectOptions from inputs that aren't dropdowns
+			if (input.type !== "dropdown" && input.selectOptions) {
+				delete input["selectOptions"];
+			}
+			// deprecated: input type
+			if (input.type) {
+				delete input.type;
+			}
+			return input;
+		});
+		return field;
+	});
+
+	return backfilledForm;
+};
+
+const backfillFormCreationProgress = () => {
+	["newBBCodeForm", "editBBCodeForm"].forEach(
+		(formCreationLocalStorageString) => {
+			const bbCodeFormJson = localStorage.getItem(
+				formCreationLocalStorageString
+			);
+			const bbCodeForm = bbCodeFormJson ? JSON.parse(bbCodeFormJson) : null;
+
+			if (bbCodeForm) {
+				const backfilledBBCodeForm = getBackfilledBBCodeForm(bbCodeForm);
+				if (!_.isEqual(backfilledBBCodeForm, bbCodeForm)) {
+					localStorage.setItem(
+						formCreationLocalStorageString,
+						JSON.stringify(backfilledBBCodeForm)
+					);
+				}
+			}
+		}
+	);
 };
 
 export default Firebase;

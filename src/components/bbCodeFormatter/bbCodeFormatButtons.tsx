@@ -75,9 +75,8 @@ const BBCodeFormatButtons = ({
 						}
 						size="sm"
 						tabIndex={-1}
-						variant="light">
+						variant="dark">
 						<FontAwesomeIcon
-							color="grey"
 							icon={button.icon}
 							fixedWidth={true}
 							style={{ pointerEvents: "none" }}

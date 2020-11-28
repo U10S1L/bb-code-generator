@@ -1,12 +1,12 @@
 import React, { ReactNode, createContext, useEffect, useState } from "react";
 
-import { BBCodeFormType } from "types/formTypes";
+import { BBCodeForm } from "types/formTypes";
 import Firebase from "components/firebase/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export const AuthContext = createContext<{
 	authUser: firebase.User | undefined;
-	stateForms: BBCodeFormType[];
+	stateForms: BBCodeForm[];
 }>({ authUser: undefined, stateForms: [] });
 
 type AuthProviderProps = {
@@ -14,7 +14,7 @@ type AuthProviderProps = {
 };
 export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const [authUser] = useAuthState(Firebase().auth);
-	const [stateForms, setStateForms] = useState<BBCodeFormType[]>([]);
+	const [stateForms, setStateForms] = useState<BBCodeForm[]>([]);
 
 	useEffect(() => {
 		if (authUser) {
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 				.collection("forms")
 				.orderBy("order")
 				.onSnapshot((snapshot) => {
-					const bbCodeForms: BBCodeFormType[] = [];
+					const bbCodeForms: BBCodeForm[] = [];
 					snapshot.docs.forEach((doc) => {
 						bbCodeForms.push(Firebase().deserializeBBCodeForm(doc.data()));
 					});

@@ -1,20 +1,20 @@
-import { BBCodeFormType, InputComponentProps } from "types/formTypes";
+import { BBCodeForm, Field } from "types/formTypes";
 import { Button, Col, Row } from "react-bootstrap";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "context/authContext";
-import { ErrorToast } from "components/toast/toast";
+import { DefaultToast } from "components/toast/oldToast";
 import Firebase from "components/firebase/firebase";
-import FormBBCodeMatch from "components/bbCode/match/formBBCodeMatch";
-import FormBBCodeUpload from "components/bbCode/upload/formBBCodeUpload";
-import FormInputCreator from "components/form/creator/input/formInputCreator";
+import FormBBCodeMatch from "components/form/creator/bbCode/match/formBBCodeMatch";
+import FormBBCodeUpload from "components/form/creator/bbCode/upload/formBBCodeUpload";
+import FormFieldCreator from "components/form/creator/field/formFieldCreator";
 import FormSetupCreator from "components/form/creator/setup/formSetupCreator";
 import Help from "components/help/help";
 import arrayMove from "array-move";
-import { getFormUid } from "formatters";
+import { getFormUid } from "common/formatters";
 import { useHistory } from "react-router-dom";
 
-export enum FormCreationStep {
+enum FormCreationStep {
 	FORM_SETUP = "Setup",
 	BBCODE_UPLOAD = "Raw BBCode",
 	FIELD_CREATION = "Field Creation",
@@ -23,7 +23,7 @@ export enum FormCreationStep {
 
 type FormCreatorProps = {
 	editMode: boolean;
-	saveEdits: (bbCodeForm: BBCodeFormType) => void;
+	saveEdits: (bbCodeForm: BBCodeForm) => void;
 };
 
 const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
@@ -32,10 +32,10 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		FormCreationStep.FORM_SETUP
 	);
 
-	const [bbCodeForm, setBBCodeForm] = useState<BBCodeFormType>({
+	const [bbCodeForm, setBBCodeForm] = useState<BBCodeForm>({
 		uid: "",
 		name: "",
-		inputComponents: [],
+		fields: [],
 		rawBBCode: "",
 		matchedBBCode: "",
 		bookmarkLink: "",
@@ -43,10 +43,10 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		updatedTimestamp: Date.now()
 	});
 
-	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<BBCodeFormType>({
+	const [originalBBCodeForm, setOriginalBBCodeForm] = useState<BBCodeForm>({
 		uid: "",
 		name: "",
-		inputComponents: [],
+		fields: [],
 		rawBBCode: "",
 		matchedBBCode: "",
 		bookmarkLink: "",
@@ -96,7 +96,10 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		switch (formCreationStep) {
 			case FormCreationStep.FORM_SETUP:
 				if (doesFormNameExist()) {
-					ErrorToast(`You already have a form named "${bbCodeForm.name}".`);
+					DefaultToast({
+						message: `You already have a form named "${bbCodeForm.name}".`,
+						type: "error"
+					});
 				} else {
 					setFormCreationStep(FormCreationStep.BBCODE_UPLOAD);
 				}
@@ -171,77 +174,65 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 		}
 	};
 
-	// Form Input Components
-	const addSelectedInputComponent = (
-		inputComponent: InputComponentProps
-	): void => {
-		if (bbCodeForm.inputComponents == null) {
+	// Form Fields
+	const addField = (field: Field): void => {
+		if (bbCodeForm.fields == null) {
 			setBBCodeForm({
 				...bbCodeForm,
-				inputComponents: [inputComponent]
+				fields: [field]
 			});
 		} else {
 			setBBCodeForm({
 				...bbCodeForm,
-				inputComponents: bbCodeForm.inputComponents.concat(inputComponent)
+				fields: bbCodeForm.fields.concat(field)
 			});
 		}
 	};
-	const updateSelectedInputComponent = (
-		newInputComponent: InputComponentProps
-	): void => {
+
+	const updateField = (field: Field): void => {
 		setBBCodeForm({
 			...bbCodeForm,
-			inputComponents: bbCodeForm.inputComponents.map((currInputComponent) =>
-				currInputComponent.uniqueId === newInputComponent.uniqueId
-					? newInputComponent
-					: currInputComponent
+			fields: bbCodeForm.fields.map((currField) =>
+				currField.uniqueId === field.uniqueId ? field : currField
 			)
 		});
 	};
-	const removeSelectedInputComponent = (
-		selectedInputComponentUniqueId: string
-	) => {
-		var regexpSelectedInputComponentUniqueId = new RegExp(
-			selectedInputComponentUniqueId,
-			"g"
-		);
+
+	const removeField = (fieldUniqueId: string) => {
+		var regexpFieldUniqueId = new RegExp(fieldUniqueId, "g");
 		var newMatchedBBCode = bbCodeForm.matchedBBCode
 			.slice()
-			.replace(regexpSelectedInputComponentUniqueId, "");
+			.replace(regexpFieldUniqueId, "");
 
 		setBBCodeForm({
 			...bbCodeForm,
 			matchedBBCode: newMatchedBBCode,
-			inputComponents: bbCodeForm.inputComponents.filter(
-				(selectedInput) =>
-					selectedInput.uniqueId !== selectedInputComponentUniqueId
+			fields: bbCodeForm.fields.filter(
+				(selectedInput) => selectedInput.uniqueId !== fieldUniqueId
 			)
 		});
 	};
-	const reorderSelectedInputComponents = (sortObject: {
-		oldIndex: number;
-		newIndex: number;
-	}) => {
+
+	const reorderField = (sortObject: { oldIndex: number; newIndex: number }) => {
 		setBBCodeForm({
 			...bbCodeForm,
-			inputComponents: arrayMove(
-				bbCodeForm.inputComponents,
+			fields: arrayMove(
+				bbCodeForm.fields,
 				sortObject.oldIndex,
 				sortObject.newIndex
 			)
 		});
 	};
 
-	const saveEditedBBCodeForm = () => {
+	const saveForm = () => {
 		if (doesFormNameExist()) {
-			ErrorToast("Form name already exists.");
+			DefaultToast({ message: "Form name already exists.", type: "error" });
 		} else {
 			saveEdits({ ...bbCodeForm, updatedTimestamp: Date.now() });
 		}
 	};
 
-	const cancelEditBBCodeForm = () => {
+	const cancelEditForm = () => {
 		saveEdits(originalBBCodeForm);
 	};
 
@@ -281,22 +272,19 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 			<Row>
 				<Col xs={12}>
 					<div className="header" style={{ border: 0 }}>
-						<h3 style={{ margin: "auto" }}>{formCreationStep}</h3>
-
+						<h4>{formCreationStep}</h4>
 						{editMode && (
 							<Row>
 								<Col
 									xs={12}
 									style={{ display: "flex", justifyContent: "flex-end" }}>
-									<Button
-										variant="success"
-										onClick={() => saveEditedBBCodeForm()}>
+									<Button variant="success" onClick={() => saveForm()}>
 										Save Edits
 									</Button>
 									<Button
 										style={{ float: "right", marginLeft: "1.5rem" }}
 										variant="danger"
-										onClick={() => cancelEditBBCodeForm()}>
+										onClick={() => cancelEditForm()}>
 										Discard Edits
 									</Button>
 								</Col>
@@ -317,12 +305,12 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 			)}
 
 			{formCreationStep === FormCreationStep.FIELD_CREATION && (
-				<FormInputCreator
+				<FormFieldCreator
 					newBBCodeForm={bbCodeForm}
-					addInput={addSelectedInputComponent}
-					updateInput={updateSelectedInputComponent}
-					removeInput={removeSelectedInputComponent}
-					reorderSelectedInputComponents={reorderSelectedInputComponents}
+					addField={addField}
+					updateField={updateField}
+					removeField={removeField}
+					reorderField={reorderField}
 				/>
 			)}
 			{formCreationStep === FormCreationStep.BBCODE_UPLOAD && (
@@ -333,7 +321,7 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 			)}
 			{formCreationStep === FormCreationStep.BBCODE_MATCH && (
 				<FormBBCodeMatch
-					selectedInputComponents={bbCodeForm.inputComponents}
+					selectedFields={bbCodeForm.fields}
 					matchedBBCode={bbCodeForm.matchedBBCode}
 					setMatchedBBCode={updateMatchedBBCode}
 				/>
@@ -354,15 +342,15 @@ const FormCreator = ({ editMode, saveEdits }: FormCreatorProps) => {
 					{(formCreationStep !== FormCreationStep.BBCODE_MATCH ||
 						!editMode) && (
 						<Button
-							variant="info"
+							variant="primary"
 							style={{ marginLeft: "1.5rem" }}
 							onClick={() => incrementFormCreationStep()}
 							disabled={
 								(formCreationStep === FormCreationStep.FORM_SETUP &&
 									bbCodeForm.name === "") ||
 								(formCreationStep === FormCreationStep.FIELD_CREATION &&
-									(bbCodeForm.inputComponents == null ||
-										bbCodeForm.inputComponents.length === 0)) ||
+									(bbCodeForm.fields == null ||
+										bbCodeForm.fields.length === 0)) ||
 								(formCreationStep === FormCreationStep.BBCODE_UPLOAD &&
 									bbCodeForm.rawBBCode === "")
 							}>

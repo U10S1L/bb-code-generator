@@ -1,7 +1,7 @@
 import "./navigationBar.css";
 
 import { Button, Nav, Navbar } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import AuthModal from "components/auth/authModal";
 import Firebase from "components/firebase/firebase";
@@ -13,13 +13,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 type NavigationBarProps = {
 	links: Page[];
-	style: React.CSSProperties;
 };
-const NavigationBar = ({ links, style }: NavigationBarProps) => {
+const NavigationBar = ({ links }: NavigationBarProps) => {
 	const [modal, setModal] = useState<{ visible: boolean }>({
 		visible: false
 	});
+
 	const [user] = useAuthState(Firebase().auth);
+
 	return (
 		<>
 			<AuthModal
@@ -27,20 +28,22 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 				visible={modal.visible}
 				onClose={() => setModal({ ...modal, visible: false })}
 			/>
-			<Navbar variant="dark" bg="dark" expand="sm" id="navbar" style={style}>
+			<Navbar bg="dark" variant="dark" expand="sm" id="navbar">
 				<LinkContainer to={"/"} exact>
 					<Navbar.Brand>
-						<h3 style={{ fontWeight: "bold" }}>
+						<h4 style={{ fontWeight: "bold" }}>
 							<span role="img" aria-label="middlefinger">
 								🖕
 							</span>{" "}
 							BBCode
-						</h3>
+						</h4>
 					</Navbar.Brand>
 				</LinkContainer>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
-				<Navbar.Collapse id="basic-navbar-nav">
-					<Nav style={{ width: "100%" }}>
+				<Navbar.Collapse
+					id="basic-navbar-nav"
+					style={{ display: "flex", justifyContent: "center" }}>
+					<Nav>
 						{links.map((link, i) => {
 							return (
 								(!link.protected || user !== null) &&
@@ -53,19 +56,20 @@ const NavigationBar = ({ links, style }: NavigationBarProps) => {
 										to={link.path}
 										className="nav-link"
 										activeClassName="active">
-										{link.name}
+										<h5>{link.name}</h5>
 									</NavLink>
 								)
 							);
 						})}
-						<Button
-							style={{ marginLeft: "auto" }}
-							variant={user ? "success" : "secondary"}
-							onClick={() => setModal({ ...modal, visible: true })}>
-							<FontAwesomeIcon icon="user" color="white" />
-						</Button>
 					</Nav>
 				</Navbar.Collapse>
+				<div>
+					<Button
+						variant={user ? "success" : "secondary"}
+						onClick={() => setModal({ ...modal, visible: true })}>
+						<FontAwesomeIcon icon="user" color="white" fixedWidth />
+					</Button>
+				</div>
 			</Navbar>
 		</>
 	);

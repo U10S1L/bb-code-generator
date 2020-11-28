@@ -1,18 +1,4 @@
-.form-element {
-	display: flex;
-	margin-bottom: 1rem;
-	flex: 1;
-	width: 50%;
-}
-.form-element .drag-handle {
-	margin: auto;
-	margin-right: 2rem;
-}
-
-.form-element .card {
-	width: 100%;
-}
-.form-element-go-button {
-	display: flex;
-	align-items: center;
+.dragging {
+	display: table;
+	table-layout: fixed;
 }
