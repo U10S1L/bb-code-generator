@@ -46,7 +46,6 @@ const BBCodeFormatButtons = ({
 		<div
 			id={"bbCodeFormatButtons"}
 			style={{
-				position: "sticky",
 				display: "flex",
 				zIndex: 4,
 				marginTop: "0.2rem",

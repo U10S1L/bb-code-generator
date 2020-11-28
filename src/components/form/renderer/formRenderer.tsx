@@ -83,13 +83,26 @@ const FormRenderer = ({
 		}
 	};
 
-	const updateTextSelection = useCallback(() => {
-		setBBCodeFormatInfo({
-			...bbCodeFormatInfo,
-			selectionStart: bbCodeFormatInfo.inputRef?.selectionStart || 0,
-			selectionEnd: bbCodeFormatInfo.inputRef?.selectionEnd || 0
-		});
-	}, [bbCodeFormatInfo, setBBCodeFormatInfo]);
+	const updateTextSelection = useCallback(
+		(e: MouseEvent) => {
+			if (
+				e.target instanceof HTMLInputElement ||
+				e.target instanceof HTMLTextAreaElement
+			) {
+				setBBCodeFormatInfo({
+					...bbCodeFormatInfo,
+					selectionStart: bbCodeFormatInfo.inputRef?.selectionStart || 0,
+					selectionEnd: bbCodeFormatInfo.inputRef?.selectionEnd || 0
+				});
+			} else if (
+				!(e.target instanceof HTMLButtonElement) ||
+				e.target.parentElement?.id !== "bbCodeFormatButtons"
+			) {
+				setBBCodeFormatInfo((prev) => ({ ...prev, inputRef: null }));
+			}
+		},
+		[bbCodeFormatInfo, setBBCodeFormatInfo]
+	);
 
 	const updateInputRef = useCallback(
 		(e: MouseEvent | FocusEvent) => {
@@ -116,11 +129,6 @@ const FormRenderer = ({
 						inputRef: null
 					}));
 				}
-			} else if (
-				!(e.target instanceof HTMLButtonElement) ||
-				e.target.parentElement?.id !== "bbCodeFormatButtons"
-			) {
-				setBBCodeFormatInfo((prev) => ({ ...prev, inputRef: null }));
 			}
 		},
 		[bbCodeForm.inputComponents]
