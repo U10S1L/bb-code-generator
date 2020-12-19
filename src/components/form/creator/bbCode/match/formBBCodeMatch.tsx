@@ -113,18 +113,18 @@ const FormBBCodeMatch = ({
 											<div style={{ display: "flex", alignItems: "center" }}>
 												<CopyToClipboardButton field={field} />
 												<Button
-													variant="light"
+													variant="link"
 													onClick={() =>
 														goToUniqueIdInMatchedBBCode(field.uniqueId)
 													}>
 													<FontAwesomeIcon icon="search" />
 												</Button>
 												<Button
-													variant="light"
+													variant="link"
 													onClick={() =>
 														deleteUniqueIDInMatchedBBCode(field.uniqueId)
 													}>
-													<FontAwesomeIcon icon="times"></FontAwesomeIcon>
+													<FontAwesomeIcon color="red" icon="times"></FontAwesomeIcon>
 												</Button>
 												<span style={{ color: "green", marginLeft: "auto" }}>
 													Matched

@@ -77,65 +77,53 @@ const FormRenderer = ({
 		}
 	};
 
-	const updateTextSelection = useCallback(
-		(e: MouseEvent) => {
-			if (
-				e.target instanceof HTMLInputElement ||
-				e.target instanceof HTMLTextAreaElement
-			) {
-				setBBCodeFormatInfo({
-					...bbCodeFormatInfo,
-					selectionStart: bbCodeFormatInfo.inputRef?.selectionStart || 0,
-					selectionEnd: bbCodeFormatInfo.inputRef?.selectionEnd || 0
-				});
-			} else if (
-				!(e.target instanceof HTMLButtonElement) ||
-				e.target.parentElement?.id !== "bbCodeFormatButtons"
-			) {
-				setBBCodeFormatInfo((prev) => ({ ...prev, inputRef: null }));
-			}
-		},
-		[bbCodeFormatInfo, setBBCodeFormatInfo]
-	);
-
 	const updateInputRef = useCallback(
 		(e: MouseEvent | FocusEvent) => {
-			if (
-				e.target instanceof HTMLInputElement ||
-				e.target instanceof HTMLTextAreaElement
-			) {
-				const target = e.target;
+			if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+				const { target } = e;
 				const parentField = bbCodeForm.fields.find(
 					(field) =>
 						field.uniqueId ===
 						target.parentElement?.parentElement?.parentElement?.id
 				);
-				if (
-					parentField &&
-					(parentField.fieldType.typeCode === "shortText" ||
-						parentField.fieldType.typeCode === "longText" ||
-						parentField.fieldType.typeCode === "listItem")
-				) {
+
+				if (parentField &&
+					(parentField.fieldType.typeCode === "shortText" || parentField.fieldType.typeCode === "longText" || parentField.fieldType.typeCode === "listItem")) {
 					setBBCodeFormatInfo((prev) => ({ ...prev, inputRef: target }));
 				} else {
-					setBBCodeFormatInfo((prev) => ({
-						...prev,
-						inputRef: null
-					}));
+					setBBCodeFormatInfo((prev) => ({ ...prev, inputRef: null }))
 				}
+			} else if (!(e.target instanceof HTMLButtonElement) || e.target.parentElement?.id !== "bbCodeFormatButtons") {
+				setBBCodeFormatInfo((prev) => ({ ...prev, inputRef: null }))
 			}
 		},
 		[bbCodeForm.fields]
 	);
 
+
+	const updateTextSelection = useCallback((e: Event) => {
+		if ((e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) ||
+			bbCodeFormatInfo.inputRef !== null) {
+			setBBCodeFormatInfo({
+				...bbCodeFormatInfo,
+				selectionStart: bbCodeFormatInfo.inputRef?.selectionStart || 0,
+				selectionEnd: bbCodeFormatInfo.inputRef?.selectionEnd || 0
+			});
+		}
+	},
+		[bbCodeFormatInfo, setBBCodeFormatInfo]
+	);
+
 	useEffect(() => {
-		window.addEventListener("mouseup", updateTextSelection);
-		window.addEventListener("focusin", updateInputRef);
 		window.addEventListener("mousedown", updateInputRef);
+		window.addEventListener("focusin", updateInputRef);
+		window.addEventListener("mouseup", updateTextSelection);
+		window.addEventListener("input", updateTextSelection);
 		return () => {
-			window.removeEventListener("mouseup", updateTextSelection);
-			window.removeEventListener("focusin", updateInputRef);
 			window.removeEventListener("mousedown", updateInputRef);
+			window.removeEventListener("focusin", updateInputRef);
+			window.removeEventListener("mouseup", updateTextSelection);
+			window.removeEventListener("input", updateTextSelection);
 		};
 	}, [updateTextSelection, updateInputRef]);
 
@@ -190,7 +178,7 @@ const FormRenderer = ({
 										visible={
 											bbCodeFormatInfo?.inputRef?.id != null &&
 											bbCodeFormatInfo?.inputRef?.id.indexOf(field.uniqueId) >
-												-1
+											-1
 										}
 									/>
 								)}
