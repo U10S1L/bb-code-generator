@@ -1,64 +1,88 @@
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-
-export type BBCodeFormType = {
+interface Form {
 	uid: string;
 	name: string;
-	inputComponents: InputComponentProps[];
-	rawBBCode: string;
-	matchedBBCode: string;
+	fields: Field[];
 	bookmarkLink: string;
-	order?: number;
 	createdTimestamp: number;
 	updatedTimestamp: number;
 	progressTimestamp?: number;
-};
+	order?: number;
 
-type inputTypes =
-	| "shortText"
-	| "longText"
-	| "dateTime"
-	| "dropdown"
-	| "checkbox"
-	| "date"
-	| "time"
-	| "url"
-	| "listItem";
+	// deprecated
+	inputComponents?: Field[];
+}
 
-type inputTypeNames =
-	| "Single Line"
-	| "Multi Line"
-	| "Date & Time"
-	| "Dropdown"
-	| "Checkbox"
-	| "Date"
-	| "Time"
-	| "Hyperlink"
-	| "List Items [*]";
+export interface BBCodeForm extends Form {
+	rawBBCode: string;
+	matchedBBCode: string;
+}
 
-export type InputComponentProps = {
+export interface FormGroup {
+	formGroupName: string;
+	forms: Form[];
+}
+
+export type fieldType =
+	| { typeCode: "shortText"; typeName: "Single Line" }
+	| { typeCode: "longText"; typeName: "Multi Line" }
+	| { typeCode: "dateTime"; typeName: "Date & Time" }
+	| { typeCode: "dropdown"; typeName: "Dropdown" }
+	| { typeCode: "checkbox"; typeName: "Checkbox" }
+	| { typeCode: "date"; typeName: "Date" }
+	| { typeCode: "time"; typeName: "Time" }
+	| { typeCode: "url"; typeName: "Hyperlink" }
+	| { typeCode: "listItem"; typeName: "List Items [*]" };
+
+export interface Field {
 	uniqueId: string;
-	type: inputTypes;
-	typeName: inputTypeNames;
-	label?: string; // User-created
+	fieldType: fieldType;
+	label?: string;
 	description?: string;
 	multi?: boolean;
 	multiStar?: boolean;
 	defaultVal: string;
-	inputs: InputTypeProps[];
+	inputs: Input[];
 	selectOptions?: string[];
 	orderNum?: number;
-	onUpdateInputs?: (inputs: InputTypeProps[]) => void;
+	onUpdateInputs?: (inputs: Input[]) => void;
 
 	// Deprecated
+	type?:
+		| "shortText"
+		| "longText"
+		| "dateTime"
+		| "dropdown"
+		| "checkbox"
+		| "date"
+		| "time"
+		| "url"
+		| "listItem";
+	typeName?:
+		| "Single Line"
+		| "Multi Line"
+		| "Date & Time"
+		| "Dropdown"
+		| "Checkbox"
+		| "Date"
+		| "Time"
+		| "Hyperlink"
+		| "List Items [*]";
 	typeIcon?: string; // Set for deletion in backfill procedures
-};
+}
 
-export type InputTypeProps = {
+export interface FieldGroup {
+	name: string;
+	fields: Field[];
+}
+
+export interface Input {
 	uniqueId?: string;
-	type: inputTypes;
 	val: string;
 	placeholder?: string;
 	readOnly?: boolean;
 	selectOptions?: string[];
 	onUpdateVal?: (val: any) => void;
-};
+
+	// Deprecated
+	type?: any;
+}

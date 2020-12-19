@@ -75,7 +75,6 @@ const Home = () => {
 				<Jumbotron
 					fluid
 					style={{
-						backgroundColor: "lightgrey",
 						flex: "1",
 						margin: "1rem 0",
 						padding: "2.5rem",

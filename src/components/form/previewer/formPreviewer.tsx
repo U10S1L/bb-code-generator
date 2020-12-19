@@ -2,7 +2,7 @@ import "./formPreviewer.css";
 
 import { Button, Form } from "react-bootstrap";
 import { Col, Row } from "react-bootstrap";
-import { InputComponentProps, InputTypeProps } from "types/formTypes";
+import { Field, Input } from "types/formTypes";
 import React, { useEffect, useState } from "react";
 import {
 	SortableContainer,
@@ -10,41 +10,36 @@ import {
 	SortableHandle
 } from "react-sortable-hoc";
 
-import { BBCodeFormType } from "types/formTypes";
+import { BBCodeForm } from "types/formTypes";
+import FieldComponent from "components/field/fieldComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import InputComponent from "components/inputComponents/inputComponent";
 
-type SelectedInputComponentProps = {
-	inputComponent: InputComponentProps;
-	editInputComponent: () => void;
-	onUpdateInputs: (inputs: InputTypeProps[]) => void;
+type FieldPreviewProps = {
+	field: Field;
 	num: number;
+	editField: () => void;
+	onUpdateInputs: (inputs: Input[]) => void;
 };
-type SortableSelectedInputComponentsProps = {
-	inputComponents: InputComponentProps[];
-	editInputComponent: (inputComponent: InputComponentProps) => void;
+type SortableSelectedFieldsProps = {
+	fields: Field[];
+	editField: (field: Field) => void;
 };
 type FormPreviewerProps = {
-	bbCodeForm: BBCodeFormType;
-	onReorderSelectedInputComponent: (sortObject: {
+	bbCodeForm: BBCodeForm;
+	onReorderSelectedField: (sortObject: {
 		oldIndex: number;
 		newIndex: number;
 	}) => void;
-	onEditSelectedInputComponent: (inputComponent: InputComponentProps) => void;
+	onEditSelectedField: (field: Field) => void;
 };
 
 const DragHandle = SortableHandle(() => (
 	<div className="drag-handle">
-		<FontAwesomeIcon icon="bars" />
+		<FontAwesomeIcon style={{ color: "var(--secondary)" }} icon="bars" />
 	</div>
 ));
-const SelectedInputComponent = SortableElement(
-	({
-		inputComponent,
-		editInputComponent,
-		onUpdateInputs,
-		num
-	}: SelectedInputComponentProps) => {
+const FieldPreview = SortableElement(
+	({ field, editField, onUpdateInputs, num }: FieldPreviewProps) => {
 		return (
 			<Row className="preview-input-component">
 				<Col xs={10}>
@@ -53,23 +48,22 @@ const SelectedInputComponent = SortableElement(
 							<span
 								style={{
 									fontWeight: "bold"
-								}}>{`${inputComponent.label}`}</span>
-							<div className="small text-muted">
-								{inputComponent.description}
-							</div>
+								}}>{`${field.label}`}</span>
+							<div className="small text-muted">{field.description}</div>
 						</Form.Label>
+						<FieldComponent
+							{...field}
+							onUpdateInputs={(inputs: Input[]) => onUpdateInputs(inputs)}
+							orderNum={num}
+						/>
 					</Form.Group>
-					<InputComponent
-						{...inputComponent}
-						onUpdateInputs={(inputs: InputTypeProps[]) =>
-							onUpdateInputs(inputs)
-						}
-						orderNum={num}
-					/>
 				</Col>
 				<Col xs={1}>
-					<Button onClick={editInputComponent} variant="secondary">
-						<FontAwesomeIcon icon={"edit"} />
+					<Button onClick={editField} variant="link">
+						<FontAwesomeIcon
+							icon={"edit"}
+							style={{ color: "var(--warning)" }}
+						/>
 					</Button>
 				</Col>
 				<Col xs={1}>
@@ -80,39 +74,31 @@ const SelectedInputComponent = SortableElement(
 	}
 );
 
-const SortableSelectedInputComponents = SortableContainer(
-	({
-		inputComponents,
-		editInputComponent
-	}: SortableSelectedInputComponentsProps) => {
-		const [previewInputComponents, setPreviewInputComponents] = useState(
-			inputComponents
-		);
+const SortableSelectedFields = SortableContainer(
+	({ fields, editField }: SortableSelectedFieldsProps) => {
+		const [previewFields, setPreviewFields] = useState(fields);
 
-		const onUpdatePreviewInputComponent = (
-			inputComponentIndex: number,
-			inputs: InputTypeProps[]
-		) => {
-			var newPreviewInputComponents = previewInputComponents.concat();
-			newPreviewInputComponents[inputComponentIndex].inputs = inputs;
-			setPreviewInputComponents(newPreviewInputComponents);
+		const onUpdatePreviewField = (fieldIndex: number, inputs: Input[]) => {
+			var newPreviewFields = previewFields.concat();
+			newPreviewFields[fieldIndex].inputs = inputs;
+			setPreviewFields(newPreviewFields);
 		};
 
 		useEffect(() => {
-			setPreviewInputComponents(inputComponents);
-		}, [inputComponents]);
+			setPreviewFields(fields);
+		}, [fields]);
 		return (
 			<ul style={{ padding: 0 }}>
-				{previewInputComponents &&
-					previewInputComponents.map((inputComponent, index) => (
-						<SelectedInputComponent
-							inputComponent={inputComponent}
+				{previewFields &&
+					previewFields.map((field, index) => (
+						<FieldPreview
+							field={field}
 							index={index}
 							key={index}
 							num={index + 1}
-							editInputComponent={() => editInputComponent(inputComponent)}
+							editField={() => editField(field)}
 							onUpdateInputs={(updatedInputs) =>
-								onUpdatePreviewInputComponent(index, updatedInputs)
+								onUpdatePreviewField(index, updatedInputs)
 							}
 						/>
 					))}
@@ -120,22 +106,23 @@ const SortableSelectedInputComponents = SortableContainer(
 		);
 	}
 );
+
 const FormPreviewer = ({
 	bbCodeForm,
-	onReorderSelectedInputComponent,
-	onEditSelectedInputComponent
+	onReorderSelectedField,
+	onEditSelectedField
 }: FormPreviewerProps) => {
 	const [bbCodeFormPreview, setBBCodeFormPreview] = useState(bbCodeForm);
 	useEffect(() => {
 		var bbCodeFormWithDefaults = {
 			...bbCodeForm,
-			inputComponents: bbCodeForm.inputComponents.map((inputComponent) => {
+			fields: bbCodeForm.fields.map((field) => {
 				return {
-					...inputComponent,
-					inputs: inputComponent.inputs.map((input) => {
+					...field,
+					inputs: field.inputs.map((input) => {
 						return {
 							...input,
-							val: inputComponent.defaultVal
+							val: field.defaultVal
 						};
 					})
 				};
@@ -144,12 +131,12 @@ const FormPreviewer = ({
 		setBBCodeFormPreview(bbCodeFormWithDefaults);
 	}, [bbCodeForm]);
 	return (
-		<Form style={{ backgroundColor: "lightgrey", padding: "1rem" }}>
-			<h4>{bbCodeFormPreview.name}</h4>
-			<SortableSelectedInputComponents
-				inputComponents={bbCodeFormPreview.inputComponents}
-				onSortEnd={onReorderSelectedInputComponent}
-				editInputComponent={onEditSelectedInputComponent}
+		<Form>
+			<h5 className="header">{bbCodeFormPreview.name}</h5>
+			<SortableSelectedFields
+				fields={bbCodeFormPreview.fields}
+				onSortEnd={onReorderSelectedField}
+				editField={onEditSelectedField}
 				useDragHandle
 			/>
 		</Form>

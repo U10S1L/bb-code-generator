@@ -1,7 +1,7 @@
 import { useHistory, useParams } from "react-router-dom";
 
+import { DefaultToast } from "components/toast/oldToast";
 import Firebase from "components/firebase/firebase";
-import { InfoToast } from "components/toast/toast";
 import { useEffect } from "react";
 
 const ShareableForm = () => {
@@ -17,7 +17,9 @@ const ShareableForm = () => {
 			})
 			.catch((errorCode) => {
 				if (errorCode === "permission-denied") {
-					InfoToast("You must be signed in to use a Shareable Copy link.");
+					DefaultToast({
+						message: "You must be signed in to use a Shareable Copy link."
+					});
 				}
 				history.replace("/");
 			});

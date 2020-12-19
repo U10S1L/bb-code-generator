@@ -4,6 +4,14 @@
 	margin-bottom: 1rem;
 }
 
+.preview-input-component.row .form-group {
+	margin-bottom: 0;
+}
+
+.preview-input-component.row button {
+	padding-bottom: 0;
+}
+
 .form-renderer.preview .form-group {
 	margin-bottom: 0;
 }

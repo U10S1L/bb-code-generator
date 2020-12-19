@@ -1,13 +1,14 @@
-* {
-	/* Firefox */
+/* Firefox */
+/* * {
 	scrollbar-width: thin;
 	scrollbar-color: #6c757d #343a40;
-}
+} */
 
-html {
-	/* Fix for jumpy scrollbar */
+/* Fix for jumpy scrollbar  */
+/* html {
 	margin-left: calc(100vw - 100%);
-}
+} */
+
 body.modal-open {
 	padding-right: 0 !important;
 }
@@ -16,29 +17,25 @@ body.modal-open {
 	width: 10px;
 }
 *::-webkit-scrollbar-track {
-	background: #343a40;
+	background: var(--dark);
 }
 *::-webkit-scrollbar-thumb {
-	background-color: #6c757d;
-	border: 2px solid #6c757d;
+	background-color: var(--secondary);
+	border: 2px solid var(--secondary);
 }
 
 .App {
 	text-align: center;
 }
 body {
-	background-color: #20354c;
 	font-family: "Roboto", sans-serif;
 }
-.container {
-	background-color: white;
-}
 
-.app-container {
+/* .app-container {
 	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;
-}
+} */
 
 .container-fluid {
 	display: flex;
@@ -51,7 +48,6 @@ body {
 	align-items: center;
 	margin-top: 1rem;
 	font-weight: bold;
-	border-bottom: 1px solid lightgray;
 	padding-bottom: 1rem;
 }
 
