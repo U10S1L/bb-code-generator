@@ -83,7 +83,7 @@ const SortableFormElement = SortableElement(
 							text={
 								process.env.NODE_ENV === "development"
 									? `localhost:3000/form/shareable/${authUser?.uid}/${form.uid}`
-									: `https://bbcode.rip/form/shareable/${authUser?.uid}/${form.uid}`
+									: `https://ripbbc.netlify.app/form/shareable/${authUser?.uid}/${form.uid}`
 							}
 							onCopy={() =>
 								DefaultToast({ message: `Shareable link copied to clipboard` })
