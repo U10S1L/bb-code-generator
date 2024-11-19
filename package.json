@@ -27,7 +27,7 @@
 		"@types/react-router-dom": "^5.1.5",
 		"array-move": "2.2.2",
 		"bootstrap": "4.5.0",
-		"firebase": "^7.16.1",
+		"firebase": "^10.9.0",
 		"fuse.js": "^6.4.1",
 		"jquery": "3.5.1",
 		"lodash": "^4.17.20",
